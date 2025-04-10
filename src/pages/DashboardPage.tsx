@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -116,7 +115,7 @@ const financialMarkets: DataWidgetProps[] = [
   {
     title: "USD/INR Exchange Rate",
     description: "Daily exchange rate",
-    chartType: "line",
+    chartType: "area",
     data: {
       labels: ["Apr 1", "Apr 2", "Apr 3", "Apr 4", "Apr 5", "Apr 8", "Apr 9"],
       datasets: [

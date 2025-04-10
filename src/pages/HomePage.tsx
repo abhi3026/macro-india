@@ -1,0 +1,305 @@
+
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import MarketTicker from "@/components/MarketTicker";
+import NewsletterModal from "@/components/NewsletterModal";
+import ResearchCard, { ResearchItem } from "@/components/ResearchCard";
+import BlogPostCard, { BlogPost } from "@/components/BlogPostCard";
+import DataWidget from "@/components/DataWidget";
+import { ArrowRight, BarChart, FileText, TrendingUp } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Link } from "react-router-dom";
+
+const HomePage = () => {
+  // Featured research items (sample data)
+  const featuredResearch: ResearchItem[] = [
+    {
+      id: "1",
+      title: "Indian Economic Outlook 2025",
+      description: "Comprehensive analysis of India's economic trajectory for the coming year with key indicators and growth projections.",
+      date: "April 2, 2025",
+      category: "Economic Outlook",
+      imageUrl: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+      fileUrl: "#",
+      featured: true
+    },
+    {
+      id: "2",
+      title: "Impact of Monetary Policy on Indian Markets",
+      description: "Analysis of how RBI's latest monetary policy decisions are affecting various sectors of the Indian economy.",
+      date: "March 28, 2025",
+      category: "Monetary Policy",
+      imageUrl: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+      fileUrl: "#"
+    },
+    {
+      id: "3",
+      title: "Agricultural Trends & Food Security",
+      description: "Examination of current agricultural output, challenges, and implications for India's food security.",
+      date: "March 20, 2025",
+      category: "Agriculture",
+      imageUrl: "https://images.unsplash.com/photo-1589256479193-9ff1356bed98?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2128&q=80",
+      fileUrl: "#"
+    }
+  ];
+
+  // Featured blog posts (sample data)
+  const featuredPosts: BlogPost[] = [
+    {
+      id: "1",
+      title: "Understanding India's Current Account Deficit",
+      excerpt: "A deep dive into the factors affecting India's current account balance and its implications for the economy.",
+      date: "April 5, 2025",
+      readTime: "8 min read",
+      author: {
+        name: "Raj Sharma",
+        avatarUrl: "https://randomuser.me/api/portraits/men/32.jpg"
+      },
+      category: "Trade Balance",
+      imageUrl: "https://images.unsplash.com/photo-1642543492481-44e81e3914a7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80",
+      featured: true
+    },
+    {
+      id: "2",
+      title: "The Inflation Challenge: Navigating Rising Prices",
+      excerpt: "Analysis of current inflation trends and strategies for businesses and consumers to adapt.",
+      date: "April 1, 2025",
+      readTime: "6 min read",
+      author: {
+        name: "Priya Desai",
+        avatarUrl: "https://randomuser.me/api/portraits/women/44.jpg"
+      },
+      category: "Inflation",
+      imageUrl: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+    }
+  ];
+
+  // GDP data for chart (sample data)
+  const gdpData = {
+    labels: ["Q1 2024", "Q2 2024", "Q3 2024", "Q4 2024", "Q1 2025"],
+    datasets: [
+      {
+        label: "GDP Growth (%)",
+        data: [6.1, 6.3, 6.7, 6.9, 7.2],
+        borderColor: "#3b82f6",
+        backgroundColor: "rgba(59, 130, 246, 0.2)",
+        fill: true
+      }
+    ]
+  };
+
+  // Inflation data for chart (sample data)
+  const inflationData = {
+    labels: ["Nov", "Dec", "Jan", "Feb", "Mar", "Apr"],
+    datasets: [
+      {
+        label: "Inflation Rate (%)",
+        data: [5.7, 5.5, 5.1, 4.9, 4.7, 4.5],
+        borderColor: "#ef4444",
+        backgroundColor: "rgba(239, 68, 68, 0.5)"
+      }
+    ]
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      <Navbar />
+      <MarketTicker />
+      
+      {/* Hero Section */}
+      <section className="relative bg-white">
+        <div 
+          className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat" 
+          style={{ backgroundImage: `url('/hero-bg.svg')` }}
+        ></div>
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
+          <div className="max-w-3xl animate-fade-up">
+            <h1 className="text-4xl md:text-5xl font-bold text-indianmacro-900 mb-6">
+              Your Window to India's Macroeconomic Landscape
+            </h1>
+            <p className="text-lg md:text-xl text-indianmacro-600 mb-8">
+              In-depth research, data analysis, and expert insights on Indian economy, markets, and financial trends.
+            </p>
+            <div className="flex flex-wrap gap-4">
+              <Button asChild size="lg" className="bg-accent1 hover:bg-accent1/90">
+                <Link to="/research">
+                  Explore Research
+                </Link>
+              </Button>
+              <Button asChild variant="outline" size="lg">
+                <Link to="/dashboard">
+                  View Latest Data
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      {/* Featured Research */}
+      <section className="bg-white py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center mb-8">
+            <div>
+              <h2 className="text-2xl md:text-3xl font-bold text-indianmacro-900">
+                Featured Research
+              </h2>
+              <p className="text-indianmacro-600 mt-2">
+                Our latest economic insights and analysis
+              </p>
+            </div>
+            <Button asChild variant="ghost" className="group">
+              <Link to="/research" className="flex items-center">
+                View all 
+                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Link>
+            </Button>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {featuredResearch.map((item) => (
+              <ResearchCard 
+                key={item.id} 
+                research={item} 
+                variant={item.featured ? "featured" : "default"} 
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+      
+      {/* Data Dashboard Preview */}
+      <section className="bg-indianmacro-50 py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center mb-8">
+            <div>
+              <h2 className="text-2xl md:text-3xl font-bold text-indianmacro-900">
+                Economic Indicators
+              </h2>
+              <p className="text-indianmacro-600 mt-2">
+                Key metrics of the Indian economy
+              </p>
+            </div>
+            <Button asChild variant="ghost" className="group">
+              <Link to="/dashboard" className="flex items-center">
+                Full Dashboard 
+                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Link>
+            </Button>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+            <DataWidget
+              title="GDP Growth Rate"
+              description="Quarterly GDP growth (YoY)"
+              chartType="area"
+              data={gdpData}
+              latestValue="7.2%"
+              latestDate="Q1 2025"
+              trend="up"
+            />
+            <DataWidget
+              title="Inflation Rate (CPI)"
+              description="Monthly inflation data"
+              chartType="bar"
+              data={inflationData}
+              latestValue="4.5%"
+              latestDate="April 2025"
+              trend="down"
+            />
+          </div>
+        </div>
+      </section>
+      
+      {/* Blog Posts */}
+      <section className="bg-white py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center mb-8">
+            <div>
+              <h2 className="text-2xl md:text-3xl font-bold text-indianmacro-900">
+                Latest Analysis
+              </h2>
+              <p className="text-indianmacro-600 mt-2">
+                Expert insights and commentary
+              </p>
+            </div>
+            <Button asChild variant="ghost" className="group">
+              <Link to="/blog" className="flex items-center">
+                View all posts
+                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Link>
+            </Button>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {featuredPosts.map((post) => (
+              <BlogPostCard 
+                key={post.id} 
+                post={post} 
+                variant={post.featured ? "featured" : "default"} 
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+      
+      {/* Features / Services */}
+      <section className="bg-indianmacro-50 py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-2xl md:text-3xl font-bold text-indianmacro-900">
+              What We Offer
+            </h2>
+            <p className="text-indianmacro-600 mt-2 max-w-2xl mx-auto">
+              Comprehensive resources to help you understand India's complex economy
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Card>
+              <CardHeader className="flex flex-col items-center text-center">
+                <FileText className="h-10 w-10 text-accent1 mb-4" />
+                <CardTitle>Research Reports</CardTitle>
+              </CardHeader>
+              <CardContent className="text-center">
+                <p className="text-indianmacro-600">
+                  In-depth analysis of economic trends, sectors, policies, and markets with actionable insights.
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader className="flex flex-col items-center text-center">
+                <BarChart className="h-10 w-10 text-accent1 mb-4" />
+                <CardTitle>Data Visualization</CardTitle>
+              </CardHeader>
+              <CardContent className="text-center">
+                <p className="text-indianmacro-600">
+                  Interactive charts and dashboards presenting key economic indicators in an accessible format.
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader className="flex flex-col items-center text-center">
+                <TrendingUp className="h-10 w-10 text-accent1 mb-4" />
+                <CardTitle>Expert Commentary</CardTitle>
+              </CardHeader>
+              <CardContent className="text-center">
+                <p className="text-indianmacro-600">
+                  Regular updates and insights on current economic events and their implications for businesses.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+      
+      <Footer />
+      <NewsletterModal />
+    </div>
+  );
+};
+
+export default HomePage;

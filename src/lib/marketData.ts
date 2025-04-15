@@ -65,7 +65,7 @@ export const formatPrice = (price: number, type: string): string => {
   }
 };
 
-// Yahoo Finance API integration (using a proxy to avoid CORS issues)
+// Yahoo Finance API integration
 export const fetchMarketData = async (): Promise<MarketData[]> => {
   try {
     // Create a list of symbols for the batch request

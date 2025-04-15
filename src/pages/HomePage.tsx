@@ -1,7 +1,6 @@
-
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import MarketTicker from "@/components/MarketTicker";
+import MarketTickerLive from "@/components/MarketTickerLive";
 import NewsletterModal from "@/components/NewsletterModal";
 import ResearchCard, { ResearchItem } from "@/components/ResearchCard";
 import BlogPostCard, { BlogPost } from "@/components/BlogPostCard";
@@ -105,7 +104,7 @@ const HomePage = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      <MarketTicker />
+      <MarketTickerLive />
       
       {/* Hero Section */}
       <section className="relative bg-white">

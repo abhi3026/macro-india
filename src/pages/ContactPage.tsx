@@ -91,7 +91,7 @@ const ContactPage = () => {
                   <Phone className="h-6 w-6 text-accent1 mr-4 mt-1" />
                   <div>
                     <h3 className="font-medium text-indianmacro-800">Phone</h3>
-                    <p className="text-indianmacro-600">+91 9876543210</p>
+                    <p className="text-indianmacro-600">+91 7033816204</p>
                     <p className="text-indianmacro-500 text-sm">
                       Mon-Fri, 9:30 AM - 6:30 PM IST
                     </p>
@@ -103,8 +103,7 @@ const ContactPage = () => {
                   <div>
                     <h3 className="font-medium text-indianmacro-800">Location</h3>
                     <p className="text-indianmacro-600">
-                      123 Business Hub, Sector 62<br />
-                      Noida, Uttar Pradesh 201309<br />
+                      Delhi />
                       India
                     </p>
                   </div>

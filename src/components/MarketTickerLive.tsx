@@ -13,13 +13,15 @@ import {
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
 
-const REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes in milliseconds
+// Shorter refresh interval to ensure more frequent updates
+const REFRESH_INTERVAL = 60 * 1000; // 1 minute in milliseconds
 
 const MarketTickerLive = () => {
   const [markets, setMarkets] = useState<MarketData[]>(getInitialMarketData());
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+  const [hasFetchFailed, setHasFetchFailed] = useState<boolean>(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isMobile = useIsMobile();
 
@@ -30,11 +32,13 @@ const MarketTickerLive = () => {
       const data = await fetchMarketData();
       setMarkets(data);
       setLastUpdated(new Date());
+      setHasFetchFailed(false);
       if (showToast) {
         toast.success("Market data updated successfully");
       }
     } catch (error) {
       console.error("Error fetching market data:", error);
+      setHasFetchFailed(true);
       
       // If error occurs and we don't have any data yet, use fallback
       if (markets.every(m => m.loading)) {
@@ -72,6 +76,25 @@ const MarketTickerLive = () => {
       }
     };
   }, []);
+
+  // Fallback static content if all APIs fail
+  if (hasFetchFailed && markets.every(m => m.error)) {
+    return (
+      <div className="w-full bg-indianmacro-100 py-2 relative overflow-hidden border-y border-indianmacro-200">
+        <div className="flex items-center justify-center text-indianmacro-700 py-2">
+          <AlertCircle className="h-4 w-4 mr-2 text-accent3" />
+          <span>Live market data temporarily unavailable. Please check back later.</span>
+          <button
+            onClick={handleManualRefresh}
+            className="ml-2 p-1 rounded-full hover:bg-indianmacro-200 text-indianmacro-600 transition-all"
+            title="Retry loading market data"
+          >
+            <RefreshCw className={cn("h-4 w-4", isRefreshing && "animate-spin")} />
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full bg-indianmacro-100 py-2 relative overflow-hidden border-y border-indianmacro-200">
@@ -113,7 +136,7 @@ const MarketTickerLive = () => {
                   ) : (
                     <>
                       <span className="font-semibold">
-                        {symbolDetails ? formatPrice(market.price, symbolDetails.type) : market.price.toLocaleString('en-IN')}
+                        {symbolDetails ? formatPrice(market.price, symbolDetails.type, market.currency) : market.price.toLocaleString('en-IN')}
                       </span>
                       <div className={cn(
                         "flex items-center",
@@ -154,7 +177,7 @@ const MarketTickerLive = () => {
                   ) : (
                     <>
                       <span className="font-semibold">
-                        {symbolDetails ? formatPrice(market.price, symbolDetails.type) : market.price.toLocaleString('en-IN')}
+                        {symbolDetails ? formatPrice(market.price, symbolDetails.type, market.currency) : market.price.toLocaleString('en-IN')}
                       </span>
                       <div className={cn(
                         "flex items-center",

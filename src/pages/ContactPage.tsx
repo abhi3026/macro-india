@@ -103,8 +103,7 @@ const ContactPage = () => {
                   <div>
                     <h3 className="font-medium text-indianmacro-800">Location</h3>
                     <p className="text-indianmacro-600">
-                      Delhi />
-                      India
+                      Delhi, India />
                     </p>
                   </div>
                 </div>

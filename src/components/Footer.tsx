@@ -1,6 +1,6 @@
 
 import { Link } from "react-router-dom";
-import { Facebook, Twitter, Linkedin, Mail } from "lucide-react";
+import { Instagram, Twitter, Linkedin, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -91,8 +91,8 @@ const Footer = () => {
               Connect with us
             </h3>
             <div className="mt-4 flex space-x-6">
-              <a href="#" className="text-gray-300 hover:text-white">
-                <span className="sr-only">Facebook</span>
+              <a href="https://www.instagram.com/indianmacroinsights/" className="text-gray-300 hover:text-white">
+                <span className="sr-only">Instagram</span>
                 <Facebook className="h-6 w-6" />
               </a>
               <a href="#" className="text-gray-300 hover:text-white">

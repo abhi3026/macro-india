@@ -1,3 +1,4 @@
+
 import { toast } from "sonner";
 
 // Define types for our market data
@@ -72,6 +73,7 @@ export const formatPrice = (price: number, type: string, currency?: string): str
 };
 
 // Twelve Data API key
+// IMPORTANT: Replace this placeholder with your actual Twelve Data API key
 const TWELVE_DATA_API_KEY = "e30992e75e7348fc9e6481e1e056ae1f";
 
 // Yahoo Finance API integration with fallback to TwelveData and static data
@@ -87,7 +89,7 @@ export const fetchMarketData = async (): Promise<MarketData[]> => {
         .map(s => s.twelveDataSymbol)
         .join(',');
       
-      if (twelveDataSymbols && TWELVE_DATA_API_KEY !== "YOUR_TWELVE_DATA_KEY") {
+      if (twelveDataSymbols) {
         const twelveDataUrl = `https://api.twelvedata.com/price?symbol=${twelveDataSymbols}&apikey=${TWELVE_DATA_API_KEY}`;
         const twelveDataResponse = await fetch(twelveDataUrl);
         

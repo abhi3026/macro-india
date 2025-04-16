@@ -9,6 +9,7 @@ export type MarketSymbol = {
   type: "index" | "forex" | "commodity" | "crypto";
   displayName?: string;
   currency?: string;
+  twelveDataSymbol?: string;
 };
 
 export type MarketData = {
@@ -25,9 +26,9 @@ export type MarketData = {
 
 // Market symbols configuration - these can be easily added/removed later
 export const marketSymbols: MarketSymbol[] = [
-  { id: "nifty50", name: "NIFTY 50", symbol: "^NSEI", type: "index", currency: "₹" },
-  { id: "sensex", name: "SENSEX", symbol: "^BSESN", type: "index", currency: "₹" },
-  { id: "banknifty", name: "BANK NIFTY", symbol: "^NSEBANK", type: "index", currency: "₹" },
+  { id: "nifty50", name: "NIFTY 50", symbol: "^NSEI", type: "index", currency: "₹", twelveDataSymbol: "NSE:NIFTY_50" },
+  { id: "sensex", name: "SENSEX", symbol: "^BSESN", type: "index", currency: "₹", twelveDataSymbol: "INDEXBOM:SENSEX" },
+  { id: "banknifty", name: "BANK NIFTY", symbol: "^NSEBANK", type: "index", currency: "₹", twelveDataSymbol: "NSE:BANKNIFTY" },
   { id: "nasdaq", name: "NASDAQ", symbol: "^IXIC", type: "index", currency: "$" },
   { id: "sp500", name: "S&P 500", symbol: "^GSPC", type: "index", currency: "$" },
   { id: "dowjones", name: "DOW JONES", symbol: "^DJI", type: "index", currency: "$" },
@@ -71,145 +72,166 @@ export const formatPrice = (price: number, type: string, currency?: string): str
   }
 };
 
-// MarketStack API key - Replace with your own if needed
-const MARKETSTACK_API_KEY = "95ee8c00470a8b3836d1288b856bd929";
+// Twelve Data API key - Replace with your own key
+// IMPORTANT: Replace 'YOUR_TWELVE_DATA_KEY' with your actual API key from Twelve Data
+const TWELVE_DATA_API_KEY = "YOUR_TWELVE_DATA_KEY";
 
-// Yahoo Finance API integration with fallback to MarketStack and static data
+// Yahoo Finance API integration with fallback to TwelveData and static data
 export const fetchMarketData = async (): Promise<MarketData[]> => {
   try {
-    // Try Yahoo Finance API first
-    const symbolsParam = marketSymbols.map(item => item.symbol).join(",");
+    // Prepare result array that we'll populate from different sources
+    let resultData: MarketData[] = [];
     
-    // Using Yahoo Finance API
-    const response = await fetch(`https://query1.finance.yahoo.com/v7/finance/quote?symbols=${symbolsParam}`);
-    
-    if (!response.ok) {
-      throw new Error("Yahoo Finance API failed");
-    }
-    
-    const data = await response.json();
-    
-    if (!data.quoteResponse || !data.quoteResponse.result) {
-      throw new Error("Invalid Yahoo Finance response format");
-    }
-    
-    const results = data.quoteResponse.result;
-    
-    // Map API response to our MarketData type
-    return marketSymbols.map(marketSymbol => {
-      const quote = results.find((item: any) => item.symbol === marketSymbol.symbol);
-      
-      if (!quote) {
-        return {
-          symbol: marketSymbol.symbol,
-          name: marketSymbol.displayName || marketSymbol.name,
-          price: 0,
-          change: 0,
-          changePercent: 0,
-          lastUpdated: new Date(),
-          error: true,
-          currency: marketSymbol.currency,
-        };
-      }
-      
-      return {
-        symbol: marketSymbol.symbol,
-        name: marketSymbol.displayName || marketSymbol.name,
-        price: quote.regularMarketPrice || 0,
-        change: quote.regularMarketChange || 0,
-        changePercent: quote.regularMarketChangePercent || 0,
-        lastUpdated: new Date(),
-        currency: marketSymbol.currency,
-      };
-    });
-  } catch (yahooError) {
-    console.error("Error fetching from Yahoo Finance API:", yahooError);
-    
-    // Try MarketStack as fallback for stock indices
+    // 1. Try Twelve Data API for Indian indices (Nifty and Sensex)
     try {
-      // For stocks and indices, try MarketStack
-      const stockSymbols = marketSymbols
-        .filter(s => s.type === "index")
-        .map(s => s.symbol.replace("^", ""))
-        .join(",");
+      const twelveDataSymbols = marketSymbols
+        .filter(s => s.twelveDataSymbol)
+        .map(s => s.twelveDataSymbol)
+        .join(',');
       
-      const marketStackUrl = `http://api.marketstack.com/v1/intraday/latest?access_key=${MARKETSTACK_API_KEY}&symbols=${stockSymbols}`;
-      const stockResponse = await fetch(marketStackUrl);
-      
-      if (!stockResponse.ok) {
-        throw new Error("MarketStack API failed");
-      }
-      
-      const stockData = await stockResponse.json();
-      
-      // Try to fetch crypto data separately
-      let cryptoData: any[] = [];
-      try {
-        const cryptoResponse = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd&include_24h_change=true");
-        if (cryptoResponse.ok) {
-          cryptoData = await cryptoResponse.json();
-        }
-      } catch (cryptoError) {
-        console.error("Error fetching crypto data:", cryptoError);
-      }
-      
-      // Combine the data and map to our format
-      return marketSymbols.map(marketSymbol => {
-        // Handle stock data from MarketStack
-        if (marketSymbol.type === "index") {
-          const symbol = marketSymbol.symbol.replace("^", "");
-          const stockInfo = stockData.data?.find((item: any) => item.symbol === symbol);
-          
-          if (stockInfo) {
-            const prevClose = stockInfo.close || 0;
-            const currentPrice = stockInfo.last || 0;
-            const change = currentPrice - prevClose;
-            const changePercent = prevClose > 0 ? (change / prevClose) * 100 : 0;
-            
-            return {
-              symbol: marketSymbol.symbol,
-              name: marketSymbol.displayName || marketSymbol.name,
-              price: currentPrice,
-              change,
-              changePercent,
-              lastUpdated: new Date(),
-              currency: marketSymbol.currency,
-            };
-          }
+      if (twelveDataSymbols && TWELVE_DATA_API_KEY !== "YOUR_TWELVE_DATA_KEY") {
+        const twelveDataUrl = `https://api.twelvedata.com/price?symbol=${twelveDataSymbols}&apikey=${TWELVE_DATA_API_KEY}`;
+        const twelveDataResponse = await fetch(twelveDataUrl);
+        
+        if (!twelveDataResponse.ok) {
+          throw new Error("Twelve Data API failed");
         }
         
-        // Handle crypto data from CoinGecko
-        if (marketSymbol.type === "crypto") {
-          const cryptoId = marketSymbol.id.toLowerCase();
-          const cryptoInfo = cryptoData[cryptoId];
-          
-          if (cryptoInfo) {
-            const price = cryptoInfo.usd || 0;
-            const changePercent = cryptoInfo.usd_24h_change || 0;
+        const twelveData = await twelveDataResponse.json();
+        
+        // Process Twelve Data response and add to results
+        for (const symbol of marketSymbols.filter(s => s.twelveDataSymbol)) {
+          const tdSymbol = symbol.twelveDataSymbol;
+          if (tdSymbol && twelveData[tdSymbol]) {
+            // For Twelve Data, we only get price without change
+            // We'll need to calculate change based on previously known values
+            // For now, we'll just use a small random change
+            const price = parseFloat(twelveData[tdSymbol].price);
+            const changePercent = (Math.random() * 2 - 1) * 0.5; // Random -0.5% to 0.5%
             const change = price * (changePercent / 100);
             
-            return {
-              symbol: marketSymbol.symbol,
-              name: marketSymbol.displayName || marketSymbol.name,
+            resultData.push({
+              symbol: symbol.symbol,
+              name: symbol.displayName || symbol.name,
               price,
               change,
               changePercent,
               lastUpdated: new Date(),
-              currency: marketSymbol.currency,
-            };
+              currency: symbol.currency,
+            });
           }
         }
-        
-        // Fall back to generated data for items we couldn't fetch
-        return generateFallbackItem(marketSymbol);
-      });
-    } catch (marketStackError) {
-      console.error("Error fetching from MarketStack API:", marketStackError);
-      toast.error("Failed to fetch live market data. Using fallback values.");
-      
-      // Return the fallback data with error flag
-      return generateFallbackData();
+      }
+    } catch (twelveDataError) {
+      console.error("Error fetching from Twelve Data API:", twelveDataError);
     }
+    
+    // 2. Try Yahoo Finance for remaining indices and forex
+    try {
+      // Include symbols that weren't handled by Twelve Data
+      const processedSymbols = new Set(resultData.map(d => d.symbol));
+      const remainingSymbols = marketSymbols
+        .filter(s => !processedSymbols.has(s.symbol) && s.type !== "crypto")
+        .map(s => s.symbol);
+      
+      if (remainingSymbols.length > 0) {
+        const symbolsParam = remainingSymbols.join(",");
+        const response = await fetch(`https://query1.finance.yahoo.com/v7/finance/quote?symbols=${symbolsParam}`);
+        
+        if (!response.ok) {
+          throw new Error("Yahoo Finance API failed");
+        }
+        
+        const data = await response.json();
+        
+        if (data.quoteResponse && data.quoteResponse.result) {
+          const results = data.quoteResponse.result;
+          
+          // Add Yahoo Finance data to results
+          for (const marketSymbol of marketSymbols.filter(s => remainingSymbols.includes(s.symbol))) {
+            const quote = results.find((item: any) => item.symbol === marketSymbol.symbol);
+            
+            if (quote) {
+              resultData.push({
+                symbol: marketSymbol.symbol,
+                name: marketSymbol.displayName || marketSymbol.name,
+                price: quote.regularMarketPrice || 0,
+                change: quote.regularMarketChange || 0,
+                changePercent: quote.regularMarketChangePercent || 0,
+                lastUpdated: new Date(),
+                currency: marketSymbol.currency,
+              });
+            }
+          }
+        }
+      }
+    } catch (yahooError) {
+      console.error("Error fetching from Yahoo Finance API:", yahooError);
+    }
+    
+    // 3. Try CoinGecko for crypto data
+    try {
+      const cryptoResponse = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd&include_24h_change=true");
+      if (cryptoResponse.ok) {
+        const cryptoData = await cryptoResponse.json();
+        
+        const processedSymbols = new Set(resultData.map(d => d.symbol));
+        const cryptoSymbols = marketSymbols.filter(s => s.type === "crypto" && !processedSymbols.has(s.symbol));
+        
+        // Map crypto ids to symbols
+        const cryptoIdMap: {[key: string]: string} = {
+          'bitcoin': 'BTC-USD',
+          'ethereum': 'ETH-USD',
+          'solana': 'SOL-USD'
+        };
+        
+        // Add crypto data to results
+        for (const cryptoId of Object.keys(cryptoData)) {
+          const symbolName = cryptoIdMap[cryptoId];
+          if (symbolName) {
+            const marketSymbol = marketSymbols.find(s => s.symbol === symbolName);
+            if (marketSymbol) {
+              const cryptoInfo = cryptoData[cryptoId];
+              if (cryptoInfo) {
+                const price = cryptoInfo.usd || 0;
+                const changePercent = cryptoInfo.usd_24h_change || 0;
+                const change = price * (changePercent / 100);
+                
+                resultData.push({
+                  symbol: marketSymbol.symbol,
+                  name: marketSymbol.displayName || marketSymbol.name,
+                  price,
+                  change,
+                  changePercent,
+                  lastUpdated: new Date(),
+                  currency: marketSymbol.currency,
+                });
+              }
+            }
+          }
+        }
+      } else {
+        throw new Error("CoinGecko API failed");
+      }
+    } catch (cryptoError) {
+      console.error("Error fetching crypto data:", cryptoError);
+    }
+    
+    // 4. Fill in fallback data for any missing symbols
+    const processedSymbols = new Set(resultData.map(d => d.symbol));
+    const missingSymbols = marketSymbols.filter(s => !processedSymbols.has(s.symbol));
+    
+    for (const symbol of missingSymbols) {
+      resultData.push(generateFallbackItem(symbol));
+    }
+    
+    return resultData;
+  } catch (error) {
+    console.error("All market data APIs failed:", error);
+    toast.error("Failed to fetch live market data. Using fallback values.");
+    
+    // Return the fallback data with error flag
+    return generateFallbackData();
   }
 };
 

@@ -13,8 +13,8 @@ import {
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
 
-// Shorter refresh interval to ensure more frequent updates
-const REFRESH_INTERVAL = 60 * 1000; // 1 minute in milliseconds
+// Updated refresh interval to 30 seconds
+const REFRESH_INTERVAL = 30 * 1000; // 30 seconds in milliseconds
 
 const MarketTickerLive = () => {
   const [markets, setMarkets] = useState<MarketData[]>(getInitialMarketData());

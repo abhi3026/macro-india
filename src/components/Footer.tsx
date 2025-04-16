@@ -93,7 +93,7 @@ const Footer = () => {
             <div className="mt-4 flex space-x-6">
               <a href="https://www.instagram.com/indianmacroinsights/" className="text-gray-300 hover:text-white">
                 <span className="sr-only">Instagram</span>
-                <Facebook className="h-6 w-6" />
+                <Instagram className="h-6 w-6" />
               </a>
               <a href="#" className="text-gray-300 hover:text-white">
                 <span className="sr-only">Twitter</span>

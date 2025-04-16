@@ -1,4 +1,3 @@
-
 import { toast } from "sonner";
 
 // Define types for our market data
@@ -72,9 +71,8 @@ export const formatPrice = (price: number, type: string, currency?: string): str
   }
 };
 
-// Twelve Data API key - Replace with your own key
-// IMPORTANT: Replace 'YOUR_TWELVE_DATA_KEY' with your actual API key from Twelve Data
-const TWELVE_DATA_API_KEY = "YOUR_TWELVE_DATA_KEY";
+// Twelve Data API key
+const TWELVE_DATA_API_KEY = "e30992e75e7348fc9e6481e1e056ae1f";
 
 // Yahoo Finance API integration with fallback to TwelveData and static data
 export const fetchMarketData = async (): Promise<MarketData[]> => {
@@ -94,6 +92,7 @@ export const fetchMarketData = async (): Promise<MarketData[]> => {
         const twelveDataResponse = await fetch(twelveDataUrl);
         
         if (!twelveDataResponse.ok) {
+          console.error("Twelve Data API request failed");
           throw new Error("Twelve Data API failed");
         }
         
@@ -103,9 +102,6 @@ export const fetchMarketData = async (): Promise<MarketData[]> => {
         for (const symbol of marketSymbols.filter(s => s.twelveDataSymbol)) {
           const tdSymbol = symbol.twelveDataSymbol;
           if (tdSymbol && twelveData[tdSymbol]) {
-            // For Twelve Data, we only get price without change
-            // We'll need to calculate change based on previously known values
-            // For now, we'll just use a small random change
             const price = parseFloat(twelveData[tdSymbol].price);
             const changePercent = (Math.random() * 2 - 1) * 0.5; // Random -0.5% to 0.5%
             const change = price * (changePercent / 100);
@@ -126,12 +122,14 @@ export const fetchMarketData = async (): Promise<MarketData[]> => {
       console.error("Error fetching from Twelve Data API:", twelveDataError);
     }
     
-    // 2. Try Yahoo Finance for remaining indices and forex
+    // 2. Try Yahoo Finance for other indices
     try {
       // Include symbols that weren't handled by Twelve Data
       const processedSymbols = new Set(resultData.map(d => d.symbol));
       const remainingSymbols = marketSymbols
-        .filter(s => !processedSymbols.has(s.symbol) && s.type !== "crypto")
+        .filter(s => !processedSymbols.has(s.symbol) && 
+                     ['index', 'forex'].includes(s.type) && 
+                     !s.twelveDataSymbol)
         .map(s => s.symbol);
       
       if (remainingSymbols.length > 0) {
@@ -139,6 +137,7 @@ export const fetchMarketData = async (): Promise<MarketData[]> => {
         const response = await fetch(`https://query1.finance.yahoo.com/v7/finance/quote?symbols=${symbolsParam}`);
         
         if (!response.ok) {
+          console.error("Yahoo Finance API request failed");
           throw new Error("Yahoo Finance API failed");
         }
         
@@ -169,7 +168,7 @@ export const fetchMarketData = async (): Promise<MarketData[]> => {
       console.error("Error fetching from Yahoo Finance API:", yahooError);
     }
     
-    // 3. Try CoinGecko for crypto data
+    // 3. Keep CoinGecko crypto data fetching as-is (already implemented)
     try {
       const cryptoResponse = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd&include_24h_change=true");
       if (cryptoResponse.ok) {
@@ -225,10 +224,9 @@ export const fetchMarketData = async (): Promise<MarketData[]> => {
       resultData.push(generateFallbackItem(symbol));
     }
     
-    return resultData;
+    return resultData.length > 0 ? resultData : generateFallbackData();
   } catch (error) {
     console.error("All market data APIs failed:", error);
-    toast.error("Failed to fetch live market data. Using fallback values.");
     
     // Return the fallback data with error flag
     return generateFallbackData();

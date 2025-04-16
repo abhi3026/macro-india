@@ -99,7 +99,7 @@ const Footer = () => {
                 <span className="sr-only">Twitter</span>
                 <Twitter className="h-6 w-6" />
               </a>
-              <a href="#" className="text-gray-300 hover:text-white">
+              <a href="https:/www.linkedin.com/company/indian-macro/" className="text-gray-300 hover:text-white">
                 <span className="sr-only">LinkedIn</span>
                 <Linkedin className="h-6 w-6" />
               </a>

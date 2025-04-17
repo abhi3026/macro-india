@@ -1,0 +1,24 @@
+
+backend:
+  name: git-gateway
+  branch: main # Branch to update (optional; defaults to main)
+  
+media_folder: "public/uploads" # Media files will be stored in the repo under public/uploads
+public_folder: "/uploads" # The src attribute for uploaded media will begin with /uploads
+
+collections:
+  - name: "research"
+    label: "Research"
+    folder: "content/research"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Publish Date", name: "date", widget: "datetime" }
+      - { label: "Description", name: "description", widget: "text" }
+      - { label: "Category", name: "category", widget: "select", options: ["Economic Outlook", "Monetary Policy", "Agriculture", "Infrastructure", "Investment", "Banking", "Technology", "Trade"] }
+      - { label: "Featured Image", name: "image", widget: "image" }
+      - { label: "File", name: "file", widget: "file", required: false }
+      - { label: "Premium Content", name: "premium", widget: "boolean", default: false }
+      - { label: "Featured", name: "featured", widget: "boolean", default: false }
+      - { label: "Body", name: "body", widget: "markdown" }

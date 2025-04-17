@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Menu, X, ChevronDown } from "lucide-react";
@@ -7,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import NewsletterModal from "@/components/NewsletterModal";
+import { subscribeToNewsletter } from "@/utils/newsletter";
 
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

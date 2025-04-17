@@ -17,7 +17,7 @@ export const subscribeToNewsletter = async (email: string): Promise<{ success: b
         "Content-Type": "application/json",
         Authorization: `Token ${BUTTONDOWN_API_KEY}`,
       },
-      body: JSON.stringify({ email }),
+      body: JSON.stringify({ email_address: email }), // Changed from email to email_address to match API expectations
     });
 
     const data = await response.json();

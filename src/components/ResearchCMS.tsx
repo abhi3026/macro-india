@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,7 +11,6 @@ import { Upload, FileEdit, Trash2, Eye, Save, Plus } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
 
-// Research item type matching the one used in the existing components
 export type ResearchItem = {
   id: string;
   title: string;
@@ -25,7 +23,6 @@ export type ResearchItem = {
   premium?: boolean;
 };
 
-// Sample initial data
 const initialResearch: ResearchItem[] = [
   {
     id: "1",
@@ -48,7 +45,6 @@ const initialResearch: ResearchItem[] = [
   }
 ];
 
-// Available categories
 const categories = [
   "Economic Outlook",
   "Monetary Policy",
@@ -60,20 +56,18 @@ const categories = [
   "Trade"
 ];
 
-const ResearchCMS = () => {
+export const ResearchCMS: React.FC = () => {
   const [researchItems, setResearchItems] = useState<ResearchItem[]>(initialResearch);
   const [editingItem, setEditingItem] = useState<ResearchItem | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const navigate = useNavigate();
   
-  // Filtered research based on search
   const filteredResearch = researchItems.filter(
     item => item.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
     item.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Create a new empty research item
   const createNewResearch = () => {
     const newItem: ResearchItem = {
       id: `new-${Date.now()}`,
@@ -87,19 +81,15 @@ const ResearchCMS = () => {
     setEditingItem(newItem);
   };
 
-  // Save research item (could connect to backend API)
   const saveResearch = () => {
     if (!editingItem) return;
     
     setIsUploading(true);
     
-    // Simulating API call
     setTimeout(() => {
       if (editingItem.id.startsWith('new-')) {
-        // Add new item
         setResearchItems([...researchItems, { ...editingItem, id: `${researchItems.length + 1}` }]);
       } else {
-        // Update existing item
         setResearchItems(
           researchItems.map(item => item.id === editingItem.id ? editingItem : item)
         );
@@ -115,9 +105,7 @@ const ResearchCMS = () => {
     }, 1000);
   };
 
-  // Delete research item
   const deleteResearch = (id: string) => {
-    // Confirm before deleting
     if (window.confirm("Are you sure you want to delete this research?")) {
       setResearchItems(researchItems.filter(item => item.id !== id));
       
@@ -129,28 +117,22 @@ const ResearchCMS = () => {
     }
   };
 
-  // Handle image upload
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!editingItem) return;
     
     const file = e.target.files?.[0];
     if (!file) return;
     
-    // In a real app, you would upload to a CDN or storage service
-    // For this example, we'll just use a local URL
     const imageUrl = URL.createObjectURL(file);
     setEditingItem({ ...editingItem, imageUrl });
   };
 
-  // Handle PDF upload
   const handlePDFUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!editingItem) return;
     
     const file = e.target.files?.[0];
     if (!file) return;
     
-    // In a real app, you would upload to a storage service
-    // For this example, we'll just use a placeholder
     setEditingItem({ ...editingItem, fileUrl: "#uploaded-pdf" });
     
     toast({
@@ -159,10 +141,7 @@ const ResearchCMS = () => {
     });
   };
 
-  // Preview the research
   const previewResearch = (item: ResearchItem) => {
-    // In a real app, you would navigate to a preview page
-    // For this example, we'll just show a toast
     toast({
       title: "Preview",
       description: `Previewing "${item.title}"`,
@@ -178,7 +157,6 @@ const ResearchCMS = () => {
           <TabsTrigger value="stats">Analytics</TabsTrigger>
         </TabsList>
         
-        {/* Manage existing research */}
         <TabsContent value="manage">
           <div className="flex justify-between items-center mb-6">
             <Input
@@ -261,7 +239,6 @@ const ResearchCMS = () => {
           )}
         </TabsContent>
         
-        {/* Create new research */}
         <TabsContent value="create">
           <Card>
             <CardHeader>
@@ -279,7 +256,6 @@ const ResearchCMS = () => {
           </Card>
         </TabsContent>
         
-        {/* Stats / Analytics */}
         <TabsContent value="stats">
           <Card>
             <CardHeader>
@@ -317,7 +293,6 @@ const ResearchCMS = () => {
         </TabsContent>
       </Tabs>
       
-      {/* Edit Dialog */}
       <Dialog open={!!editingItem} onOpenChange={(open) => !open && setEditingItem(null)}>
         <DialogContent className="max-w-3xl">
           <DialogHeader>

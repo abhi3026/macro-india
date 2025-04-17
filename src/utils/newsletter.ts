@@ -17,19 +17,21 @@ export const subscribeToNewsletter = async (email: string): Promise<{ success: b
         "Content-Type": "application/json",
         Authorization: `Token ${BUTTONDOWN_API_KEY}`,
       },
-      body: JSON.stringify({ email_address: email }), // Changed from email to email_address to match API expectations
+      body: JSON.stringify({ email_address: email }), // Using email_address as required by the API
     });
 
     const data = await response.json();
 
     if (response.status >= 400) {
-      if (data.email && Array.isArray(data.email) && data.email[0].includes("already exists")) {
+      // Check for existing subscriber error
+      if (data.email_address && Array.isArray(data.email_address) && data.email_address[0].includes("already exists")) {
         return {
           success: true,
           message: "You're already subscribed to our newsletter!",
         };
       }
 
+      // Handle other API errors
       return {
         success: false,
         message: data.detail || "There was an error subscribing you to the newsletter.",

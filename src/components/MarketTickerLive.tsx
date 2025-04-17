@@ -10,10 +10,10 @@ import {
   getSymbolDetails,
   formatPrice
 } from "@/lib/marketData";
-import { toast } from "sonner";
+import { toast } from "@/components/ui/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
 
-// Updated refresh interval to 30 seconds
+// Set refresh interval to 30 seconds
 const REFRESH_INTERVAL = 30 * 1000; // 30 seconds in milliseconds
 
 const MarketTickerLive = () => {
@@ -34,7 +34,10 @@ const MarketTickerLive = () => {
       setLastUpdated(new Date());
       setHasFetchFailed(false);
       if (showToast) {
-        toast.success("Market data updated successfully");
+        toast({
+          title: "Market data updated successfully",
+          variant: "default",
+        });
       }
     } catch (error) {
       console.error("Error fetching market data:", error);
@@ -45,10 +48,18 @@ const MarketTickerLive = () => {
         const fallbackData = generateFallbackData();
         setMarkets(fallbackData);
         if (showToast) {
-          toast.error("Using fallback market data due to API error");
+          toast({
+            title: "Data Error",
+            description: "Using fallback market data due to API error",
+            variant: "destructive",
+          });
         }
       } else if (showToast) {
-        toast.error("Failed to refresh market data");
+        toast({
+          title: "Update Failed",
+          description: "Failed to refresh market data",
+          variant: "destructive",
+        });
       }
     } finally {
       setIsLoading(false);

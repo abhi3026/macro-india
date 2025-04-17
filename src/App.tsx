@@ -13,6 +13,7 @@ import DashboardPage from "./pages/DashboardPage";
 import LiveMarketDataPage from "./pages/LiveMarketDataPage";
 import BlogPage from "./pages/BlogPage";
 import ContactPage from "./pages/ContactPage";
+import AdminPage from "./pages/AdminPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient({
@@ -38,6 +39,7 @@ const App = () => (
             <Route path="/live-markets" element={<LiveMarketDataPage />} />
             <Route path="/blog" element={<BlogPage />} />
             <Route path="/contact" element={<ContactPage />} />
+            <Route path="/admin" element={<AdminPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

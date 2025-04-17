@@ -5,9 +5,12 @@ import { Menu, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import NewsletterModal from "@/components/NewsletterModal";
 
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [newsletterModalOpen, setNewsletterModalOpen] = useState(false);
   
   const navItems = [
     { name: "Home", path: "/" },
@@ -16,6 +19,14 @@ const Navbar = () => {
     { name: "Blog", path: "/blog" },
     { name: "Contact", path: "/contact" },
   ];
+
+  const handleSubscribeClick = () => {
+    setNewsletterModalOpen(true);
+    // Close mobile menu if it's open
+    if (mobileMenuOpen) {
+      setMobileMenuOpen(false);
+    }
+  };
 
   return (
     <nav className="bg-background shadow-sm border-b border-border sticky top-0 z-50">
@@ -46,12 +57,18 @@ const Navbar = () => {
               </Link>
             ))}
             <ThemeToggle />
-            <Button 
-              variant="default" 
-              className="ml-4 bg-accent1 hover:bg-accent1/90"
-            >
-              Subscribe
-            </Button>
+            <Dialog open={newsletterModalOpen} onOpenChange={setNewsletterModalOpen}>
+              <DialogTrigger asChild>
+                <Button 
+                  variant="default" 
+                  className="ml-4 bg-accent1 hover:bg-accent1/90"
+                  onClick={handleSubscribeClick}
+                >
+                  Subscribe
+                </Button>
+              </DialogTrigger>
+              <NewsletterModal />
+            </Dialog>
           </div>
           
           {/* Mobile Menu Button */}
@@ -89,12 +106,18 @@ const Navbar = () => {
               {item.name}
             </Link>
           ))}
-          <Button 
-            variant="default" 
-            className="w-full mt-3 bg-accent1 hover:bg-accent1/90"
-          >
-            Subscribe
-          </Button>
+          <Dialog open={newsletterModalOpen} onOpenChange={setNewsletterModalOpen}>
+            <DialogTrigger asChild>
+              <Button 
+                variant="default" 
+                className="w-full mt-3 bg-accent1 hover:bg-accent1/90"
+                onClick={handleSubscribeClick}
+              >
+                Subscribe
+              </Button>
+            </DialogTrigger>
+            <NewsletterModal />
+          </Dialog>
         </div>
       </div>
     </nav>

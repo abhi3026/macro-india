@@ -1,10 +1,58 @@
 
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Instagram, Twitter, Linkedin, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/ui/use-toast";
+import { subscribeToNewsletter } from "@/utils/newsletter";
 
 const Footer = () => {
+  const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!email) return;
+    
+    setIsSubmitting(true);
+    
+    try {
+      const result = await subscribeToNewsletter(email);
+      
+      if (result.success) {
+        // Save in localStorage to not show popup modal again
+        localStorage.setItem("newsletter-subscribed", "true");
+        
+        // Show success toast
+        toast({
+          title: "Subscription successful!",
+          description: result.message,
+        });
+        
+        setEmail("");
+      } else {
+        // Show error toast
+        toast({
+          title: "Subscription failed",
+          description: result.message,
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Newsletter subscription error:", error);
+      toast({
+        title: "Subscription failed",
+        description: "There was an error subscribing to the newsletter. Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <footer className="bg-indianmacro-800 text-white">
       <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
@@ -69,7 +117,7 @@ const Footer = () => {
             <p className="mt-4 text-base text-gray-300">
               Get the latest research and macroeconomic insights delivered to your inbox.
             </p>
-            <form className="mt-4 sm:flex sm:max-w-md">
+            <form className="mt-4 sm:flex sm:max-w-md" onSubmit={handleSubscribe}>
               <Input
                 type="email"
                 name="email"
@@ -78,10 +126,16 @@ const Footer = () => {
                 required
                 placeholder="Enter your email"
                 className="bg-indianmacro-700 border-indianmacro-600 text-white"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
               <div className="mt-3 rounded-md sm:mt-0 sm:ml-3 sm:flex-shrink-0">
-                <Button type="submit" className="w-full bg-accent1 hover:bg-accent1/90">
-                  Subscribe
+                <Button 
+                  type="submit" 
+                  className="w-full bg-accent1 hover:bg-accent1/90"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Subscribing..." : "Subscribe"}
                 </Button>
               </div>
             </form>

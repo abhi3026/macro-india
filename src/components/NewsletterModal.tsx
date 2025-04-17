@@ -13,10 +13,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
+import { subscribeToNewsletter } from "@/utils/newsletter";
 
 const NewsletterModal = () => {
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -32,22 +34,45 @@ const NewsletterModal = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // In a real application, this would send the email to your newsletter service
-    console.log("Subscribed email:", email);
+    if (!email) return;
     
-    // Save in localStorage to not show the popup again
-    localStorage.setItem("newsletter-subscribed", "true");
+    setIsSubmitting(true);
     
-    // Show success toast
-    toast({
-      title: "Subscription successful!",
-      description: "Thank you for subscribing to our newsletter.",
-    });
-    
-    setOpen(false);
+    try {
+      const result = await subscribeToNewsletter(email);
+      
+      if (result.success) {
+        // Save in localStorage to not show the popup again
+        localStorage.setItem("newsletter-subscribed", "true");
+        
+        // Show success toast
+        toast({
+          title: "Subscription successful!",
+          description: result.message,
+        });
+        
+        setOpen(false);
+      } else {
+        // Show error toast
+        toast({
+          title: "Subscription failed",
+          description: result.message,
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Newsletter subscription error:", error);
+      toast({
+        title: "Subscription failed",
+        description: "There was an error subscribing to the newsletter. Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -77,8 +102,12 @@ const NewsletterModal = () => {
           </div>
           
           <div className="pt-2">
-            <Button type="submit" className="w-full bg-accent1 hover:bg-accent1/90">
-              Subscribe now
+            <Button 
+              type="submit" 
+              className="w-full bg-accent1 hover:bg-accent1/90"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Subscribing..." : "Subscribe now"}
             </Button>
           </div>
           

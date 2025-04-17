@@ -1,5 +1,6 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { restoreMarketTicker } from "@/utils/metaTags";
 
 type Theme = "dark" | "light" | "system";
 
@@ -43,10 +44,44 @@ export function ThemeProvider({
         : "light";
       
       root.classList.add(systemTheme);
+      
+      // Fix any UI elements that might break during theme change
+      setTimeout(() => {
+        restoreMarketTicker();
+      }, 100);
+      
       return;
     }
     
     root.classList.add(theme);
+    
+    // Fix any UI elements that might break during theme change
+    setTimeout(() => {
+      restoreMarketTicker();
+    }, 100);
+  }, [theme]);
+
+  // Handle system theme change
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    
+    const handleChange = () => {
+      if (theme === "system") {
+        const root = window.document.documentElement;
+        root.classList.remove("light", "dark");
+        
+        const systemTheme = mediaQuery.matches ? "dark" : "light";
+        root.classList.add(systemTheme);
+        
+        // Fix any UI elements that might break during theme change
+        setTimeout(() => {
+          restoreMarketTicker();
+        }, 100);
+      }
+    };
+    
+    mediaQuery.addEventListener("change", handleChange);
+    return () => mediaQuery.removeEventListener("change", handleChange);
   }, [theme]);
 
   const value = {

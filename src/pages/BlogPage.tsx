@@ -1,8 +1,10 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import BlogPostCard, { BlogPost } from "@/components/BlogPostCard";
+import BlogPostCard from "@/components/BlogPostCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, Filter } from "lucide-react";
@@ -12,133 +14,64 @@ import {
   DropdownMenuCheckboxItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-// Sample blog posts data
-const blogPosts: BlogPost[] = [
-  {
-    id: "1",
-    title: "Understanding India's Current Account Deficit",
-    excerpt: "A deep dive into the factors affecting India's current account balance and its implications for the economy.",
-    date: "April 5, 2025",
-    readTime: "8 min read",
-    author: {
-      name: "Raj Sharma",
-      avatarUrl: "https://randomuser.me/api/portraits/men/32.jpg"
-    },
-    category: "Trade Balance",
-    imageUrl: "https://images.unsplash.com/photo-1642543492481-44e81e3914a7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80",
-    featured: true
-  },
-  {
-    id: "2",
-    title: "The Inflation Challenge: Navigating Rising Prices",
-    excerpt: "Analysis of current inflation trends and strategies for businesses and consumers to adapt.",
-    date: "April 1, 2025",
-    readTime: "6 min read",
-    author: {
-      name: "Priya Desai",
-      avatarUrl: "https://randomuser.me/api/portraits/women/44.jpg"
-    },
-    category: "Inflation",
-    imageUrl: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
-  },
-  {
-    id: "3",
-    title: "RBI's Monetary Policy: Impact on Various Sectors",
-    excerpt: "Examining how the central bank's decisions affect different parts of the Indian economy.",
-    date: "March 28, 2025",
-    readTime: "7 min read",
-    author: {
-      name: "Amit Patel",
-      avatarUrl: "https://randomuser.me/api/portraits/men/67.jpg"
-    },
-    category: "Monetary Policy",
-    imageUrl: "https://images.unsplash.com/photo-1565514020179-026b92b2d71b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
-  },
-  {
-    id: "4",
-    title: "Digital Rupee: India's CBDC Journey",
-    excerpt: "Tracking the development and potential impact of India's digital currency initiative.",
-    date: "March 25, 2025",
-    readTime: "10 min read",
-    author: {
-      name: "Nisha Kumar",
-      avatarUrl: "https://randomuser.me/api/portraits/women/63.jpg"
-    },
-    category: "Digital Economy",
-    imageUrl: "https://images.unsplash.com/photo-1518544801976-3e160afe6c77?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80"
-  },
-  {
-    id: "5",
-    title: "Export-Led Growth: Opportunities and Challenges",
-    excerpt: "Analysis of India's export potential and the obstacles to achieving sustainable growth through exports.",
-    date: "March 20, 2025",
-    readTime: "5 min read",
-    author: {
-      name: "Vikram Singh",
-      avatarUrl: "https://randomuser.me/api/portraits/men/22.jpg"
-    },
-    category: "Trade",
-    imageUrl: "https://images.unsplash.com/photo-1579618229285-d11be78cd4a8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2071&q=80"
-  },
-  {
-    id: "6",
-    title: "Budget 2025: Key Takeaways for the Economy",
-    excerpt: "Breaking down the major announcements in the latest union budget and their economic implications.",
-    date: "March 15, 2025",
-    readTime: "12 min read",
-    author: {
-      name: "Sunita Rao",
-      avatarUrl: "https://randomuser.me/api/portraits/women/78.jpg"
-    },
-    category: "Fiscal Policy",
-    imageUrl: "https://images.unsplash.com/photo-1554672408-730436b60dde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
-  },
-  {
-    id: "7",
-    title: "Manufacturing Sector Revival: Policy Measures",
-    excerpt: "Examining the initiatives to boost India's manufacturing competitiveness and create jobs.",
-    date: "March 10, 2025",
-    readTime: "9 min read",
-    author: {
-      name: "Rajeev Mehta",
-      avatarUrl: "https://randomuser.me/api/portraits/men/42.jpg"
-    },
-    category: "Industry",
-    imageUrl: "https://images.unsplash.com/photo-1573596592813-d5cc133f9c93?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
-  },
-  {
-    id: "8",
-    title: "Banking Sector Health: NPA Trends",
-    excerpt: "Analysis of the current state of non-performing assets in the Indian banking system.",
-    date: "March 5, 2025",
-    readTime: "7 min read",
-    author: {
-      name: "Anjali Sharma",
-      avatarUrl: "https://randomuser.me/api/portraits/women/33.jpg"
-    },
-    category: "Banking",
-    imageUrl: "https://images.unsplash.com/photo-1501167786227-4cba60f6d58f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
-  }
-];
+import { fetchMarketPosts, MarketPost } from "@/utils/contentLoader";
+import { updateMetaTags } from "@/utils/metaTags";
+import SEOHead from "@/components/SEOHead";
 
 const categories = [
   "All Categories",
-  "Trade Balance",
-  "Inflation",
-  "Monetary Policy",
-  "Digital Economy",
-  "Trade",
-  "Fiscal Policy",
-  "Industry",
-  "Banking"
+  "Equities",
+  "Debt",
+  "Commodities",
+  "Forex",
+  "Derivatives"
 ];
 
 const BlogPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   
+  // Fetch market posts from CMS
+  const { data: marketData, isLoading, error } = useQuery({
+    queryKey: ['marketPosts'],
+    queryFn: fetchMarketPosts,
+  });
+  
+  // Update meta tags on component mount
+  useEffect(() => {
+    updateMetaTags(
+      "Macroeconomic Insights | IndianMacro",
+      "Expert analysis, commentary, and perspective on India's economy, markets, and financial trends.",
+      "/blog"
+    );
+  }, []);
+  
+  // Transform market data to blog post format
+  const transformMarketPostToBlogPost = (post: MarketPost) => {
+    return {
+      id: post.id,
+      title: post.title,
+      excerpt: post.summary,
+      date: new Date(post.date).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      }),
+      readTime: `${Math.ceil(post.summary.length / 600)} min read`,
+      author: {
+        name: "Indian Macro Team",
+        avatarUrl: "https://randomuser.me/api/portraits/men/32.jpg"
+      },
+      category: post.category,
+      imageUrl: post.image || "https://images.unsplash.com/photo-1642543492481-44e81e3914a7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80",
+      featured: post.featured,
+      slug: post.slug
+    };
+  };
+  
   // Filter blog posts based on search query and filters
+  const blogPosts = marketData ? marketData.map(transformMarketPostToBlogPost) : [];
+  
   const filteredPosts = blogPosts.filter((post) => {
     // Search query filter
     const matchesQuery = searchQuery === "" ||
@@ -154,6 +87,12 @@ const BlogPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <SEOHead 
+        title="Macroeconomic Insights | IndianMacro"
+        description="Expert analysis, commentary, and perspective on India's economy, markets, and financial trends."
+        canonicalUrl="/blog"
+      />
+      
       <Navbar />
       
       {/* Header */}
@@ -167,15 +106,17 @@ const BlogPage = () => {
       </div>
       
       {/* Featured Post */}
-      {filteredPosts.find(post => post.featured) && (
-        <div className="bg-white py-12">
+      {!isLoading && filteredPosts.find(post => post.featured) && (
+        <div className="bg-white dark:bg-indianmacro-900 py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-2xl font-bold mb-6">Featured Insight</h2>
             <div className="max-w-4xl mx-auto">
               {filteredPosts
                 .filter(post => post.featured)
                 .map(post => (
-                  <BlogPostCard key={post.id} post={post} variant="featured" />
+                  <Link key={post.id} to={`/market/${post.slug}`}>
+                    <BlogPostCard post={post} variant="featured" />
+                  </Link>
                 ))[0]
               }
             </div>
@@ -184,7 +125,7 @@ const BlogPage = () => {
       )}
       
       {/* Main Blog Content */}
-      <div className="flex-grow bg-white">
+      <div className="flex-grow bg-white dark:bg-indianmacro-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Search and Filter */}
           <div className="flex flex-col md:flex-row gap-4 mb-8">
@@ -231,17 +172,32 @@ const BlogPage = () => {
           </div>
           
           {/* Blog Posts Grid */}
-          {filteredPosts.filter(post => !post.featured).length > 0 ? (
+          {isLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {Array(6).fill(0).map((_, i) => (
+                <div key={i} className="animate-pulse">
+                  <div className="h-48 bg-indianmacro-200 dark:bg-indianmacro-700 rounded-lg mb-4"></div>
+                  <div className="h-6 bg-indianmacro-200 dark:bg-indianmacro-700 rounded w-3/4 mb-2"></div>
+                  <div className="h-4 bg-indianmacro-200 dark:bg-indianmacro-700 rounded w-1/2 mb-4"></div>
+                  <div className="h-4 bg-indianmacro-200 dark:bg-indianmacro-700 rounded w-full mb-2"></div>
+                  <div className="h-4 bg-indianmacro-200 dark:bg-indianmacro-700 rounded w-full mb-2"></div>
+                  <div className="h-4 bg-indianmacro-200 dark:bg-indianmacro-700 rounded w-3/4"></div>
+                </div>
+              ))}
+            </div>
+          ) : filteredPosts.filter(post => !post.featured).length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredPosts
                 .filter(post => !post.featured)
                 .map((post) => (
-                  <BlogPostCard key={post.id} post={post} />
+                  <Link key={post.id} to={`/market/${post.slug}`}>
+                    <BlogPostCard key={post.id} post={post} />
+                  </Link>
                 ))}
             </div>
           ) : (
             <div className="text-center py-12">
-              <p className="text-indianmacro-600">No articles found matching your search criteria.</p>
+              <p className="text-indianmacro-600 dark:text-indianmacro-400">No articles found matching your search criteria.</p>
               <Button 
                 variant="link" 
                 onClick={() => {
@@ -255,25 +211,27 @@ const BlogPage = () => {
           )}
           
           {/* Pagination */}
-          <div className="flex justify-center mt-12">
-            <div className="flex space-x-2">
-              <Button variant="outline" disabled>
-                Previous
-              </Button>
-              <Button variant="outline" className="bg-accent1 text-white hover:bg-accent1/90">
-                1
-              </Button>
-              <Button variant="outline">
-                2
-              </Button>
-              <Button variant="outline">
-                3
-              </Button>
-              <Button variant="outline">
-                Next
-              </Button>
+          {filteredPosts.length > 0 && (
+            <div className="flex justify-center mt-12">
+              <div className="flex space-x-2">
+                <Button variant="outline" disabled>
+                  Previous
+                </Button>
+                <Button variant="outline" className="bg-accent1 text-white hover:bg-accent1/90">
+                  1
+                </Button>
+                <Button variant="outline">
+                  2
+                </Button>
+                <Button variant="outline">
+                  3
+                </Button>
+                <Button variant="outline">
+                  Next
+                </Button>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
       

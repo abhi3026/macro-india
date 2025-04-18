@@ -12,7 +12,7 @@ import HomePage from "./pages/HomePage";
 import ResearchPage from "./pages/ResearchPage";
 import DashboardPage from "./pages/DashboardPage";
 import LiveMarketDataPage from "./pages/LiveMarketDataPage";
-import BlogPage from "./pages/BlogPage";
+import EducationPage from "./pages/EducationPage";
 import ContactPage from "./pages/ContactPage";
 import AdminPage from "./pages/AdminPage";
 import NotFound from "./pages/NotFound";
@@ -20,6 +20,7 @@ import NotFound from "./pages/NotFound";
 // Research content routes
 import ResearchPostPage from "./pages/ResearchPostPage";
 import MarketPostPage from "./pages/MarketPostPage";
+import EducationalPostPage from "./pages/EducationalPostPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -43,9 +44,10 @@ const App = () => (
               <Route path="/research" element={<ResearchPage />} />
               <Route path="/research/:slug" element={<ResearchPostPage />} />
               <Route path="/market/:slug" element={<MarketPostPage />} />
+              <Route path="/education" element={<EducationPage />} />
+              <Route path="/education/:slug" element={<EducationalPostPage />} />
               <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/live-markets" element={<LiveMarketDataPage />} />
-              <Route path="/blog" element={<BlogPage />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/admin" element={<AdminPage />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

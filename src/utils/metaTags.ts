@@ -40,28 +40,35 @@ export const updateMetaTags = (
  * This ensures that the market ticker continues working properly across dark/light mode transitions
  */
 export const restoreMarketTicker = () => {
-  // Find all market ticker containers
-  const tickerContainers = document.querySelectorAll('.ticker-container');
-  
-  // For each container, restore animation state
-  tickerContainers.forEach(container => {
-    const marqueeElements = container.querySelectorAll('.animate-marquee, .animate-marquee2');
+  try {
+    // Find all market ticker containers
+    const tickerContainers = document.querySelectorAll('.ticker-container');
     
-    // Reset animation by briefly removing and re-adding the classes
-    marqueeElements.forEach(element => {
-      const classList = [...element.classList];
-      const hasMarquee = classList.includes('animate-marquee');
-      const hasMarquee2 = classList.includes('animate-marquee2');
+    if (tickerContainers.length === 0) return;
+    
+    // For each container, restore animation state
+    tickerContainers.forEach(container => {
+      const marqueeElements = container.querySelectorAll('.animate-marquee, .animate-marquee2');
       
-      if (hasMarquee) {
-        element.classList.remove('animate-marquee');
-        setTimeout(() => element.classList.add('animate-marquee'), 10);
-      }
-      
-      if (hasMarquee2) {
-        element.classList.remove('animate-marquee2');
-        setTimeout(() => element.classList.add('animate-marquee2'), 10);
-      }
+      // Reset animation by briefly removing and re-adding the classes
+      marqueeElements.forEach(element => {
+        const classList = [...element.classList];
+        const hasMarquee = classList.includes('animate-marquee');
+        const hasMarquee2 = classList.includes('animate-marquee2');
+        
+        // Store original position and reapply animation with slight delay to reset
+        if (hasMarquee) {
+          element.classList.remove('animate-marquee');
+          requestAnimationFrame(() => element.classList.add('animate-marquee'));
+        }
+        
+        if (hasMarquee2) {
+          element.classList.remove('animate-marquee2');
+          requestAnimationFrame(() => element.classList.add('animate-marquee2'));
+        }
+      });
     });
-  });
+  } catch (error) {
+    console.error("Error restoring market ticker:", error);
+  }
 };

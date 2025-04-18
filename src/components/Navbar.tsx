@@ -1,30 +1,71 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog } from "@/components/ui/dialog";
 import NewsletterModal from "@/components/NewsletterModal";
 import { subscribeToNewsletter } from "@/utils/newsletter";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/components/ui/use-toast";
 
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [newsletterModalOpen, setNewsletterModalOpen] = useState(false);
+  const [subscribeModalOpen, setSubscribeModalOpen] = useState(false);
+  const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
   
   const navItems = [
     { name: "Home", path: "/" },
     { name: "Research", path: "/research" },
     { name: "Data Dashboard", path: "/dashboard" },
-    { name: "Blog", path: "/blog" },
+    { name: "Education", path: "/education" },
     { name: "Contact", path: "/contact" },
   ];
 
-  const handleSubscribeClick = () => {
-    setNewsletterModalOpen(true);
-    // Close mobile menu if it's open
-    if (mobileMenuOpen) {
-      setMobileMenuOpen(false);
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!email) return;
+    
+    setIsSubmitting(true);
+    
+    try {
+      const result = await subscribeToNewsletter(email);
+      
+      if (result.success) {
+        // Save in localStorage to not show popup again
+        localStorage.setItem("newsletter-subscribed", "true");
+        
+        // Show success toast
+        toast({
+          title: "Subscription successful!",
+          description: result.message,
+        });
+        
+        setEmail("");
+        setSubscribeModalOpen(false);
+      } else {
+        // Show error toast
+        toast({
+          title: "Subscription failed",
+          description: result.message,
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Newsletter subscription error:", error);
+      toast({
+        title: "Subscription failed",
+        description: "There was an error subscribing to the newsletter. Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -57,17 +98,55 @@ const Navbar = () => {
               </Link>
             ))}
             <ThemeToggle />
-            <Dialog open={newsletterModalOpen} onOpenChange={setNewsletterModalOpen}>
-              <DialogTrigger asChild>
-                <Button 
-                  variant="default" 
-                  className="ml-4 bg-accent1 hover:bg-accent1/90"
-                  onClick={handleSubscribeClick}
-                >
-                  Subscribe
-                </Button>
-              </DialogTrigger>
-              <NewsletterModal />
+            <Button 
+              variant="default" 
+              className="ml-4 bg-accent1 hover:bg-accent1/90"
+              onClick={() => setSubscribeModalOpen(true)}
+            >
+              Subscribe
+            </Button>
+            
+            {/* Subscribe Modal */}
+            <Dialog open={subscribeModalOpen} onOpenChange={setSubscribeModalOpen}>
+              <Dialog.Content className="sm:max-w-md">
+                <Dialog.Header>
+                  <Dialog.Title className="text-2xl font-bold text-indianmacro-800">
+                    Subscribe to our newsletter
+                  </Dialog.Title>
+                  <Dialog.Description>
+                    Get the latest research and macroeconomic insights delivered to your inbox.
+                  </Dialog.Description>
+                </Dialog.Header>
+                
+                <form onSubmit={handleSubscribe} className="space-y-4 py-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="subscribe-email">Email address</Label>
+                    <Input 
+                      id="subscribe-email" 
+                      type="email" 
+                      placeholder="your@email.com" 
+                      required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="w-full"
+                    />
+                  </div>
+                  
+                  <div className="pt-2">
+                    <Button 
+                      type="submit" 
+                      className="w-full bg-accent1 hover:bg-accent1/90"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? "Subscribing..." : "Subscribe now"}
+                    </Button>
+                  </div>
+                  
+                  <p className="text-xs text-center text-gray-500 mt-2">
+                    You can unsubscribe at any time. We'll never share your email.
+                  </p>
+                </form>
+              </Dialog.Content>
             </Dialog>
           </div>
           
@@ -106,18 +185,16 @@ const Navbar = () => {
               {item.name}
             </Link>
           ))}
-          <Dialog open={newsletterModalOpen} onOpenChange={setNewsletterModalOpen}>
-            <DialogTrigger asChild>
-              <Button 
-                variant="default" 
-                className="w-full mt-3 bg-accent1 hover:bg-accent1/90"
-                onClick={handleSubscribeClick}
-              >
-                Subscribe
-              </Button>
-            </DialogTrigger>
-            <NewsletterModal />
-          </Dialog>
+          <Button 
+            variant="default" 
+            className="w-full mt-3 bg-accent1 hover:bg-accent1/90"
+            onClick={() => {
+              setMobileMenuOpen(false);
+              setSubscribeModalOpen(true);
+            }}
+          >
+            Subscribe
+          </Button>
         </div>
       </div>
     </nav>

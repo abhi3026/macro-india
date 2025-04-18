@@ -1,3 +1,4 @@
+
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import MarketTickerLive from "@/components/MarketTickerLive";
@@ -5,10 +6,15 @@ import NewsletterModal from "@/components/NewsletterModal";
 import ResearchCard, { ResearchItem } from "@/components/ResearchCard";
 import BlogPostCard, { BlogPost } from "@/components/BlogPostCard";
 import DataWidget from "@/components/DataWidget";
-import { ArrowRight, BarChart, FileText, TrendingUp } from "lucide-react";
+import WorldIndices from "@/components/WorldIndices";
+import { ArrowRight, BarChart, FileText, TrendingUp, Newspaper } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import SEOHead from "@/components/SEOHead";
+import NewsSnippets from "@/components/NewsSnippets";
+import AdSpace from "@/components/AdSpace";
 
 const HomePage = () => {
   // Featured research items (sample data)
@@ -43,7 +49,7 @@ const HomePage = () => {
     }
   ];
 
-  // Featured blog posts (sample data)
+  // Featured educational posts (sample data)
   const featuredPosts: BlogPost[] = [
     {
       id: "1",
@@ -103,6 +109,12 @@ const HomePage = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <SEOHead 
+        title="IndianMacro | India's Macroeconomic Data & Research Platform"
+        description="In-depth research, data analysis, and expert insights on Indian economy, markets, and financial trends."
+        canonicalUrl="/"
+      />
+      
       <Navbar />
       <MarketTickerLive />
       
@@ -136,8 +148,43 @@ const HomePage = () => {
         </div>
       </section>
       
-      {/* Featured Research */}
+      {/* World Indices Section */}
       <section className="bg-white py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center mb-8">
+            <div>
+              <h2 className="text-2xl md:text-3xl font-bold text-indianmacro-900">
+                Financial Markets
+              </h2>
+              <p className="text-indianmacro-600 mt-2">
+                Track major indices, currencies, and commodities
+              </p>
+            </div>
+            <Button asChild variant="ghost" className="group">
+              <Link to="/live-markets" className="flex items-center">
+                Full Market Data
+                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Link>
+            </Button>
+          </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* World Indices */}
+            <div className="lg:col-span-2">
+              <WorldIndices />
+            </div>
+            
+            {/* News and Ads */}
+            <div className="space-y-6">
+              <NewsSnippets />
+              <AdSpace />
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      {/* Featured Research */}
+      <section className="bg-indianmacro-50 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-8">
             <div>
@@ -169,7 +216,7 @@ const HomePage = () => {
       </section>
       
       {/* Data Dashboard Preview */}
-      <section className="bg-indianmacro-50 py-16">
+      <section className="bg-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-8">
             <div>
@@ -211,21 +258,21 @@ const HomePage = () => {
         </div>
       </section>
       
-      {/* Blog Posts */}
-      <section className="bg-white py-16">
+      {/* Educational Content */}
+      <section className="bg-indianmacro-50 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-8">
             <div>
               <h2 className="text-2xl md:text-3xl font-bold text-indianmacro-900">
-                Latest Analysis
+                Educational Resources
               </h2>
               <p className="text-indianmacro-600 mt-2">
-                Expert insights and commentary
+                Learn about macroeconomics and financial markets
               </p>
             </div>
             <Button asChild variant="ghost" className="group">
-              <Link to="/blog" className="flex items-center">
-                View all posts
+              <Link to="/education" className="flex items-center">
+                View all resources
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
             </Button>
@@ -244,7 +291,7 @@ const HomePage = () => {
       </section>
       
       {/* Features / Services */}
-      <section className="bg-indianmacro-50 py-16">
+      <section className="bg-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-2xl md:text-3xl font-bold text-indianmacro-900">
@@ -255,7 +302,7 @@ const HomePage = () => {
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <Card>
               <CardHeader className="flex flex-col items-center text-center">
                 <FileText className="h-10 w-10 text-accent1 mb-4" />
@@ -283,11 +330,23 @@ const HomePage = () => {
             <Card>
               <CardHeader className="flex flex-col items-center text-center">
                 <TrendingUp className="h-10 w-10 text-accent1 mb-4" />
-                <CardTitle>Expert Commentary</CardTitle>
+                <CardTitle>Market Analysis</CardTitle>
               </CardHeader>
               <CardContent className="text-center">
                 <p className="text-indianmacro-600">
-                  Regular updates and insights on current economic events and their implications for businesses.
+                  Real-time market data, trends, and expert commentary on financial markets and investment insights.
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader className="flex flex-col items-center text-center">
+                <Newspaper className="h-10 w-10 text-accent1 mb-4" />
+                <CardTitle>Educational Content</CardTitle>
+              </CardHeader>
+              <CardContent className="text-center">
+                <p className="text-indianmacro-600">
+                  Easy-to-understand resources on economic concepts, financial literacy, and market fundamentals.
                 </p>
               </CardContent>
             </Card>

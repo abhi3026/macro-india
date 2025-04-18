@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -107,8 +108,7 @@
     animation-play-state: paused;
   }
 
-  .animate-marquee,
-  .animate-marquee2 {
+  .animate-marquee {
     position: absolute;
     top: 0;
     left: 0;
@@ -116,6 +116,30 @@
     display: flex;
     align-items: center;
     width: fit-content;
+    animation: marquee 30s linear infinite;
+    will-change: transform;
+  }
+
+  .animate-marquee2 {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    width: fit-content;
+    animation: marquee 30s linear infinite;
+    animation-delay: 15s;
+    will-change: transform;
+  }
+
+  @keyframes marquee {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
   }
 
   @media (max-width: 640px) {

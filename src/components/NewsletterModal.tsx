@@ -22,16 +22,21 @@ const NewsletterModal = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Show the modal after 5 seconds on the site
-    const timer = setTimeout(() => {
-      // Check if user has already subscribed
-      const hasSubscribed = localStorage.getItem("newsletter-subscribed");
-      if (!hasSubscribed) {
+    // Check if user has already seen the popup in this session
+    const hasSeenPopup = sessionStorage.getItem("newsletter-popup-seen");
+    // Check if user has already subscribed (permanently)
+    const hasSubscribed = localStorage.getItem("newsletter-subscribed");
+    
+    if (!hasSeenPopup && !hasSubscribed) {
+      // Show the modal after 5 seconds on the site
+      const timer = setTimeout(() => {
         setOpen(true);
-      }
-    }, 5000);
+        // Mark as seen for this session
+        sessionStorage.setItem("newsletter-popup-seen", "true");
+      }, 5000);
 
-    return () => clearTimeout(timer);
+      return () => clearTimeout(timer);
+    }
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {

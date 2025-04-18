@@ -198,8 +198,9 @@ const EconomicIndicatorsDashboard = () => {
         
         // Update random indicators with slight variations
         PRIORITY_INDICATORS.forEach(indicator => {
-          if (updatedCountry[indicator as keyof CountryData]) {
-            const indicatorData = updatedCountry[indicator as keyof CountryData] as IndicatorValue;
+          const indicatorKey = indicator as keyof CountryData;
+          if (updatedCountry[indicatorKey]) {
+            const indicatorData = updatedCountry[indicatorKey] as IndicatorValue;
             const oldValue = indicatorData.value;
             
             // Apply small random change
@@ -213,8 +214,8 @@ const EconomicIndicatorsDashboard = () => {
               change: +(newValue - oldValue).toFixed(2)
             };
             
-            // Assign the updated indicator value
-            updatedCountry[indicator as keyof CountryData] = updatedIndicator;
+            // Assign the updated indicator value - use proper typing
+            updatedCountry[indicatorKey] = updatedIndicator;
             
             // Mark this cell for animation
             setRefreshing(prev => ({

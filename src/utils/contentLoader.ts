@@ -23,13 +23,14 @@ export interface ResearchPost {
 export interface MarketPost {
   id: string;
   title: string;
-  date: string;
-  summary: string;
-  image?: string;
-  category: string;
-  featured: boolean;
-  content: string;
   slug: string;
+  content: string;
+  summary: string;
+  date: string;
+  category?: string;
+  image?: string;
+  imageCaption?: string;
+  featured?: boolean;
 }
 
 export interface NewsletterPost {

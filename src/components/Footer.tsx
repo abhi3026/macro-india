@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Instagram, Twitter, Linkedin, Mail } from "lucide-react";
@@ -23,10 +22,8 @@ const Footer = () => {
       const result = await subscribeToNewsletter(email);
       
       if (result.success) {
-        // Save in localStorage to not show popup modal again
         localStorage.setItem("newsletter-subscribed", "true");
         
-        // Show success toast
         toast({
           title: "Subscription successful!",
           description: result.message,
@@ -34,7 +31,6 @@ const Footer = () => {
         
         setEmail("");
       } else {
-        // Show error toast
         toast({
           title: "Subscription failed",
           description: result.message,
@@ -153,7 +149,7 @@ const Footer = () => {
                 <span className="sr-only">Twitter</span>
                 <Twitter className="h-6 w-6" />
               </a>
-              <a href="https:/www.linkedin.com/company/indian-macro/" className="text-gray-300 hover:text-white">
+              <a href="https://www.linkedin.com/company/indian-macro/" className="text-gray-300 hover:text-white">
                 <span className="sr-only">LinkedIn</span>
                 <Linkedin className="h-6 w-6" />
               </a>

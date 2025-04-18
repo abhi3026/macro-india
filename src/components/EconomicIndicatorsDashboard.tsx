@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { 
@@ -19,7 +18,6 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, TrendingUp, TrendingDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-// Define the structure of economic data
 interface IndicatorValue {
   value: number;
   change?: number;
@@ -31,6 +29,7 @@ type CountryData = {
   name: string;
   code: string;
   flag: string;
+  [key: string]: string | IndicatorValue | undefined;
   gdp?: IndicatorValue;
   gdpGrowth?: IndicatorValue;
   inflation?: IndicatorValue;
@@ -41,7 +40,6 @@ type CountryData = {
   exports?: IndicatorValue;
 };
 
-// Mock data for initial render - will be replaced by API data
 const DEFAULT_ECONOMIC_DATA: CountryData[] = [
   {
     name: "United States",
@@ -162,10 +160,8 @@ const DEFAULT_ECONOMIC_DATA: CountryData[] = [
   },
 ];
 
-// Specific indicators we want to show
 const PRIORITY_INDICATORS = ["gdpGrowth", "inflation", "interestRate", "unemployment"];
 
-// Helper to format numbers for display
 const formatValue = (value: number, unit: string): string => {
   if (unit === "%") {
     return `${value.toFixed(1)}${unit}`;
@@ -183,41 +179,29 @@ const EconomicIndicatorsDashboard = () => {
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
   const [refreshing, setRefreshing] = useState<Record<string, boolean>>({});
 
-  // This would be replaced with actual API fetching
   const fetchData = async () => {
     try {
       setLoading(true);
       
-      // In a real implementation, this would be an API call
-      // For now, we'll simulate it with a timeout
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Add some random variation to the data to simulate updates
       const updatedData = economicData.map(country => {
-        const updatedCountry = { ...country };
+        const updatedCountry = { ...country } as CountryData;
         
-        // Update random indicators with slight variations
         PRIORITY_INDICATORS.forEach(indicator => {
           const indicatorKey = indicator as keyof CountryData;
-          if (updatedCountry[indicatorKey]) {
+          if (updatedCountry[indicatorKey] && typeof updatedCountry[indicatorKey] !== 'string') {
             const indicatorData = updatedCountry[indicatorKey] as IndicatorValue;
             const oldValue = indicatorData.value;
             
-            // Apply small random change
             const randomChange = (Math.random() - 0.5) * 0.2;
             const newValue = Math.max(0, oldValue + randomChange);
             
-            // Update the indicator with the new value and change
-            const updatedIndicator: IndicatorValue = {
-              ...indicatorData,
+            updatedCountry[indicatorKey] = {
               value: newValue,
-              change: +(newValue - oldValue).toFixed(2)
+              change: +(newValue - oldValue).toFixed(2),
+              unit: indicatorData.unit,
+              date: indicatorData.date
             };
             
-            // Assign the updated indicator value - use proper typing
-            updatedCountry[indicatorKey] = updatedIndicator;
-            
-            // Mark this cell for animation
             setRefreshing(prev => ({
               ...prev,
               [`${country.code}-${indicator}`]: true
@@ -231,7 +215,6 @@ const EconomicIndicatorsDashboard = () => {
       setEconomicData(updatedData);
       setLastUpdated(new Date());
       
-      // Reset animations after a delay
       setTimeout(() => {
         setRefreshing({});
       }, 2000);
@@ -242,15 +225,11 @@ const EconomicIndicatorsDashboard = () => {
     }
   };
 
-  // Auto refresh data every 60 seconds
   useEffect(() => {
-    // Initial fetch
     fetchData();
     
-    // Set up interval for refreshing
     const interval = setInterval(fetchData, 60000);
     
-    // Clean up on unmount
     return () => clearInterval(interval);
   }, []);
 
@@ -284,7 +263,6 @@ const EconomicIndicatorsDashboard = () => {
                     </div>
                   </TableCell>
                   
-                  {/* GDP Growth */}
                   <TableCell 
                     className={cn(
                       "text-right", 
@@ -302,7 +280,6 @@ const EconomicIndicatorsDashboard = () => {
                     </div>
                   </TableCell>
                   
-                  {/* Inflation */}
                   <TableCell 
                     className={cn(
                       "text-right", 
@@ -317,7 +294,6 @@ const EconomicIndicatorsDashboard = () => {
                     </div>
                   </TableCell>
                   
-                  {/* Interest Rate */}
                   <TableCell 
                     className={cn(
                       "text-right", 
@@ -330,7 +306,6 @@ const EconomicIndicatorsDashboard = () => {
                     </div>
                   </TableCell>
                   
-                  {/* Unemployment */}
                   <TableCell 
                     className={cn(
                       "text-right", 

@@ -1,9 +1,6 @@
-
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { ArrowRight, TrendingUp, TrendingDown } from "lucide-react";
+import { TrendingUp, TrendingDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Table,
@@ -138,14 +135,6 @@ const WorldIndices = () => {
               ))}
             </TableBody>
           </Table>
-        </div>
-        <div className="mt-4 flex justify-center">
-          <Button asChild variant="outline" className="group">
-            <Link to="/live-markets" className="flex items-center gap-2">
-              Full Market Data
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </Link>
-          </Button>
         </div>
       </CardContent>
     </Card>

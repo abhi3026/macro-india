@@ -12,7 +12,7 @@ const AdSpace = () => {
               <p className="text-slate-500 dark:text-slate-400 text-sm mb-2">Ad Space Available</p>
               <p className="text-xs text-slate-400 dark:text-slate-500">
                 Interested in advertising here?<br />
-                Contact us at ads@indianmacro.com
+                Contact us at contact@indianmacro.com
               </p>
             </div>
           </div>

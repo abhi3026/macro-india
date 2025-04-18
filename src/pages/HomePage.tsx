@@ -120,7 +120,7 @@ const HomePage = () => {
         </div>
       </section>
       
-      {/* World Indices Section */}
+      {/* Financial Markets Section */}
       <section className="bg-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-8">
@@ -132,12 +132,6 @@ const HomePage = () => {
                 Track major indices, currencies, and commodities
               </p>
             </div>
-            <Button asChild variant="ghost" className="group">
-              <Link to="/live-markets" className="flex items-center">
-                Full Market Data
-                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Link>
-            </Button>
           </div>
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -151,6 +145,11 @@ const HomePage = () => {
               <NewsSnippets />
               <AdSpace />
             </div>
+          </div>
+          
+          {/* Economic Indicators */}
+          <div className="mt-8">
+            <EconomicIndicatorsDashboard />
           </div>
         </div>
       </section>
@@ -184,24 +183,6 @@ const HomePage = () => {
               />
             ))}
           </div>
-        </div>
-      </section>
-      
-      {/* Economic Indicators Dashboard */}
-      <section className="bg-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center mb-8">
-            <div>
-              <h2 className="text-2xl md:text-3xl font-bold text-indianmacro-900">
-                Economic Indicators
-              </h2>
-              <p className="text-indianmacro-600 mt-2">
-                Key metrics of the global economy
-              </p>
-            </div>
-          </div>
-          
-          <EconomicIndicatorsDashboard />
         </div>
       </section>
       

@@ -5,6 +5,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, TrendingUp, TrendingDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 // Type for index data
 interface IndexData {
@@ -89,47 +97,47 @@ const WorldIndices = () => {
       </CardHeader>
       <CardContent>
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b">
-                <th className="text-left font-medium px-4 py-2">Name</th>
-                <th className="text-right font-medium px-4 py-2">Last</th>
-                <th className="text-right font-medium px-4 py-2">High</th>
-                <th className="text-right font-medium px-4 py-2">Low</th>
-                <th className="text-right font-medium px-4 py-2">Chg.</th>
-                <th className="text-right font-medium px-4 py-2">Chg. %</th>
-                <th className="text-right font-medium px-4 py-2">Time</th>
-              </tr>
-            </thead>
-            <tbody>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="font-medium">Name</TableHead>
+                <TableHead className="text-right font-medium">Last</TableHead>
+                <TableHead className="text-right font-medium">High</TableHead>
+                <TableHead className="text-right font-medium">Low</TableHead>
+                <TableHead className="text-right font-medium">Chg.</TableHead>
+                <TableHead className="text-right font-medium">Chg. %</TableHead>
+                <TableHead className="text-right font-medium">Time</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {INDICES_DATA.map((index) => (
-                <tr key={index.name} className="border-b last:border-0 hover:bg-muted/50">
-                  <td className="px-4 py-2">
+                <TableRow key={index.name}>
+                  <TableCell>
                     <div className="flex items-center gap-2">
                       <span>{index.flag}</span>
                       <span>{index.name}</span>
                     </div>
-                  </td>
-                  <td className="text-right px-4 py-2">{index.last.toLocaleString()}</td>
-                  <td className="text-right px-4 py-2">{index.high.toLocaleString()}</td>
-                  <td className="text-right px-4 py-2">{index.low.toLocaleString()}</td>
-                  <td className={cn(
-                    "text-right px-4 py-2",
+                  </TableCell>
+                  <TableCell className="text-right">{index.last.toLocaleString()}</TableCell>
+                  <TableCell className="text-right">{index.high.toLocaleString()}</TableCell>
+                  <TableCell className="text-right">{index.low.toLocaleString()}</TableCell>
+                  <TableCell className={cn(
+                    "text-right",
                     index.change >= 0 ? "text-green-600" : "text-red-600"
                   )}>
                     {index.change >= 0 ? '+' : ''}{index.change.toLocaleString()}
-                  </td>
-                  <td className={cn(
-                    "text-right px-4 py-2",
+                  </TableCell>
+                  <TableCell className={cn(
+                    "text-right",
                     index.changePercent >= 0 ? "text-green-600" : "text-red-600"
                   )}>
                     {index.changePercent >= 0 ? '+' : ''}{index.changePercent.toFixed(2)}%
-                  </td>
-                  <td className="text-right px-4 py-2">{index.time}</td>
-                </tr>
+                  </TableCell>
+                  <TableCell className="text-right">{index.time}</TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
         <div className="mt-4 flex justify-center">
           <Button asChild variant="outline" className="group">

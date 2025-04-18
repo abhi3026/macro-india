@@ -1,12 +1,11 @@
-
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import MarketTickerLive from "@/components/MarketTickerLive";
 import NewsletterModal from "@/components/NewsletterModal";
 import ResearchCard, { ResearchItem } from "@/components/ResearchCard";
 import BlogPostCard, { BlogPost } from "@/components/BlogPostCard";
-import DataWidget from "@/components/DataWidget";
 import WorldIndices from "@/components/WorldIndices";
+import EconomicIndicatorsDashboard from "@/components/EconomicIndicatorsDashboard";
 import { ArrowRight, BarChart, FileText, TrendingUp, Newspaper } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -79,33 +78,6 @@ const HomePage = () => {
       imageUrl: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
     }
   ];
-
-  // GDP data for chart (sample data)
-  const gdpData = {
-    labels: ["Q1 2024", "Q2 2024", "Q3 2024", "Q4 2024", "Q1 2025"],
-    datasets: [
-      {
-        label: "GDP Growth (%)",
-        data: [6.1, 6.3, 6.7, 6.9, 7.2],
-        borderColor: "#3b82f6",
-        backgroundColor: "rgba(59, 130, 246, 0.2)",
-        fill: true
-      }
-    ]
-  };
-
-  // Inflation data for chart (sample data)
-  const inflationData = {
-    labels: ["Nov", "Dec", "Jan", "Feb", "Mar", "Apr"],
-    datasets: [
-      {
-        label: "Inflation Rate (%)",
-        data: [5.7, 5.5, 5.1, 4.9, 4.7, 4.5],
-        borderColor: "#ef4444",
-        backgroundColor: "rgba(239, 68, 68, 0.5)"
-      }
-    ]
-  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -215,7 +187,7 @@ const HomePage = () => {
         </div>
       </section>
       
-      {/* Data Dashboard Preview */}
+      {/* Economic Indicators Dashboard */}
       <section className="bg-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-8">
@@ -224,37 +196,12 @@ const HomePage = () => {
                 Economic Indicators
               </h2>
               <p className="text-indianmacro-600 mt-2">
-                Key metrics of the Indian economy
+                Key metrics of the global economy
               </p>
             </div>
-            <Button asChild variant="ghost" className="group">
-              <Link to="/dashboard" className="flex items-center">
-                Full Dashboard 
-                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Link>
-            </Button>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-            <DataWidget
-              title="GDP Growth Rate"
-              description="Quarterly GDP growth (YoY)"
-              chartType="area"
-              data={gdpData}
-              latestValue="7.2%"
-              latestDate="Q1 2025"
-              trend="up"
-            />
-            <DataWidget
-              title="Inflation Rate (CPI)"
-              description="Monthly inflation data"
-              chartType="bar"
-              data={inflationData}
-              latestValue="4.5%"
-              latestDate="April 2025"
-              trend="down"
-            />
-          </div>
+          <EconomicIndicatorsDashboard />
         </div>
       </section>
       

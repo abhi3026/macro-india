@@ -5,7 +5,14 @@ import { Menu, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { Dialog } from "@/components/ui/dialog";
+import { 
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import NewsletterModal from "@/components/NewsletterModal";
 import { subscribeToNewsletter } from "@/utils/newsletter";
 import { Input } from "@/components/ui/input";
@@ -108,15 +115,15 @@ const Navbar = () => {
             
             {/* Subscribe Modal */}
             <Dialog open={subscribeModalOpen} onOpenChange={setSubscribeModalOpen}>
-              <Dialog.Content className="sm:max-w-md">
-                <Dialog.Header>
-                  <Dialog.Title className="text-2xl font-bold text-indianmacro-800">
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle className="text-2xl font-bold text-indianmacro-800">
                     Subscribe to our newsletter
-                  </Dialog.Title>
-                  <Dialog.Description>
+                  </DialogTitle>
+                  <DialogDescription>
                     Get the latest research and macroeconomic insights delivered to your inbox.
-                  </Dialog.Description>
-                </Dialog.Header>
+                  </DialogDescription>
+                </DialogHeader>
                 
                 <form onSubmit={handleSubscribe} className="space-y-4 py-4">
                   <div className="space-y-2">
@@ -146,7 +153,7 @@ const Navbar = () => {
                     You can unsubscribe at any time. We'll never share your email.
                   </p>
                 </form>
-              </Dialog.Content>
+              </DialogContent>
             </Dialog>
           </div>
           

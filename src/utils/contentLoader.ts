@@ -1,4 +1,3 @@
-
 /**
  * Content loader utility for fetching CMS content
  */
@@ -116,6 +115,32 @@ export async function fetchNewsletterPosts(): Promise<NewsletterPost[]> {
     
     // Return sample data as fallback
     return getSampleNewsletterPosts();
+  }
+}
+
+// Function to fetch a single market post by slug
+export async function fetchMarketPost(slug: string): Promise<MarketPost | null> {
+  try {
+    // Fetch all market posts
+    const posts = await fetchMarketPosts();
+    
+    // Find the post with the matching slug
+    const post = posts.find(post => post.slug === slug);
+    
+    if (!post) {
+      throw new Error(`Market post with slug "${slug}" not found`);
+    }
+    
+    return post;
+  } catch (error) {
+    console.error(`Error fetching market post with slug "${slug}":`, error);
+    toast({
+      title: "Error loading content",
+      description: "Please try again later",
+      variant: "destructive",
+    });
+    
+    return null;
   }
 }
 

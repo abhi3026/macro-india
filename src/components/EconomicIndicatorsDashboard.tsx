@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { 
@@ -29,7 +30,6 @@ type CountryData = {
   name: string;
   code: string;
   flag: string;
-  [key: string]: string | IndicatorValue | undefined;
   gdp?: IndicatorValue;
   gdpGrowth?: IndicatorValue;
   inflation?: IndicatorValue;
@@ -38,6 +38,7 @@ type CountryData = {
   debtToGdp?: IndicatorValue;
   pmi?: IndicatorValue;
   exports?: IndicatorValue;
+  [key: string]: string | IndicatorValue | undefined;
 };
 
 const DEFAULT_ECONOMIC_DATA: CountryData[] = [
@@ -188,8 +189,10 @@ const EconomicIndicatorsDashboard = () => {
         
         PRIORITY_INDICATORS.forEach(indicator => {
           const indicatorKey = indicator as keyof CountryData;
-          if (updatedCountry[indicatorKey] && typeof updatedCountry[indicatorKey] !== 'string') {
-            const indicatorData = updatedCountry[indicatorKey] as IndicatorValue;
+          const currentValue = updatedCountry[indicatorKey];
+          
+          if (currentValue && typeof currentValue !== 'string') {
+            const indicatorData = currentValue as IndicatorValue;
             const oldValue = indicatorData.value;
             
             const randomChange = (Math.random() - 0.5) * 0.2;
@@ -200,7 +203,7 @@ const EconomicIndicatorsDashboard = () => {
               change: +(newValue - oldValue).toFixed(2),
               unit: indicatorData.unit,
               date: indicatorData.date
-            };
+            } as IndicatorValue;
             
             setRefreshing(prev => ({
               ...prev,
@@ -267,16 +270,21 @@ const EconomicIndicatorsDashboard = () => {
                     className={cn(
                       "text-right", 
                       refreshing[`${country.code}-gdpGrowth`] && "animate-pulse bg-muted/20",
-                      country.gdpGrowth?.value! >= 0 ? "text-green-600" : "text-red-600"
+                      country.gdpGrowth && country.gdpGrowth.value >= 0 ? "text-green-600" : "text-red-600"
                     )}
                   >
                     <div className="flex items-center justify-end gap-1">
-                      {country.gdpGrowth?.value! >= 0 ? 
+                      {country.gdpGrowth && country.gdpGrowth.value >= 0 ? 
                         <TrendingUp className="h-4 w-4" /> : 
                         <TrendingDown className="h-4 w-4" />
                       }
-                      {formatValue(country.gdpGrowth?.value || 0, country.gdpGrowth?.unit || "%")}
-                      <span className="text-xs ml-1 text-muted-foreground">{country.gdpGrowth?.date}</span>
+                      {formatValue(
+                        country.gdpGrowth ? country.gdpGrowth.value : 0, 
+                        country.gdpGrowth ? country.gdpGrowth.unit : "%"
+                      )}
+                      <span className="text-xs ml-1 text-muted-foreground">
+                        {country.gdpGrowth ? country.gdpGrowth.date : ""}
+                      </span>
                     </div>
                   </TableCell>
                   
@@ -284,13 +292,18 @@ const EconomicIndicatorsDashboard = () => {
                     className={cn(
                       "text-right", 
                       refreshing[`${country.code}-inflation`] && "animate-pulse bg-muted/20",
-                      country.inflation?.value! <= 2.5 ? "text-green-600" : 
-                      country.inflation?.value! >= 5 ? "text-red-600" : "text-yellow-600"
+                      country.inflation && country.inflation.value <= 2.5 ? "text-green-600" : 
+                      country.inflation && country.inflation.value >= 5 ? "text-red-600" : "text-yellow-600"
                     )}
                   >
                     <div className="flex items-center justify-end gap-1">
-                      {formatValue(country.inflation?.value || 0, country.inflation?.unit || "%")}
-                      <span className="text-xs ml-1 text-muted-foreground">{country.inflation?.date}</span>
+                      {formatValue(
+                        country.inflation ? country.inflation.value : 0, 
+                        country.inflation ? country.inflation.unit : "%"
+                      )}
+                      <span className="text-xs ml-1 text-muted-foreground">
+                        {country.inflation ? country.inflation.date : ""}
+                      </span>
                     </div>
                   </TableCell>
                   
@@ -301,8 +314,13 @@ const EconomicIndicatorsDashboard = () => {
                     )}
                   >
                     <div className="flex items-center justify-end gap-1">
-                      {formatValue(country.interestRate?.value || 0, country.interestRate?.unit || "%")}
-                      <span className="text-xs ml-1 text-muted-foreground">{country.interestRate?.date}</span>
+                      {formatValue(
+                        country.interestRate ? country.interestRate.value : 0, 
+                        country.interestRate ? country.interestRate.unit : "%"
+                      )}
+                      <span className="text-xs ml-1 text-muted-foreground">
+                        {country.interestRate ? country.interestRate.date : ""}
+                      </span>
                     </div>
                   </TableCell>
                   
@@ -310,13 +328,18 @@ const EconomicIndicatorsDashboard = () => {
                     className={cn(
                       "text-right", 
                       refreshing[`${country.code}-unemployment`] && "animate-pulse bg-muted/20",
-                      country.unemployment?.value! <= 4 ? "text-green-600" : 
-                      country.unemployment?.value! >= 7 ? "text-red-600" : "text-yellow-600"
+                      country.unemployment && country.unemployment.value <= 4 ? "text-green-600" : 
+                      country.unemployment && country.unemployment.value >= 7 ? "text-red-600" : "text-yellow-600"
                     )}
                   >
                     <div className="flex items-center justify-end gap-1">
-                      {formatValue(country.unemployment?.value || 0, country.unemployment?.unit || "%")}
-                      <span className="text-xs ml-1 text-muted-foreground">{country.unemployment?.date}</span>
+                      {formatValue(
+                        country.unemployment ? country.unemployment.value : 0, 
+                        country.unemployment ? country.unemployment.unit : "%"
+                      )}
+                      <span className="text-xs ml-1 text-muted-foreground">
+                        {country.unemployment ? country.unemployment.date : ""}
+                      </span>
                     </div>
                   </TableCell>
                 </TableRow>

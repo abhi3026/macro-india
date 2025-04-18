@@ -1,10 +1,11 @@
+
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import MarketTickerLive from "@/components/MarketTickerLive";
 import NewsletterModal from "@/components/NewsletterModal";
 import ResearchCard, { ResearchItem } from "@/components/ResearchCard";
 import BlogPostCard, { BlogPost } from "@/components/BlogPostCard";
-import WorldIndices from "@/components/WorldIndices";
+import Markets from "@/components/Markets";
 import EconomicIndicatorsDashboard from "@/components/EconomicIndicatorsDashboard";
 import { ArrowRight, BarChart, FileText, TrendingUp, Newspaper } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -135,9 +136,9 @@ const HomePage = () => {
           </div>
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* World Indices */}
+            {/* Markets table */}
             <div className="lg:col-span-2">
-              <WorldIndices />
+              <Markets />
             </div>
             
             {/* News and Ads */}
@@ -147,9 +148,14 @@ const HomePage = () => {
             </div>
           </div>
           
-          {/* Economic Indicators */}
-          <div className="mt-8">
-            <EconomicIndicatorsDashboard />
+          {/* Economic Indicators right below Markets and beside Ads */}
+          <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2">
+              <EconomicIndicatorsDashboard />
+            </div>
+            <div className="lg:col-span-1">
+              {/* This empty div ensures proper spacing and alignment */}
+            </div>
           </div>
         </div>
       </section>

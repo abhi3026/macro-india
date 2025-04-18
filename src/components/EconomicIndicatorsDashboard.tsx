@@ -20,12 +20,12 @@ import { ArrowRight, TrendingUp, TrendingDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 // Define the structure of economic data
-type IndicatorValue = {
+interface IndicatorValue {
   value: number;
   change?: number;
   unit: string;
   date: string;
-};
+}
 
 type CountryData = {
   name: string;
@@ -206,12 +206,15 @@ const EconomicIndicatorsDashboard = () => {
             const randomChange = (Math.random() - 0.5) * 0.2;
             const newValue = Math.max(0, oldValue + randomChange);
             
-            // Update the indicator
-            updatedCountry[indicator as keyof CountryData] = {
+            // Update the indicator with the new value and change
+            const updatedIndicator: IndicatorValue = {
               ...indicatorData,
               value: newValue,
               change: +(newValue - oldValue).toFixed(2)
             };
+            
+            // Assign the updated indicator value
+            updatedCountry[indicator as keyof CountryData] = updatedIndicator;
             
             // Mark this cell for animation
             setRefreshing(prev => ({

@@ -141,20 +141,11 @@ const HomePage = () => {
               <Markets />
             </div>
             
-            {/* News and Ads */}
+            {/* Side content: News and Economic Indicators */}
             <div className="space-y-6">
               <NewsSnippets />
               <AdSpace />
-            </div>
-          </div>
-          
-          {/* Economic Indicators right below Markets and beside Ads */}
-          <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2">
               <EconomicIndicatorsDashboard />
-            </div>
-            <div className="lg:col-span-1">
-              {/* This empty div ensures proper spacing and alignment */}
             </div>
           </div>
         </div>

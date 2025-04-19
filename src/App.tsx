@@ -14,6 +14,7 @@ import DashboardPage from "./pages/DashboardPage";
 import LiveMarketDataPage from "./pages/LiveMarketDataPage";
 import EducationPage from "./pages/EducationPage";
 import ContactPage from "./pages/ContactPage";
+import AboutPage from "./pages/AboutPage";
 import AdminPage from "./pages/AdminPage";
 import NotFound from "./pages/NotFound";
 
@@ -46,6 +47,7 @@ const App = () => (
               <Route path="/market/:slug" element={<MarketPostPage />} />
               <Route path="/education" element={<EducationPage />} />
               <Route path="/education/:slug" element={<EducationalPostPage />} />
+              <Route path="/about" element={<AboutPage />} />
               <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/live-markets" element={<LiveMarketDataPage />} />
               <Route path="/contact" element={<ContactPage />} />

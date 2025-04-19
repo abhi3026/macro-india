@@ -1,10 +1,9 @@
-
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TrendingUp, TrendingDown, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { cn } from "@/lib/utils";
+import { cn, debounce } from "@/lib/utils";
 import {
   Table,
   TableBody,
@@ -206,8 +205,9 @@ const Markets = () => {
   const [currencies, setCurrencies] = useState<Currency[]>(INITIAL_CURRENCIES_DATA);
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+  const updateTimeoutRef = useRef<number | null>(null);
 
-  const getButtonText = () => {
+  const getButtonText = useCallback(() => {
     switch (activeTab) {
       case "indices": return "Show All Indices";
       case "stocks": return "Show All Stocks";
@@ -216,9 +216,9 @@ const Markets = () => {
       case "currencies": return "Show All Currencies";
       default: return "Show All";
     }
-  };
+  }, [activeTab]);
 
-  const getButtonRoute = () => {
+  const getButtonRoute = useCallback(() => {
     switch (activeTab) {
       case "indices": return "/live-markets";
       case "stocks": return "/stocks";
@@ -227,153 +227,155 @@ const Markets = () => {
       case "currencies": return "/currencies";
       default: return "/live-markets";
     }
-  };
+  }, [activeTab]);
 
-  const refreshMarketData = useCallback(async () => {
+  const refreshMarketData = useCallback(() => {
     if (isRefreshing) return;
     
     setIsRefreshing(true);
     
     try {
-      // Use a longer delay to prevent excessive refreshing that causes flickering
-      await new Promise(resolve => setTimeout(resolve, 300));
-      
-      switch (activeTab) {
-        case "indices":
-          // Updated to prevent flickering by making smaller changes
-          const updatedData = marketIndices.map(index => {
-            const changeDirection = Math.random() > 0.5 ? 1 : -1;
-            // Reduce the magnitude of change to prevent dramatic flickering
-            const changeAmount = (Math.random() * 0.05) * changeDirection;
-            const newLast = +(index.last * (1 + changeAmount / 100)).toFixed(2);
-            const change = +(newLast - index.last).toFixed(2);
-            const changePercent = +((change / index.last) * 100).toFixed(2);
-            
-            return {
-              ...index,
-              last: newLast,
-              change,
-              changePercent,
-              time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-            };
-          });
-          
-          setMarketIndices(updatedData);
-          break;
-        case "stocks":
-          // Using similar approach with smaller changes for stocks
-          const updatedStocks = stocks.map(stock => {
-            const changeDirection = Math.random() > 0.5 ? 1 : -1;
-            const changeAmount = (Math.random() * 0.08) * changeDirection;
-            const newLast = +(stock.last * (1 + changeAmount / 100)).toFixed(2);
-            const change = +(newLast - stock.last).toFixed(2);
-            const changePercent = +((change / stock.last) * 100).toFixed(2);
-            
-            return {
-              ...stock,
-              last: newLast,
-              change,
-              changePercent,
-              time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-            };
-          });
-          
-          setStocks(updatedStocks);
-          break;
-        case "crypto":
-          // Using similar approach with smaller changes for crypto
-          const updatedCryptos = cryptos.map(crypto => {
-            const changeDirection = Math.random() > 0.5 ? 1 : -1;
-            const changeAmount = (Math.random() * 0.1) * changeDirection;
-            const newLast = +(crypto.last * (1 + changeAmount / 100)).toFixed(2);
-            const change = +(newLast - crypto.last).toFixed(2);
-            const changePercent = +((change / crypto.last) * 100).toFixed(2);
-            
-            return {
-              ...crypto,
-              last: newLast,
-              change,
-              changePercent,
-              time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-            };
-          });
-          
-          setCryptos(updatedCryptos);
-          break;
-        case "commodities":
-          // Using similar approach with smaller changes for commodities
-          const updatedCommodities = commodities.map(commodity => {
-            const changeDirection = Math.random() > 0.5 ? 1 : -1;
-            const changeAmount = (Math.random() * 0.08) * changeDirection;
-            const newLast = +(commodity.last * (1 + changeAmount / 100)).toFixed(2);
-            const change = +(newLast - commodity.last).toFixed(2);
-            const changePercent = +((change / commodity.last) * 100).toFixed(2);
-            
-            return {
-              ...commodity,
-              last: newLast,
-              change,
-              changePercent,
-              time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-            };
-          });
-          
-          setCommodities(updatedCommodities);
-          break;
-        case "currencies":
-          // Using similar approach with smaller changes for currencies
-          const updatedCurrencies = currencies.map(currency => {
-            const changeDirection = Math.random() > 0.5 ? 1 : -1;
-            const changeAmount = (Math.random() * 0.05) * changeDirection;
-            const newLast = +(currency.last * (1 + changeAmount / 100)).toFixed(4);
-            const change = +(newLast - currency.last).toFixed(4);
-            const changePercent = +((change / currency.last) * 100).toFixed(2);
-            
-            return {
-              ...currency,
-              last: newLast,
-              change,
-              changePercent,
-              time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-            };
-          });
-          
-          setCurrencies(updatedCurrencies);
-          break;
-      }
-      
-      setLastUpdated(new Date());
+      setTimeout(() => {
+        switch (activeTab) {
+          case "indices":
+            setMarketIndices(prevData => 
+              prevData.map(index => {
+                const changeDirection = Math.random() > 0.5 ? 1 : -1;
+                const changeAmount = (Math.random() * 0.03) * changeDirection;
+                const newLast = +(index.last * (1 + changeAmount / 100)).toFixed(2);
+                const change = +(newLast - index.last).toFixed(2);
+                const changePercent = +((change / index.last) * 100).toFixed(2);
+                
+                return {
+                  ...index,
+                  last: newLast,
+                  change,
+                  changePercent,
+                  time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                };
+              })
+            );
+            break;
+          case "stocks":
+            setStocks(prevData => 
+              prevData.map(stock => {
+                const changeDirection = Math.random() > 0.5 ? 1 : -1;
+                const changeAmount = (Math.random() * 0.04) * changeDirection;
+                const newLast = +(stock.last * (1 + changeAmount / 100)).toFixed(2);
+                const change = +(newLast - stock.last).toFixed(2);
+                const changePercent = +((change / stock.last) * 100).toFixed(2);
+                
+                return {
+                  ...stock,
+                  last: newLast,
+                  change,
+                  changePercent,
+                  time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                };
+              })
+            );
+            break;
+          case "crypto":
+            setCryptos(prevData => 
+              prevData.map(crypto => {
+                const changeDirection = Math.random() > 0.5 ? 1 : -1;
+                const changeAmount = (Math.random() * 0.05) * changeDirection;
+                const newLast = +(crypto.last * (1 + changeAmount / 100)).toFixed(2);
+                const change = +(newLast - crypto.last).toFixed(2);
+                const changePercent = +((change / crypto.last) * 100).toFixed(2);
+                
+                return {
+                  ...crypto,
+                  last: newLast,
+                  change,
+                  changePercent,
+                  time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                };
+              })
+            );
+            break;
+          case "commodities":
+            setCommodities(prevData => 
+              prevData.map(commodity => {
+                const changeDirection = Math.random() > 0.5 ? 1 : -1;
+                const changeAmount = (Math.random() * 0.04) * changeDirection;
+                const newLast = +(commodity.last * (1 + changeAmount / 100)).toFixed(2);
+                const change = +(newLast - commodity.last).toFixed(2);
+                const changePercent = +((change / commodity.last) * 100).toFixed(2);
+                
+                return {
+                  ...commodity,
+                  last: newLast,
+                  change,
+                  changePercent,
+                  time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                };
+              })
+            );
+            break;
+          case "currencies":
+            setCurrencies(prevData => 
+              prevData.map(currency => {
+                const changeDirection = Math.random() > 0.5 ? 1 : -1;
+                const changeAmount = (Math.random() * 0.02) * changeDirection;
+                const newLast = +(currency.last * (1 + changeAmount / 100)).toFixed(4);
+                const change = +(newLast - currency.last).toFixed(4);
+                const changePercent = +((change / currency.last) * 100).toFixed(2);
+                
+                return {
+                  ...currency,
+                  last: newLast,
+                  change,
+                  changePercent,
+                  time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                };
+              })
+            );
+            break;
+        }
+        
+        setLastUpdated(new Date());
+        setIsRefreshing(false);
+      }, 300);
     } catch (error) {
       console.error("Error refreshing market data:", error);
-    } finally {
       setIsRefreshing(false);
     }
-  }, [activeTab, isRefreshing, marketIndices, stocks, cryptos, commodities, currencies]);
+  }, [activeTab, isRefreshing]);
 
   useEffect(() => {
     refreshMarketData();
-    // Reduce refresh frequency to prevent flickering
+    
     const intervalId = setInterval(refreshMarketData, 30000);
-    return () => clearInterval(intervalId);
+    
+    return () => {
+      clearInterval(intervalId);
+      if (updateTimeoutRef.current) {
+        window.clearTimeout(updateTimeoutRef.current);
+      }
+    };
   }, [refreshMarketData]);
 
-  const handleShowAll = () => {
-    window.scrollTo(0, 0);
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
   };
 
   return (
-    <Card className="shadow-sm">
+    <Card className="shadow-sm transition-all duration-300 hover:shadow-md">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle>Markets</CardTitle>
+        <CardTitle className="flex items-center gap-2">
+          <TrendingUp className="h-5 w-5 text-accent1" />
+          Markets
+        </CardTitle>
         <div className="text-sm text-muted-foreground flex items-center gap-2">
           <Button 
             variant="ghost" 
             size="sm" 
-            className="h-8 px-2 text-xs"
+            className="h-8 px-2 text-xs transition-colors hover:bg-muted"
             onClick={refreshMarketData}
             disabled={isRefreshing}
           >
-            Refresh
+            {isRefreshing ? "Updating..." : "Refresh"}
           </Button>
           <span>Last updated: {lastUpdated.toLocaleTimeString()}</span>
         </div>
@@ -382,7 +384,7 @@ const Markets = () => {
         <Tabs 
           defaultValue="indices" 
           value={activeTab} 
-          onValueChange={(value) => setActiveTab(value)}
+          onValueChange={handleTabChange}
           className="w-full"
         >
           <TabsList className="w-full mb-4 grid grid-cols-5">
@@ -409,7 +411,7 @@ const Markets = () => {
                 </TableHeader>
                 <TableBody>
                   {marketIndices.map((index) => (
-                    <TableRow key={index.name}>
+                    <TableRow key={index.name} className="transition-colors hover:bg-muted/50">
                       <TableCell>
                         <div className="flex items-center gap-2">
                           <span className="text-base">{index.flag}</span>
@@ -630,10 +632,15 @@ const Markets = () => {
         <div className="mt-4 flex justify-center">
           <Button 
             asChild 
-            className="group"
-            onClick={handleShowAll}
+            className="group transition-colors hover:bg-accent1/90"
           >
-            <Link to={getButtonRoute()} className="flex items-center gap-2">
+            <Link 
+              to={getButtonRoute()} 
+              className="flex items-center gap-2"
+              onClick={() => {
+                window.scrollTo(0, 0);
+              }}
+            >
               {getButtonText()}
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>

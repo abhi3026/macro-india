@@ -1,168 +1,183 @@
 
-import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Instagram, Twitter, Linkedin, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useToast } from "@/components/ui/use-toast";
-import { subscribeToNewsletter } from "@/utils/newsletter";
+import { ExternalLink } from "lucide-react";
 
 const Footer = () => {
-  const [email, setEmail] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const { toast } = useToast();
-
-  const handleSubscribe = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!email) return;
-    
-    setIsSubmitting(true);
-    
-    try {
-      const result = await subscribeToNewsletter(email);
-      
-      if (result.success) {
-        localStorage.setItem("newsletter-subscribed", "true");
-        
-        toast({
-          title: "Subscription successful!",
-          description: result.message,
-        });
-        
-        setEmail("");
-      } else {
-        toast({
-          title: "Subscription failed",
-          description: result.message,
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
-      console.error("Newsletter subscription error:", error);
-      toast({
-        title: "Subscription failed",
-        description: "There was an error subscribing to the newsletter. Please try again later.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
+  const currentYear = new Date().getFullYear();
+  
   return (
-    <footer className="bg-indianmacro-800 text-white">
-      <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
-        <div className="xl:grid xl:grid-cols-4 xl:gap-8">
-          <div className="grid grid-cols-2 gap-8 xl:col-span-2">
-            <div className="md:grid md:grid-cols-2 md:gap-8">
-              <div>
-                <h3 className="text-sm font-semibold tracking-wider uppercase">
-                  Content
-                </h3>
-                <ul className="mt-4 space-y-4">
-                  <li>
-                    <Link to="/research" className="text-base text-gray-300 hover:text-white">
-                      Research
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/dashboard" className="text-base text-gray-300 hover:text-white">
-                      Data Dashboard
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/education" className="text-base text-gray-300 hover:text-white">
-                      Education
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-              <div className="mt-12 md:mt-0">
-                <h3 className="text-sm font-semibold tracking-wider uppercase">
-                  Company
-                </h3>
-                <ul className="mt-4 space-y-4">
-                  <li>
-                    <Link to="/about" className="text-base text-gray-300 hover:text-white">
-                      About
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/contact" className="text-base text-gray-300 hover:text-white">
-                      Contact
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/privacy" className="text-base text-gray-300 hover:text-white">
-                      Privacy Policy
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/terms" className="text-base text-gray-300 hover:text-white">
-                      Terms of Service
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <div className="mt-12 xl:mt-0">
-            <h3 className="text-sm font-semibold tracking-wider uppercase">
-              Subscribe to our newsletter
-            </h3>
-            <p className="mt-4 text-base text-gray-300">
-              Get the latest research and macroeconomic insights delivered to your inbox.
-            </p>
-            <form className="mt-4 sm:flex sm:max-w-md" onSubmit={handleSubscribe}>
-              <Input
-                type="email"
-                name="email"
-                id="email-address"
-                autoComplete="email"
-                required
-                placeholder="Enter your email"
-                className="bg-indianmacro-700 border-indianmacro-600 text-white"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+    <footer className="bg-indianmacro-900 text-white pt-16 pb-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          {/* First Column - Logo and Description */}
+          <div className="col-span-1 md:col-span-2">
+            <Link to="/" className="inline-block mb-4">
+              <img 
+                src="/logo.svg" 
+                alt="IndianMacro Logo" 
+                className="h-10 w-auto" 
+                width="40"
+                height="40"
               />
-              <div className="mt-3 rounded-md sm:mt-0 sm:ml-3 sm:flex-shrink-0">
-                <Button 
-                  type="submit" 
-                  className="w-full bg-accent1 hover:bg-accent1/90"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? "Subscribing..." : "Subscribe"}
-                </Button>
-              </div>
-            </form>
-          </div>
-          <div className="mt-12 xl:mt-0 xl:ml-8">
-            <h3 className="text-sm font-semibold tracking-wider uppercase">
-              Connect with us
-            </h3>
-            <div className="mt-4 flex space-x-6">
-              <a href="https://www.instagram.com/indianmacroinsights/" className="text-gray-300 hover:text-white">
-                <span className="sr-only">Instagram</span>
-                <Instagram className="h-6 w-6" />
+            </Link>
+            <p className="text-gray-300 mb-6 max-w-md">
+              IndianMacro provides comprehensive research, data, and analysis on the Indian economy, 
+              markets, and financial trends to help you make informed decisions.
+            </p>
+            <div className="flex space-x-4">
+              <a 
+                href="https://twitter.com/indianmacro" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                aria-label="Twitter"
+                className="transition-opacity hover:opacity-80"
+              >
+                <svg className="h-6 w-6 fill-current" viewBox="0 0 24 24">
+                  <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                </svg>
               </a>
-              <a href="#" className="text-gray-300 hover:text-white">
-                <span className="sr-only">Twitter</span>
-                <Twitter className="h-6 w-6" />
+              <a 
+                href="https://linkedin.com/company/indianmacro" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                aria-label="LinkedIn"
+                className="transition-opacity hover:opacity-80"
+              >
+                <svg className="h-6 w-6 fill-current" viewBox="0 0 24 24">
+                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                </svg>
               </a>
-              <a href="https://www.linkedin.com/company/indian-macro/" className="text-gray-300 hover:text-white">
-                <span className="sr-only">LinkedIn</span>
-                <Linkedin className="h-6 w-6" />
-              </a>
-              <a href="mailto:contact@indianmacro.com" className="text-gray-300 hover:text-white">
-                <span className="sr-only">Email</span>
-                <Mail className="h-6 w-6" />
+              <a 
+                href="https://facebook.com/indianmacro" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                aria-label="Facebook"
+                className="transition-opacity hover:opacity-80"
+              >
+                <svg className="h-6 w-6 fill-current" viewBox="0 0 24 24">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
               </a>
             </div>
-            <p className="mt-8 text-base text-gray-300">
-              IndianMacro © {new Date().getFullYear()}<br />
-              All rights reserved.
+          </div>
+          
+          {/* Second Column - Quick Links */}
+          <div className="col-span-1">
+            <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
+            <ul className="space-y-3">
+              <li>
+                <Link to="/" className="text-gray-300 hover:text-white transition-colors">
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link to="/research" className="text-gray-300 hover:text-white transition-colors">
+                  Research
+                </Link>
+              </li>
+              <li>
+                <Link to="/dashboard" className="text-gray-300 hover:text-white transition-colors">
+                  Data Dashboard
+                </Link>
+              </li>
+              <li>
+                <Link to="/education" className="text-gray-300 hover:text-white transition-colors">
+                  Education
+                </Link>
+              </li>
+              <li>
+                <Link to="/about" className="text-gray-300 hover:text-white transition-colors">
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link to="/contact" className="text-gray-300 hover:text-white transition-colors">
+                  Contact
+                </Link>
+              </li>
+            </ul>
+          </div>
+          
+          {/* Third Column - Resources */}
+          <div className="col-span-1">
+            <h3 className="text-lg font-semibold mb-4">Resources</h3>
+            <ul className="space-y-3">
+              <li>
+                <a 
+                  href="https://rbi.org.in" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-gray-300 hover:text-white transition-colors flex items-center gap-1"
+                >
+                  RBI
+                  <ExternalLink className="h-3 w-3" />
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="https://mospi.gov.in" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-gray-300 hover:text-white transition-colors flex items-center gap-1"
+                >
+                  MOSPI
+                  <ExternalLink className="h-3 w-3" />
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="https://nseindia.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-gray-300 hover:text-white transition-colors flex items-center gap-1"
+                >
+                  NSE
+                  <ExternalLink className="h-3 w-3" />
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="https://bseindia.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-gray-300 hover:text-white transition-colors flex items-center gap-1"
+                >
+                  BSE
+                  <ExternalLink className="h-3 w-3" />
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="https://finmin.nic.in" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-gray-300 hover:text-white transition-colors flex items-center gap-1"
+                >
+                  Min. of Finance
+                  <ExternalLink className="h-3 w-3" />
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        
+        <div className="mt-12 pt-8 border-t border-gray-700">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <p className="text-gray-400 text-sm mb-4 md:mb-0">
+              © {currentYear} IndianMacro. All rights reserved.
             </p>
+            <div className="flex space-x-6">
+              <Link to="/privacy" className="text-gray-400 text-sm hover:text-white transition-colors">
+                Privacy Policy
+              </Link>
+              <Link to="/terms" className="text-gray-400 text-sm hover:text-white transition-colors">
+                Terms of Service
+              </Link>
+              <Link to="/disclaimer" className="text-gray-400 text-sm hover:text-white transition-colors">
+                Disclaimer
+              </Link>
+            </div>
           </div>
         </div>
       </div>

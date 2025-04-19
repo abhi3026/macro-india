@@ -87,6 +87,29 @@ const updateOrCreateMeta = (
 };
 
 /**
+ * Restores market ticker functionality after theme changes
+ * This function helps fix any UI elements that might break during theme changes
+ */
+export const restoreMarketTicker = (): void => {
+  // Find market ticker containers
+  const tickerContainers = document.querySelectorAll('.market-ticker-container');
+  
+  // If there are ticker containers, they may need refreshing
+  if (tickerContainers.length > 0) {
+    // Force a small UI update by toggling a class
+    tickerContainers.forEach(container => {
+      // Add a temporary class
+      container.classList.add('ticker-refreshing');
+      
+      // Remove it after a brief delay to trigger a repaint
+      setTimeout(() => {
+        container.classList.remove('ticker-refreshing');
+      }, 50);
+    });
+  }
+};
+
+/**
  * Pre-defined meta tag configurations for main pages
  */
 export const pageMetaTags = {

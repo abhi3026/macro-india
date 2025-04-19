@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Menu, X, ChevronDown } from "lucide-react";
@@ -18,6 +17,7 @@ import { subscribeToNewsletter } from "@/utils/newsletter";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
+import { Search } from "lucide-react";
 
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -45,10 +45,8 @@ const Navbar = () => {
       const result = await subscribeToNewsletter(email);
       
       if (result.success) {
-        // Save in localStorage to not show popup again
         localStorage.setItem("newsletter-subscribed", "true");
         
-        // Show success toast
         toast({
           title: "Subscription successful!",
           description: result.message,
@@ -57,7 +55,6 @@ const Navbar = () => {
         setEmail("");
         setSubscribeModalOpen(false);
       } else {
-        // Show error toast
         toast({
           title: "Subscription failed",
           description: result.message,
@@ -95,7 +92,17 @@ const Navbar = () => {
             </Link>
           </div>
           
-          {/* Desktop Menu */}
+          <div className="hidden md:flex items-center flex-1 max-w-md mx-4">
+            <div className="relative w-full">
+              <Input
+                type="search"
+                placeholder="Search markets, stocks, indices..."
+                className="w-full pl-10"
+              />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            </div>
+          </div>
+
           <div className="hidden md:flex md:items-center md:space-x-4">
             {navItems.map((item) => (
               <Link 
@@ -115,7 +122,6 @@ const Navbar = () => {
               Subscribe
             </Button>
             
-            {/* Subscribe Modal */}
             <Dialog open={subscribeModalOpen} onOpenChange={setSubscribeModalOpen}>
               <DialogContent className="sm:max-w-md">
                 <DialogHeader>
@@ -159,7 +165,6 @@ const Navbar = () => {
             </Dialog>
           </div>
           
-          {/* Mobile Menu Button */}
           <div className="flex items-center md:hidden">
             <ThemeToggle />
             <button
@@ -180,7 +185,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
       <div 
         id="mobile-menu"
         className={cn(
@@ -189,6 +193,16 @@ const Navbar = () => {
         )}
         aria-hidden={!mobileMenuOpen}
       >
+        <div className="px-4 py-2">
+          <div className="relative">
+            <Input
+              type="search"
+              placeholder="Search markets, stocks, indices..."
+              className="w-full pl-10"
+            />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          </div>
+        </div>
         <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-background">
           {navItems.map((item) => (
             <Link

@@ -8,12 +8,13 @@ import Markets from "@/components/Markets";
 import EconomicIndicatorsDashboard from "@/components/EconomicIndicatorsDashboard";
 import EconomicCalendar from "@/components/EconomicCalendar";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import SEOHead from "@/components/SEOHead";
 import NewsSnippets from "@/components/NewsSnippets";
 import AdSpace from "@/components/AdSpace";
+import { ArrowRight, FileText, BarChart, TrendingUp, Newspaper } from "lucide-react";
 
 const HomePage = () => {
   // Featured research items (sample data)

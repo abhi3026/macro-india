@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TrendingUp, TrendingDown, ArrowRight } from "lucide-react";
@@ -70,7 +69,6 @@ interface Currency {
   time: string;
 }
 
-// Initial market data
 const INITIAL_MARKET_DATA: MarketIndex[] = [
   {
     name: "Dow Jones",
@@ -207,25 +205,39 @@ const Markets = () => {
   const [currencies, setCurrencies] = useState<Currency[]>(INITIAL_CURRENCIES_DATA);
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
-  const [refreshTimestamp, setRefreshTimestamp] = useState<number>(Date.now());
 
-  // Function to simulate refreshing market data without causing flickering
+  const getButtonText = () => {
+    switch (activeTab) {
+      case "indices": return "Show All Indices";
+      case "stocks": return "Show All Stocks";
+      case "crypto": return "Show All Cryptos";
+      case "commodities": return "Show All Commodities";
+      case "currencies": return "Show All Currencies";
+      default: return "Show All";
+    }
+  };
+
+  const getButtonRoute = () => {
+    switch (activeTab) {
+      case "indices": return "/live-markets";
+      case "stocks": return "/stocks";
+      case "crypto": return "/crypto";
+      case "commodities": return "/commodities";
+      case "currencies": return "/currencies";
+      default: return "/live-markets";
+    }
+  };
+
   const refreshMarketData = useCallback(async () => {
     if (isRefreshing) return;
     
     setIsRefreshing(true);
     
     try {
-      // In a real implementation, this would fetch from an API
-      // For now, we'll simulate small changes to avoid flickering
+      await new Promise(resolve => setTimeout(resolve, 100));
       
-      // Create a timestamp to ensure React recognizes the state change
-      const timestamp = Date.now();
-      setRefreshTimestamp(timestamp);
-      
-      setTimeout(() => {
-        // Update data based on active tab
-        if (activeTab === "indices") {
+      switch (activeTab) {
+        case "indices":
           const updatedData = marketIndices.map(index => {
             const changeDirection = Math.random() > 0.5 ? 1 : -1;
             const changeAmount = (Math.random() * 0.2) * changeDirection;
@@ -243,7 +255,8 @@ const Markets = () => {
           });
           
           setMarketIndices(updatedData);
-        } else if (activeTab === "stocks") {
+          break;
+        case "stocks":
           const updatedStocks = stocks.map(stock => {
             const changeDirection = Math.random() > 0.5 ? 1 : -1;
             const changeAmount = (Math.random() * 0.3) * changeDirection;
@@ -261,7 +274,8 @@ const Markets = () => {
           });
           
           setStocks(updatedStocks);
-        } else if (activeTab === "crypto") {
+          break;
+        case "crypto":
           const updatedCryptos = cryptos.map(crypto => {
             const changeDirection = Math.random() > 0.5 ? 1 : -1;
             const changeAmount = (Math.random() * 0.5) * changeDirection;
@@ -279,7 +293,8 @@ const Markets = () => {
           });
           
           setCryptos(updatedCryptos);
-        } else if (activeTab === "commodities") {
+          break;
+        case "commodities":
           const updatedCommodities = commodities.map(commodity => {
             const changeDirection = Math.random() > 0.5 ? 1 : -1;
             const changeAmount = (Math.random() * 0.3) * changeDirection;
@@ -297,7 +312,8 @@ const Markets = () => {
           });
           
           setCommodities(updatedCommodities);
-        } else if (activeTab === "currencies") {
+          break;
+        case "currencies":
           const updatedCurrencies = currencies.map(currency => {
             const changeDirection = Math.random() > 0.5 ? 1 : -1;
             const changeAmount = (Math.random() * 0.2) * changeDirection;
@@ -315,32 +331,26 @@ const Markets = () => {
           });
           
           setCurrencies(updatedCurrencies);
-        }
-        
-        setLastUpdated(new Date());
-        setIsRefreshing(false);
-      }, 300); // Small delay to avoid UI jank
+          break;
+      }
+      
+      setLastUpdated(new Date());
     } catch (error) {
-      console.error("Error refreshing market data", error);
-      toast({
-        title: "Failed to update market data",
-        description: "Please try again later",
-        variant: "destructive",
-      });
+      console.error("Error refreshing market data:", error);
+    } finally {
       setIsRefreshing(false);
     }
-  }, [activeTab, marketIndices, stocks, cryptos, commodities, currencies, isRefreshing]);
+  }, [activeTab, isRefreshing]);
 
-  // Auto-refresh market data every 60 seconds
   useEffect(() => {
     refreshMarketData();
-    
-    const intervalId = setInterval(() => {
-      refreshMarketData();
-    }, 60000);
-    
+    const intervalId = setInterval(refreshMarketData, 60000);
     return () => clearInterval(intervalId);
   }, [refreshMarketData]);
+
+  const handleShowAll = () => {
+    window.scrollTo(0, 0);
+  };
 
   return (
     <Card className="shadow-sm">
@@ -376,7 +386,7 @@ const Markets = () => {
           
           <TabsContent value="indices" className="mt-0">
             <div className="overflow-x-auto">
-              <Table key={`indices-${refreshTimestamp}`}>
+              <Table key={`indices-${Date.now()}`}>
                 <TableHeader>
                   <TableRow>
                     <TableHead className="font-medium">Name</TableHead>
@@ -426,7 +436,7 @@ const Markets = () => {
           
           <TabsContent value="stocks" className="mt-0">
             <div className="overflow-x-auto">
-              <Table key={`stocks-${refreshTimestamp}`}>
+              <Table key={`stocks-${Date.now()}`}>
                 <TableHeader>
                   <TableRow>
                     <TableHead className="font-medium">Name</TableHead>
@@ -476,7 +486,7 @@ const Markets = () => {
           
           <TabsContent value="crypto" className="mt-0">
             <div className="overflow-x-auto">
-              <Table key={`crypto-${refreshTimestamp}`}>
+              <Table key={`crypto-${Date.now()}`}>
                 <TableHeader>
                   <TableRow>
                     <TableHead className="font-medium">Name</TableHead>
@@ -526,7 +536,7 @@ const Markets = () => {
           
           <TabsContent value="commodities" className="mt-0">
             <div className="overflow-x-auto">
-              <Table key={`commodities-${refreshTimestamp}`}>
+              <Table key={`commodities-${Date.now()}`}>
                 <TableHeader>
                   <TableRow>
                     <TableHead className="font-medium">Name</TableHead>
@@ -567,7 +577,7 @@ const Markets = () => {
           
           <TabsContent value="currencies" className="mt-0">
             <div className="overflow-x-auto">
-              <Table key={`currencies-${refreshTimestamp}`}>
+              <Table key={`currencies-${Date.now()}`}>
                 <TableHeader>
                   <TableRow>
                     <TableHead className="font-medium">Pair</TableHead>
@@ -609,9 +619,13 @@ const Markets = () => {
         </Tabs>
 
         <div className="mt-4 flex justify-center">
-          <Button asChild className="group">
-            <Link to="/live-markets" className="flex items-center gap-2">
-              Show All Indices
+          <Button 
+            asChild 
+            className="group"
+            onClick={handleShowAll}
+          >
+            <Link to={getButtonRoute()} className="flex items-center gap-2">
+              {getButtonText()}
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
           </Button>

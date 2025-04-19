@@ -1,4 +1,3 @@
-
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import MarketTickerLive from "@/components/MarketTickerLive";
@@ -7,9 +6,9 @@ import ResearchCard, { ResearchItem } from "@/components/ResearchCard";
 import BlogPostCard, { BlogPost } from "@/components/BlogPostCard";
 import Markets from "@/components/Markets";
 import EconomicIndicatorsDashboard from "@/components/EconomicIndicatorsDashboard";
-import { ArrowRight, BarChart, FileText, TrendingUp, Newspaper } from "lucide-react";
+import EconomicCalendar from "@/components/EconomicCalendar";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import SEOHead from "@/components/SEOHead";
@@ -80,6 +79,11 @@ const HomePage = () => {
     }
   ];
 
+  useEffect(() => {
+    // Scroll to top on mount
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col">
       <SEOHead 
@@ -124,28 +128,33 @@ const HomePage = () => {
       {/* Financial Markets Section */}
       <section className="bg-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center mb-8">
-            <div>
-              <h2 className="text-2xl md:text-3xl font-bold text-indianmacro-900">
-                Financial Markets
-              </h2>
-              <p className="text-indianmacro-600 mt-2">
-                Track major indices, currencies, and commodities
-              </p>
-            </div>
-          </div>
-          
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Markets table */}
             <div className="lg:col-span-2">
               <Markets />
             </div>
             
-            {/* Side content: News and Economic Indicators */}
+            {/* Side content: Ads and Economic Indicators */}
             <div className="space-y-6">
-              <NewsSnippets />
               <AdSpace />
               <EconomicIndicatorsDashboard />
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      {/* Economic Calendar and News Section */}
+      <section className="bg-indianmacro-50 py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Economic Calendar */}
+            <div className="lg:col-span-2">
+              <EconomicCalendar />
+            </div>
+            
+            {/* News Section */}
+            <div>
+              <NewsSnippets />
             </div>
           </div>
         </div>

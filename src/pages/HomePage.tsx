@@ -1,3 +1,4 @@
+
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import MarketTickerLive from "@/components/MarketTickerLive";
@@ -126,7 +127,7 @@ const HomePage = () => {
         </div>
       </section>
       
-      {/* Financial Markets Section */}
+      {/* Financial Markets & Economic Indicators Section */}
       <section className="bg-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -135,29 +136,28 @@ const HomePage = () => {
               <Markets />
             </div>
             
-            {/* Side content: Ads and Economic Indicators */}
-            <div className="space-y-6">
-              <AdSpace />
+            {/* Side content: Economic Indicators */}
+            <div>
               <EconomicIndicatorsDashboard />
+            </div>
+          </div>
+          
+          {/* Ad Space and News */}
+          <div className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-1">
+              <AdSpace />
+            </div>
+            <div className="lg:col-span-2">
+              <NewsSnippets />
             </div>
           </div>
         </div>
       </section>
       
-      {/* Economic Calendar and News Section */}
+      {/* Economic Calendar Section */}
       <section className="bg-indianmacro-50 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Economic Calendar */}
-            <div className="lg:col-span-2">
-              <EconomicCalendar />
-            </div>
-            
-            {/* News Section */}
-            <div>
-              <NewsSnippets />
-            </div>
-          </div>
+          <EconomicCalendar />
         </div>
       </section>
       

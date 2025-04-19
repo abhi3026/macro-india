@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Instagram, Twitter, Linkedin, Mail } from "lucide-react";
@@ -71,8 +72,8 @@ const Footer = () => {
                     </Link>
                   </li>
                   <li>
-                    <Link to="/blog" className="text-base text-gray-300 hover:text-white">
-                      Blog
+                    <Link to="/education" className="text-base text-gray-300 hover:text-white">
+                      Education
                     </Link>
                   </li>
                 </ul>

@@ -57,7 +57,7 @@ const INITIAL_EVENTS: EconomicEvent[] = [
 
 const EconomicCalendar = () => {
   const [events, setEvents] = useState<EconomicEvent[]>(INITIAL_EVENTS);
-  const [currentDate] = useState(new Date());
+  const [currentDate, setCurrentDate] = useState(new Date());
 
   const getImpactColor = (impact: "High" | "Medium" | "Low") => {
     switch (impact) {
@@ -67,6 +67,46 @@ const EconomicCalendar = () => {
       default: return "text-gray-600";
     }
   };
+
+  // Function to periodically update event data (simulating real-time updates)
+  const updateEventsData = () => {
+    // Occasionally update forecast or actual values to simulate live data
+    const shouldUpdate = Math.random() > 0.7; // 30% chance to update
+    
+    if (shouldUpdate) {
+      setEvents(prevEvents => {
+        return prevEvents.map(event => {
+          // Only update some events (not all at once)
+          if (Math.random() > 0.7) {
+            // Randomly decide what to update
+            const updateType = Math.floor(Math.random() * 3);
+            
+            if (updateType === 0 && event.forecast) {
+              // Update forecast
+              const currentValue = parseFloat(event.forecast.replace('%', ''));
+              const newValue = (currentValue + (Math.random() * 0.1 - 0.05)).toFixed(2);
+              return { ...event, forecast: event.forecast.includes('%') ? `${newValue}%` : newValue };
+            } else if (updateType === 1 && !event.actual) {
+              // Add actual value to an event that didn't have one
+              const forecastValue = event.forecast ? parseFloat(event.forecast.replace('%', '')) : 0;
+              const actualValue = (forecastValue + (Math.random() * 0.2 - 0.1)).toFixed(2);
+              return { ...event, actual: event.forecast?.includes('%') ? `${actualValue}%` : actualValue };
+            }
+          }
+          return event;
+        });
+      });
+    }
+    
+    // Update current date/time
+    setCurrentDate(new Date());
+  };
+
+  useEffect(() => {
+    // Update every 30 seconds
+    const interval = setInterval(updateEventsData, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <Card className="shadow-sm">
@@ -104,7 +144,7 @@ const EconomicCalendar = () => {
                   <TableCell>{event.time}</TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
-                      <span>{event.flag}</span>
+                      <span className="text-base">{event.flag}</span>
                       <span className="hidden md:inline">{event.country}</span>
                     </div>
                   </TableCell>

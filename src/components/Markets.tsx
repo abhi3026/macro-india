@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TrendingUp, TrendingDown, ArrowRight } from "lucide-react";
@@ -234,13 +235,16 @@ const Markets = () => {
     setIsRefreshing(true);
     
     try {
-      await new Promise(resolve => setTimeout(resolve, 100));
+      // Use a longer delay to prevent excessive refreshing that causes flickering
+      await new Promise(resolve => setTimeout(resolve, 300));
       
       switch (activeTab) {
         case "indices":
+          // Updated to prevent flickering by making smaller changes
           const updatedData = marketIndices.map(index => {
             const changeDirection = Math.random() > 0.5 ? 1 : -1;
-            const changeAmount = (Math.random() * 0.2) * changeDirection;
+            // Reduce the magnitude of change to prevent dramatic flickering
+            const changeAmount = (Math.random() * 0.05) * changeDirection;
             const newLast = +(index.last * (1 + changeAmount / 100)).toFixed(2);
             const change = +(newLast - index.last).toFixed(2);
             const changePercent = +((change / index.last) * 100).toFixed(2);
@@ -257,9 +261,10 @@ const Markets = () => {
           setMarketIndices(updatedData);
           break;
         case "stocks":
+          // Using similar approach with smaller changes for stocks
           const updatedStocks = stocks.map(stock => {
             const changeDirection = Math.random() > 0.5 ? 1 : -1;
-            const changeAmount = (Math.random() * 0.3) * changeDirection;
+            const changeAmount = (Math.random() * 0.08) * changeDirection;
             const newLast = +(stock.last * (1 + changeAmount / 100)).toFixed(2);
             const change = +(newLast - stock.last).toFixed(2);
             const changePercent = +((change / stock.last) * 100).toFixed(2);
@@ -276,9 +281,10 @@ const Markets = () => {
           setStocks(updatedStocks);
           break;
         case "crypto":
+          // Using similar approach with smaller changes for crypto
           const updatedCryptos = cryptos.map(crypto => {
             const changeDirection = Math.random() > 0.5 ? 1 : -1;
-            const changeAmount = (Math.random() * 0.5) * changeDirection;
+            const changeAmount = (Math.random() * 0.1) * changeDirection;
             const newLast = +(crypto.last * (1 + changeAmount / 100)).toFixed(2);
             const change = +(newLast - crypto.last).toFixed(2);
             const changePercent = +((change / crypto.last) * 100).toFixed(2);
@@ -295,9 +301,10 @@ const Markets = () => {
           setCryptos(updatedCryptos);
           break;
         case "commodities":
+          // Using similar approach with smaller changes for commodities
           const updatedCommodities = commodities.map(commodity => {
             const changeDirection = Math.random() > 0.5 ? 1 : -1;
-            const changeAmount = (Math.random() * 0.3) * changeDirection;
+            const changeAmount = (Math.random() * 0.08) * changeDirection;
             const newLast = +(commodity.last * (1 + changeAmount / 100)).toFixed(2);
             const change = +(newLast - commodity.last).toFixed(2);
             const changePercent = +((change / commodity.last) * 100).toFixed(2);
@@ -314,9 +321,10 @@ const Markets = () => {
           setCommodities(updatedCommodities);
           break;
         case "currencies":
+          // Using similar approach with smaller changes for currencies
           const updatedCurrencies = currencies.map(currency => {
             const changeDirection = Math.random() > 0.5 ? 1 : -1;
-            const changeAmount = (Math.random() * 0.2) * changeDirection;
+            const changeAmount = (Math.random() * 0.05) * changeDirection;
             const newLast = +(currency.last * (1 + changeAmount / 100)).toFixed(4);
             const change = +(newLast - currency.last).toFixed(4);
             const changePercent = +((change / currency.last) * 100).toFixed(2);
@@ -340,11 +348,12 @@ const Markets = () => {
     } finally {
       setIsRefreshing(false);
     }
-  }, [activeTab, isRefreshing]);
+  }, [activeTab, isRefreshing, marketIndices, stocks, cryptos, commodities, currencies]);
 
   useEffect(() => {
     refreshMarketData();
-    const intervalId = setInterval(refreshMarketData, 60000);
+    // Reduce refresh frequency to prevent flickering
+    const intervalId = setInterval(refreshMarketData, 30000);
     return () => clearInterval(intervalId);
   }, [refreshMarketData]);
 
@@ -386,7 +395,7 @@ const Markets = () => {
           
           <TabsContent value="indices" className="mt-0">
             <div className="overflow-x-auto">
-              <Table key={`indices-${Date.now()}`}>
+              <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead className="font-medium">Name</TableHead>
@@ -403,11 +412,11 @@ const Markets = () => {
                     <TableRow key={index.name}>
                       <TableCell>
                         <div className="flex items-center gap-2">
-                          <span>{index.flag}</span>
+                          <span className="text-base">{index.flag}</span>
                           <span>{index.name}</span>
                         </div>
                       </TableCell>
-                      <TableCell className="text-right">{index.last.toLocaleString()}</TableCell>
+                      <TableCell className="text-right font-medium">{index.last.toLocaleString()}</TableCell>
                       <TableCell className={cn(
                         "text-right",
                         index.change >= 0 ? "text-green-600" : "text-red-600"
@@ -436,7 +445,7 @@ const Markets = () => {
           
           <TabsContent value="stocks" className="mt-0">
             <div className="overflow-x-auto">
-              <Table key={`stocks-${Date.now()}`}>
+              <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead className="font-medium">Name</TableHead>
@@ -457,7 +466,7 @@ const Markets = () => {
                           <span className="text-xs text-muted-foreground">{stock.ticker}</span>
                         </div>
                       </TableCell>
-                      <TableCell className="text-right">{stock.last.toLocaleString()}</TableCell>
+                      <TableCell className="text-right font-medium">{stock.last.toLocaleString()}</TableCell>
                       <TableCell className={cn(
                         "text-right",
                         stock.change >= 0 ? "text-green-600" : "text-red-600"
@@ -486,7 +495,7 @@ const Markets = () => {
           
           <TabsContent value="crypto" className="mt-0">
             <div className="overflow-x-auto">
-              <Table key={`crypto-${Date.now()}`}>
+              <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead className="font-medium">Name</TableHead>
@@ -507,7 +516,7 @@ const Markets = () => {
                           <span className="text-xs text-muted-foreground">{crypto.symbol}</span>
                         </div>
                       </TableCell>
-                      <TableCell className="text-right">${crypto.last.toLocaleString()}</TableCell>
+                      <TableCell className="text-right font-medium">${crypto.last.toLocaleString()}</TableCell>
                       <TableCell className={cn(
                         "text-right",
                         crypto.change >= 0 ? "text-green-600" : "text-red-600"
@@ -536,7 +545,7 @@ const Markets = () => {
           
           <TabsContent value="commodities" className="mt-0">
             <div className="overflow-x-auto">
-              <Table key={`commodities-${Date.now()}`}>
+              <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead className="font-medium">Name</TableHead>
@@ -553,7 +562,7 @@ const Markets = () => {
                       <TableCell>
                         <span>{commodity.name}</span>
                       </TableCell>
-                      <TableCell className="text-right">{commodity.last.toLocaleString()}</TableCell>
+                      <TableCell className="text-right font-medium">{commodity.last.toLocaleString()}</TableCell>
                       <TableCell className={cn(
                         "text-right",
                         commodity.change >= 0 ? "text-green-600" : "text-red-600"
@@ -577,7 +586,7 @@ const Markets = () => {
           
           <TabsContent value="currencies" className="mt-0">
             <div className="overflow-x-auto">
-              <Table key={`currencies-${Date.now()}`}>
+              <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead className="font-medium">Pair</TableHead>
@@ -596,7 +605,7 @@ const Markets = () => {
                           <span className="text-xs text-muted-foreground">{currency.symbol}</span>
                         </div>
                       </TableCell>
-                      <TableCell className="text-right">{currency.last.toLocaleString(undefined, { minimumFractionDigits: 4, maximumFractionDigits: 4 })}</TableCell>
+                      <TableCell className="text-right font-medium">{currency.last.toLocaleString(undefined, { minimumFractionDigits: 4, maximumFractionDigits: 4 })}</TableCell>
                       <TableCell className={cn(
                         "text-right",
                         currency.change >= 0 ? "text-green-600" : "text-red-600"

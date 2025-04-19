@@ -30,7 +30,7 @@ const Navbar = () => {
     { name: "Home", path: "/" },
     { name: "Research", path: "/research" },
     { name: "Data Dashboard", path: "/dashboard" },
-    { name: "Education", path: "/education" },
+    { name: "Education", path: "/education" }, // Changed from Blog to Education
     { name: "Contact", path: "/contact" },
   ];
 

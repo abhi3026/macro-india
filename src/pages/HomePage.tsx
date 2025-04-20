@@ -14,6 +14,7 @@ import SEOHead from "@/components/SEOHead";
 import FeaturedResearch from "@/components/FeaturedResearch";
 import EducationalResources from "@/components/EducationalResources";
 import WhatWeOffer from "@/components/WhatWeOffer";
+import InterestRateTracker from "@/components/InterestRateTracker";
 
 const HomePage = () => {
   useEffect(() => {
@@ -38,7 +39,7 @@ const HomePage = () => {
       
       <main className="flex-grow">
         {/* Chart and News Section */}
-        <section className="bg-white py-2">
+        <section className="py-2">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
               <div className="lg:col-span-3">
@@ -52,7 +53,7 @@ const HomePage = () => {
         </section>
         
         {/* Markets and Ad Section */}
-        <section className="bg-white py-2">
+        <section className="py-2">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
               <div className="lg:col-span-3">
@@ -65,37 +66,26 @@ const HomePage = () => {
           </div>
         </section>
         
-        {/* Economic Indicators and Calendar Section */}
-        <section className="bg-white py-2">
+        {/* Economic Indicators, Interest Rates, and Calendar Section */}
+        <section className="py-2">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
               <div className="lg:col-span-3">
                 <EconomicIndicatorsDashboard />
               </div>
-              <div className="lg:col-span-1">
+              <div className="lg:col-span-1 space-y-4">
+                <InterestRateTracker />
                 <EconomicCalendar />
               </div>
             </div>
           </div>
         </section>
 
-        {/* Featured Research Section */}
-        <section className="bg-white py-2">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Additional Sections */}
+        <section className="py-2">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
             <FeaturedResearch />
-          </div>
-        </section>
-
-        {/* Educational Resources Section */}
-        <section className="bg-white py-2">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <EducationalResources />
-          </div>
-        </section>
-
-        {/* What We Offer Section */}
-        <section className="bg-white py-2">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <WhatWeOffer />
           </div>
         </section>

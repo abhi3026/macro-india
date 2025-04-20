@@ -5,67 +5,64 @@ import { ChartLine } from "lucide-react";
 
 interface TradingViewChartProps {
   symbol?: string;
-  interval?: string;
-  theme?: "light" | "dark";
   height?: number;
 }
 
 const TradingViewChart = ({
   symbol = "NSE:NIFTY",
-  interval = "D",
-  theme = "light",
-  height = 400
+  height = 600
 }: TradingViewChartProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Clean up any existing script
     const container = containerRef.current;
-    if (container) {
-      while (container.firstChild) {
-        container.removeChild(container.firstChild);
-      }
+    if (!container) return;
+
+    // Clean up any existing content
+    while (container.firstChild) {
+      container.removeChild(container.firstChild);
     }
 
-    // Create a new script element
-    const script = document.createElement("script");
-    script.src = "https://s3.tradingview.com/tv.js";
+    const script = document.createElement('script');
+    script.src = 'https://s3.tradingview.com/tv.js';
     script.async = true;
     script.onload = () => {
-      if (typeof window.TradingView !== "undefined" && container) {
+      if (typeof window.TradingView !== 'undefined') {
         new window.TradingView.widget({
-          autosize: true,
-          symbol: symbol,
-          interval: interval,
-          timezone: "Asia/Kolkata",
-          theme: theme,
-          style: "1",
-          locale: "en",
-          toolbar_bg: "#f1f3f6",
-          enable_publishing: false,
-          hide_top_toolbar: false,
-          allow_symbol_change: true,
-          container_id: container.id,
-          hide_side_toolbar: false,
-          show_popup_button: true,
-          popup_width: "1000",
-          popup_height: "650",
-          withdateranges: true,
-          hide_volume: false,
+          "autosize": true,
+          "symbol": symbol,
+          "interval": "D",
+          "timezone": "Asia/Kolkata",
+          "theme": "light",
+          "style": "1",
+          "locale": "en",
+          "enable_publishing": false,
+          "withdateranges": true,
+          "range": "YTD",
+          "hide_volume": false,
+          "allow_symbol_change": true,
+          "details": true,
+          "hotlist": true,
+          "calendar": true,
+          "studies": [
+            "MASimple@tv-basicstudies",
+            "RSI@tv-basicstudies"
+          ],
+          "container_id": container.id,
+          "show_popup_button": true,
+          "popup_width": "1000",
+          "popup_height": "650",
         });
       }
     };
 
-    // Append script to document
     document.head.appendChild(script);
-
     return () => {
-      // Clean up
       if (script.parentNode) {
         script.parentNode.removeChild(script);
       }
     };
-  }, [symbol, interval, theme]);
+  }, [symbol]);
 
   return (
     <Card className="shadow-sm">

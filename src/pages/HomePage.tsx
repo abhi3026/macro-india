@@ -7,10 +7,13 @@ import NewsletterModal from "@/components/NewsletterModal";
 import Markets from "@/components/Markets";
 import EconomicIndicatorsDashboard from "@/components/EconomicIndicatorsDashboard";
 import EconomicCalendar from "@/components/EconomicCalendar";
-import InvestingChart from "@/components/InvestingChart";
+import TradingViewChart from "@/components/TradingViewChart";
 import AdSpace from "@/components/AdSpace";
 import NewsSnippets from "@/components/NewsSnippets";
 import SEOHead from "@/components/SEOHead";
+import FeaturedResearch from "@/components/FeaturedResearch";
+import EducationalResources from "@/components/EducationalResources";
+import WhatWeOffer from "@/components/WhatWeOffer";
 
 const HomePage = () => {
   useEffect(() => {
@@ -35,11 +38,11 @@ const HomePage = () => {
       
       <main className="flex-grow">
         {/* Chart and News Section */}
-        <section className="bg-white py-4">
+        <section className="bg-white py-2">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
               <div className="lg:col-span-3">
-                <InvestingChart />
+                <TradingViewChart />
               </div>
               <div className="lg:col-span-1">
                 <NewsSnippets />
@@ -49,7 +52,7 @@ const HomePage = () => {
         </section>
         
         {/* Markets and Ad Section */}
-        <section className="bg-white py-4">
+        <section className="bg-white py-2">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
               <div className="lg:col-span-3">
@@ -63,7 +66,7 @@ const HomePage = () => {
         </section>
         
         {/* Economic Indicators and Calendar Section */}
-        <section className="bg-white py-4">
+        <section className="bg-white py-2">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
               <div className="lg:col-span-3">
@@ -73,6 +76,27 @@ const HomePage = () => {
                 <EconomicCalendar />
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* Featured Research Section */}
+        <section className="bg-white py-2">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <FeaturedResearch />
+          </div>
+        </section>
+
+        {/* Educational Resources Section */}
+        <section className="bg-white py-2">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <EducationalResources />
+          </div>
+        </section>
+
+        {/* What We Offer Section */}
+        <section className="bg-white py-2">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <WhatWeOffer />
           </div>
         </section>
       </main>

@@ -37,7 +37,7 @@ const TradingViewChart = ({
           autosize: true,
           symbol: symbol,
           interval: interval,
-          timezone: "Etc/UTC",
+          timezone: "Asia/Kolkata",
           theme: theme,
           style: "1",
           locale: "en",
@@ -47,11 +47,11 @@ const TradingViewChart = ({
           allow_symbol_change: true,
           container_id: container.id,
           hide_side_toolbar: false,
-          save_image: true,
-          studies: ["RSI@tv-basicstudies", "MAExp@tv-basicstudies"],
           show_popup_button: true,
           popup_width: "1000",
           popup_height: "650",
+          withdateranges: true,
+          hide_volume: false,
         });
       }
     };

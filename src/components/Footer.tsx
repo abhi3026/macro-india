@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ExternalLink, Instagram, Linkedin } from "lucide-react";
+import { Instagram, Linkedin, Mail, ExternalLink } from "lucide-react";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -10,7 +10,7 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-2">
-            <Link to="/" className="inline-block mb-4">
+            <Link to="/" className="inline-block mb-4" onClick={() => window.scrollTo(0, 0)}>
               <img 
                 src="/logo.svg" 
                 alt="IndianMacro Logo" 
@@ -25,18 +25,16 @@ const Footer = () => {
             </p>
             <div className="flex space-x-4">
               <a 
-                href="https://twitter.com/indianmacro" 
+                href="https://www.instagram.com/indianmacroinsights" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                aria-label="Twitter"
+                aria-label="Instagram"
                 className="transition-opacity hover:opacity-80"
               >
-                <svg className="h-6 w-6 fill-current" viewBox="0 0 24 24">
-                  <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
-                </svg>
+                <Instagram className="h-6 w-6" />
               </a>
               <a 
-                href="https://linkedin.com/in/your-linkedin" 
+                href="https://www.linkedin.com/company/indian-macro" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 aria-label="LinkedIn"
@@ -45,13 +43,11 @@ const Footer = () => {
                 <Linkedin className="h-6 w-6" />
               </a>
               <a 
-                href="https://instagram.com/your-instagram" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                aria-label="Instagram"
+                href="mailto:contact@indianmacro.com" 
+                aria-label="Email"
                 className="transition-opacity hover:opacity-80"
               >
-                <Instagram className="h-6 w-6" />
+                <Mail className="h-6 w-6" />
               </a>
             </div>
           </div>
@@ -60,32 +56,32 @@ const Footer = () => {
             <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-3">
               <li>
-                <Link to="/" className="text-gray-300 hover:text-white transition-colors">
+                <Link to="/" className="text-gray-300 hover:text-white transition-colors" onClick={() => window.scrollTo(0, 0)}>
                   Home
                 </Link>
               </li>
               <li>
-                <Link to="/research" className="text-gray-300 hover:text-white transition-colors">
+                <Link to="/research" className="text-gray-300 hover:text-white transition-colors" onClick={() => window.scrollTo(0, 0)}>
                   Research
                 </Link>
               </li>
               <li>
-                <Link to="/dashboard" className="text-gray-300 hover:text-white transition-colors">
+                <Link to="/dashboard" className="text-gray-300 hover:text-white transition-colors" onClick={() => window.scrollTo(0, 0)}>
                   Data Dashboard
                 </Link>
               </li>
               <li>
-                <Link to="/education" className="text-gray-300 hover:text-white transition-colors">
+                <Link to="/education" className="text-gray-300 hover:text-white transition-colors" onClick={() => window.scrollTo(0, 0)}>
                   Education
                 </Link>
               </li>
               <li>
-                <Link to="/about" className="text-gray-300 hover:text-white transition-colors">
+                <Link to="/about" className="text-gray-300 hover:text-white transition-colors" onClick={() => window.scrollTo(0, 0)}>
                   About Us
                 </Link>
               </li>
               <li>
-                <Link to="/contact" className="text-gray-300 hover:text-white transition-colors">
+                <Link to="/contact" className="text-gray-300 hover:text-white transition-colors" onClick={() => window.scrollTo(0, 0)}>
                   Contact
                 </Link>
               </li>
@@ -160,13 +156,13 @@ const Footer = () => {
               © {currentYear} IndianMacro. All rights reserved.
             </p>
             <div className="flex space-x-6">
-              <Link to="/privacy" className="text-gray-400 text-sm hover:text-white transition-colors">
+              <Link to="/privacy" className="text-gray-400 text-sm hover:text-white transition-colors" onClick={() => window.scrollTo(0, 0)}>
                 Privacy Policy
               </Link>
-              <Link to="/terms" className="text-gray-400 text-sm hover:text-white transition-colors">
+              <Link to="/terms" className="text-gray-400 text-sm hover:text-white transition-colors" onClick={() => window.scrollTo(0, 0)}>
                 Terms of Service
               </Link>
-              <Link to="/disclaimer" className="text-gray-400 text-sm hover:text-white transition-colors">
+              <Link to="/disclaimer" className="text-gray-400 text-sm hover:text-white transition-colors" onClick={() => window.scrollTo(0, 0)}>
                 Disclaimer
               </Link>
             </div>

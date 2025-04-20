@@ -17,15 +17,24 @@ import { useIsMobile } from "@/hooks/use-mobile";
 const REFRESH_INTERVAL = 30 * 1000; // 30 seconds in milliseconds
 
 const MarketTickerLive = () => {
-  const [markets, setMarkets] = useState<MarketData[]>(getInitialMarketData());
+  const [markets, setMarkets] = useState<MarketData[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const [hasFetchFailed, setHasFetchFailed] = useState<boolean>(false);
+  const initialLoadCompleted = useRef<boolean>(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isMobile = useIsMobile();
 
+  // Initialize with fallback data immediately to prevent flickering
+  useEffect(() => {
+    // Always set initial static data immediately to prevent flickering
+    setMarkets(generateFallbackData());
+  }, []);
+
   const fetchData = async (showToast = false) => {
+    if (isRefreshing) return; // Prevent concurrent fetch operations
+    
     setIsRefreshing(true);
     try {
       // Try to fetch real data
@@ -33,6 +42,8 @@ const MarketTickerLive = () => {
       setMarkets(data);
       setLastUpdated(new Date());
       setHasFetchFailed(false);
+      initialLoadCompleted.current = true;
+      
       if (showToast) {
         toast({
           title: "Market data updated successfully",
@@ -43,21 +54,16 @@ const MarketTickerLive = () => {
       console.error("Error fetching market data:", error);
       setHasFetchFailed(true);
       
-      // If error occurs and we don't have any data yet, use fallback
-      if (markets.every(m => m.loading)) {
-        const fallbackData = generateFallbackData();
-        setMarkets(fallbackData);
-        if (showToast) {
-          toast({
-            title: "Data Error",
-            description: "Using fallback market data due to API error",
-            variant: "destructive",
-          });
-        }
-      } else if (showToast) {
+      // If error occurs and we don't have any data yet, ensure we have fallback data
+      if (!initialLoadCompleted.current) {
+        setMarkets(generateFallbackData());
+        initialLoadCompleted.current = true;
+      }
+      
+      if (showToast) {
         toast({
           title: "Update Failed",
-          description: "Failed to refresh market data",
+          description: "Using fallback market data due to API error",
           variant: "destructive",
         });
       }
@@ -72,8 +78,10 @@ const MarketTickerLive = () => {
   };
 
   useEffect(() => {
-    // Initial data fetch
-    fetchData();
+    // Initial data fetch after a short delay to allow fallback data to render first
+    const initialFetchTimeout = setTimeout(() => {
+      fetchData();
+    }, 500);
 
     // Set up the refresh interval
     timeoutRef.current = setInterval(() => {
@@ -82,6 +90,7 @@ const MarketTickerLive = () => {
 
     // Cleanup on unmount
     return () => {
+      clearTimeout(initialFetchTimeout);
       if (timeoutRef.current) {
         clearInterval(timeoutRef.current);
       }

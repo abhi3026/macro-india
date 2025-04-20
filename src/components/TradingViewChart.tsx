@@ -36,10 +36,11 @@ const TradingViewChart = ({
           "theme": "light",
           "style": "1",
           "locale": "en",
+          "toolbar_bg": "#f1f3f6",
           "enable_publishing": false,
           "withdateranges": true,
           "range": "YTD",
-          "hide_volume": false,
+          "hide_side_toolbar": false,
           "allow_symbol_change": true,
           "details": true,
           "hotlist": true,
@@ -52,6 +53,26 @@ const TradingViewChart = ({
           "show_popup_button": true,
           "popup_width": "1000",
           "popup_height": "650",
+          // Advanced chart options
+          "enabled_features": [
+            "study_templates",
+            "use_localstorage_for_settings"
+          ],
+          "charts_storage_url": "https://saveload.tradingview.com",
+          "charts_storage_api_version": "1.1",
+          "client_id": "tradingview.com",
+          "fullscreen": false,
+          "hide_top_toolbar": false,
+          "save_image": true,
+          "watchlist": [
+            "NSE:NIFTY",
+            "NSE:BANKNIFTY",
+            "NSE:SENSEX",
+            "BSE:SENSEX",
+            "NSE:FINNIFTY",
+            "NSE:NIFTYMID50",
+            "NSE:INDIAVIX"
+          ]
         });
       }
     };

@@ -52,37 +52,31 @@ const HomePage = () => {
           </div>
         </section>
         
-        {/* Markets and Ad Section */}
+        {/* Markets Section */}
         <section className="py-2">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
               <div className="lg:col-span-3">
                 <Markets />
               </div>
-              <div className="lg:col-span-1">
+              <div className="lg:col-span-1 space-y-2">
                 <AdSpace />
-              </div>
-            </div>
-          </div>
-        </section>
-        
-        {/* Economic Indicators, Interest Rates, and Calendar Section */}
-        <section className="py-2">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-              <div className="lg:col-span-3">
-                <EconomicIndicatorsDashboard />
-              </div>
-              <div className="lg:col-span-1 space-y-4">
                 <InterestRateTracker />
                 <EconomicCalendar />
               </div>
             </div>
           </div>
         </section>
-
-        {/* Additional Sections */}
+        
+        {/* Economic Indicators Section */}
         <section className="py-2">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <EconomicIndicatorsDashboard />
+          </div>
+        </section>
+
+        {/* Featured Research, Educational Resources, and What We Offer Sections */}
+        <section className="py-4">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
             <FeaturedResearch />
             <EducationalResources />

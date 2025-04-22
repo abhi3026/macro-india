@@ -1,40 +1,42 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { X } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
 import { subscribeToNewsletter } from "@/utils/newsletter";
 
 interface NewsletterModalProps {
   onClose: () => void;
 }
 
-const NewsletterModal = ({ onClose }: NewsletterModalProps) => {
+export default function NewsletterModal({ onClose }: NewsletterModalProps) {
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [message, setMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
+  const [message, setMessage] = useState("");
+  const [isError, setIsError] = useState(false);
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setMessage(null);
+    setMessage("");
+    setIsError(false);
 
     try {
-      const result = await subscribeToNewsletter(email);
-      if (result.success) {
-        setMessage({ text: "Successfully subscribed!", type: "success" });
-        setTimeout(onClose, 2000);
-      } else {
-        setMessage({ text: result.message || "Failed to subscribe", type: "error" });
-      }
+      await subscribeToNewsletter(email);
+      setMessage("Successfully subscribed to newsletter!");
+      setEmail("");
+      setTimeout(() => {
+        onClose();
+      }, 2000);
     } catch (error) {
-      setMessage({ text: "An error occurred. Please try again.", type: "error" });
+      setIsError(true);
+      setMessage("Failed to subscribe. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg p-6 max-w-md w-full relative">
         <button
           onClick={onClose}
@@ -42,14 +44,12 @@ const NewsletterModal = ({ onClose }: NewsletterModalProps) => {
         >
           <X size={24} />
         </button>
-
         <h2 className="text-2xl font-bold mb-4">Subscribe to Our Newsletter</h2>
         <p className="text-gray-600 mb-6">
-          Get the latest updates and insights delivered to your inbox.
+          Stay updated with our latest insights and analysis on the Indian economy.
         </p>
-
-        <form onSubmit={handleSubscribe} className="space-y-4">
-          <div>
+        <form onSubmit={handleSubscribe}>
+          <div className="space-y-4">
             <Input
               type="email"
               placeholder="Enter your email"
@@ -58,25 +58,25 @@ const NewsletterModal = ({ onClose }: NewsletterModalProps) => {
               required
               className="w-full"
             />
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Subscribing..." : "Subscribe"}
+            </Button>
           </div>
-
-          {message && (
-            <p className={`text-sm ${message.type === "success" ? "text-green-600" : "text-red-600"}`}>
-              {message.text}
-            </p>
-          )}
-
-          <Button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full"
-          >
-            {isSubmitting ? "Subscribing..." : "Subscribe"}
-          </Button>
         </form>
+        {message && (
+          <p
+            className={`mt-4 text-sm ${
+              isError ? "text-red-500" : "text-green-500"
+            }`}
+          >
+            {message}
+          </p>
+        )}
       </div>
     </div>
   );
-};
-
-export default NewsletterModal; 
+} 

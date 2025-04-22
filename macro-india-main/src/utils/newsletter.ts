@@ -1,25 +1,31 @@
-interface NewsletterResponse {
+interface SubscribeResponse {
   success: boolean;
-  message?: string;
+  message: string;
 }
 
-export const subscribeToNewsletter = async (email: string): Promise<NewsletterResponse> => {
+export async function subscribeToNewsletter(email: string): Promise<SubscribeResponse> {
   try {
-    const response = await fetch("/api/newsletter", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email }),
-    });
+    // Here you would typically make an API call to your backend service
+    // For now, we'll simulate a successful subscription
+    await new Promise(resolve => setTimeout(resolve, 1000));
 
-    const data = await response.json();
-    return data;
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return {
+        success: false,
+        message: "Please enter a valid email address",
+      };
+    }
+
+    return {
+      success: true,
+      message: "Thank you for subscribing to our newsletter!",
+    };
   } catch (error) {
-    console.error("Error subscribing to newsletter:", error);
     return {
       success: false,
-      message: "Failed to subscribe to newsletter",
+      message: "An error occurred while subscribing. Please try again later.",
     };
   }
-}; 
+} 

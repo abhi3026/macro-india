@@ -1,0 +1,3 @@
+[submodule "IndianMacro"]
+	path = IndianMacro
+	url = https://github.com/abhi3026/macro-india 

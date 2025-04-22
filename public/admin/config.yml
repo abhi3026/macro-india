@@ -1,0 +1,71 @@
+backend:
+  name: git-gateway
+  branch: main # Branch to update (optional; defaults to main)
+  
+media_folder: "public/images/uploads" # Media files will be stored in the repo under public/images/uploads
+public_folder: "/images/uploads" # The src attribute for uploaded media will begin with /images/uploads
+
+collections:
+  - name: "research"
+    label: "Research"
+    folder: "content/research"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Publish Date", name: "date", widget: "datetime"}
+      - {label: "Featured Image", name: "thumbnail", widget: "image"}
+      - {label: "Description", name: "description", widget: "text"}
+      - {label: "Category", name: "category", widget: "select", options: ["Economic Analysis", "Market Research", "Policy Updates", "Industry Analysis"]}
+      - {label: "Body", name: "body", widget: "markdown"}
+
+  - name: "data-dashboard"
+    label: "Data Dashboard"
+    folder: "content/data-dashboard"
+    create: true
+    fields:
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Last Updated", name: "updated", widget: "datetime"}
+      - {label: "Description", name: "description", widget: "text"}
+      - {label: "Category", name: "category", widget: "select", options: ["Markets", "Economic Indicators", "Economic Calendar", "Interest Rates"]}
+      - {label: "Data", name: "data", widget: "code", default_language: "json"}
+
+  - name: "education"
+    label: "Education"
+    folder: "content/education"
+    create: true
+    fields:
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Publish Date", name: "date", widget: "datetime"}
+      - {label: "Featured Image", name: "thumbnail", widget: "image"}
+      - {label: "Description", name: "description", widget: "text"}
+      - {label: "Level", name: "level", widget: "select", options: ["Beginner", "Intermediate", "Advanced"]}
+      - {label: "Category", name: "category", widget: "select", options: ["Economics", "Markets", "Trading", "Investment"]}
+      - {label: "Body", name: "body", widget: "markdown"}
+
+  - name: "market"
+    label: "Market Insights"
+    folder: "content/market"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Date", name: "date", widget: "datetime" }
+      - { label: "Summary", name: "summary", widget: "text" }
+      - { label: "Featured Image", name: "image", widget: "image", required: false }
+      - { label: "Category", name: "category", widget: "select", options: ["Equities", "Debt", "Commodities", "Forex", "Derivatives"] }
+      - { label: "Featured", name: "featured", widget: "boolean", default: false }
+      - { label: "Content", name: "body", widget: "markdown" }
+
+  - name: "newsletter"
+    label: "Newsletter Posts"
+    folder: "content/newsletter"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Date", name: "date", widget: "datetime" }
+      - { label: "Description", name: "description", widget: "text" }
+      - { label: "Featured Image", name: "image", widget: "image", required: false }
+      - { label: "Send to Subscribers", name: "send", widget: "boolean", default: false }
+      - { label: "Body", name: "body", widget: "markdown" }

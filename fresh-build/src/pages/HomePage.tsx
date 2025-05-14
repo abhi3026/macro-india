@@ -1,5 +1,5 @@
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import MarketTickerLive from "@/components/MarketTickerLive";
@@ -29,7 +29,7 @@ const HomePage = () => {
         canonicalUrl="/"
       />
       
-      <header className="sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header className="w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-50">
         <Navbar />
       </header>
       
@@ -43,7 +43,7 @@ const HomePage = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
               <div className="lg:col-span-3">
-                <TradingViewChart />
+                <TradingViewChart defaultSymbol="NYSE:SPGI" />
               </div>
               <div className="lg:col-span-1">
                 <NewsSnippets />

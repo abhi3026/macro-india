@@ -1,45 +1,56 @@
-import { useEffect } from "react";
+
+import { useEffect, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartLine } from "lucide-react";
 
 interface TradingViewChartProps {
-  symbol?: string;
-  height?: number;
+  defaultSymbol?: string;
 }
 
-const TradingViewChart = ({
-  symbol = "NSE:NIFTY",
-  height = 600
-}: TradingViewChartProps) => {
-  useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
-    script.async = true;
-    script.innerHTML = JSON.stringify({
-      "autosize": true,
-      "symbol": symbol,
-      "interval": "D",
-      "timezone": "Asia/Kolkata",
-      "theme": "light",
-      "style": "1",
-      "locale": "en",
-      "enable_publishing": false,
-      "allow_symbol_change": true,
-      "calendar": false,
-      "support_host": "https://www.tradingview.com"
-    });
+const TradingViewChart = ({ defaultSymbol = "NYSE:SPGI" }: TradingViewChartProps) => {
+  const containerRef = useRef<HTMLDivElement>(null);
 
-    const container = document.querySelector('.tradingview-widget-container__widget');
-    if (container) {
-      container.appendChild(script);
+  useEffect(() => {
+    // Clean up any existing widgets
+    if (containerRef.current) {
+      containerRef.current.innerHTML = '';
     }
 
-    return () => {
-      if (container) {
-        container.innerHTML = '';
+    // Create a new widget
+    const script = document.createElement("script");
+    script.src = "https://s3.tradingview.com/tv.js";
+    script.async = true;
+    script.onload = () => {
+      if (window.TradingView && containerRef.current) {
+        new window.TradingView.widget({
+          autosize: true,
+          symbol: defaultSymbol,
+          interval: "D",
+          timezone: "Asia/Kolkata",
+          theme: "light",
+          style: "1",
+          locale: "en",
+          toolbar_bg: "#f1f3f6",
+          enable_publishing: false,
+          allow_symbol_change: true,
+          container_id: containerRef.current.id,
+          hide_top_toolbar: false,
+          hide_legend: false,
+          save_image: false,
+          height: 400,
+        });
       }
     };
-  }, [symbol]);
+    
+    document.head.appendChild(script);
+
+    return () => {
+      // Clean up
+      if (script.parentNode) {
+        script.parentNode.removeChild(script);
+      }
+    };
+  }, [defaultSymbol]);
 
   return (
     <Card className="shadow-sm">
@@ -50,14 +61,11 @@ const TradingViewChart = ({
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="tradingview-widget-container" style={{ height: `${height}px` }}>
-          <div className="tradingview-widget-container__widget"></div>
-          <div className="tradingview-copyright">
-            <a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank">
-              <span className="blue-text">Track all markets on TradingView</span>
-            </a>
-          </div>
-        </div>
+        <div 
+          ref={containerRef}
+          id="tradingview_widget_container"
+          className="w-full h-[400px]"
+        />
       </CardContent>
     </Card>
   );

@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { marketData } from "@/lib/marketData";
+import { generateFallbackData, MarketData as MarketDataType } from "@/lib/marketData";
 
 type MarketCategory = "indices" | "stocks" | "crypto" | "commodities" | "currencies";
 
@@ -19,8 +19,24 @@ const Markets = () => {
     { id: "currencies", label: "Currencies" }
   ];
 
-  // Get data for the active category
-  const currentData = marketData[activeCategory] || [];
+  // Get data for the active category by filtering the generated fallback data
+  const allMarketData = generateFallbackData();
+  
+  // Map market types to our categories
+  const categoryMap: { [key in MarketCategory]: string[] } = {
+    indices: ["index"],
+    stocks: ["stock"],  // Note: This might need to be adjusted based on actual data
+    crypto: ["crypto"],
+    commodities: ["commodity"],
+    currencies: ["forex"],
+  };
+  
+  // Filter data by the active category
+  const currentData = allMarketData.filter(item => {
+    const symbolDetails = allMarketData.find(s => s.symbol === item.symbol);
+    // Default to indices if no match (this helps with fallback)
+    return symbolDetails ? categoryMap[activeCategory].includes(symbolDetails.type || "index") : activeCategory === "indices";
+  });
 
   return (
     <Card className="shadow-sm">
@@ -65,12 +81,12 @@ const Markets = () => {
                     <div className="font-medium">{item.name}</div>
                     <div className="text-xs text-muted-foreground">{item.symbol}</div>
                   </td>
-                  <td className="py-2 px-4 text-right">{item.last}</td>
+                  <td className="py-2 px-4 text-right">{item.price}</td>
                   <td className={`py-2 px-4 text-right ${item.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                    {item.change >= 0 ? '+' : ''}{item.change}
+                    {item.change >= 0 ? '+' : ''}{item.change.toFixed(2)}
                   </td>
                   <td className={`py-2 px-4 text-right ${item.changePercent >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                    {item.changePercent >= 0 ? '+' : ''}{item.changePercent}%
+                    {item.changePercent >= 0 ? '+' : ''}{item.changePercent.toFixed(2)}%
                   </td>
                 </tr>
               ))}

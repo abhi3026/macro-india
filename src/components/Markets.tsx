@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { generateFallbackData, MarketData as MarketDataType } from "@/lib/marketData";
+import { generateFallbackData, marketSymbols } from "@/lib/marketData";
 
 type MarketCategory = "indices" | "stocks" | "crypto" | "commodities" | "currencies";
 
@@ -19,23 +19,24 @@ const Markets = () => {
     { id: "currencies", label: "Currencies" }
   ];
 
-  // Get data for the active category by filtering the generated fallback data
+  // Get all market data
   const allMarketData = generateFallbackData();
   
-  // Map market types to our categories
+  // Map market categories to symbol types
   const categoryMap: { [key in MarketCategory]: string[] } = {
     indices: ["index"],
-    stocks: ["stock"],  // Note: This might need to be adjusted based on actual data
+    stocks: ["stock"],
     crypto: ["crypto"],
     commodities: ["commodity"],
     currencies: ["forex"],
   };
   
-  // Filter data by the active category
+  // Filter data by the active category using marketSymbols for type information
   const currentData = allMarketData.filter(item => {
-    const symbolDetails = allMarketData.find(s => s.symbol === item.symbol);
-    // Default to indices if no match (this helps with fallback)
-    return symbolDetails ? categoryMap[activeCategory].includes(symbolDetails.type || "index") : activeCategory === "indices";
+    // Find the symbol details from marketSymbols array
+    const symbolDetails = marketSymbols.find(s => s.symbol === item.symbol);
+    // Return true if the symbol's type matches the active category
+    return symbolDetails ? categoryMap[activeCategory].includes(symbolDetails.type) : activeCategory === "indices";
   });
 
   return (

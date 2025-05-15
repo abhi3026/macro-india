@@ -8,7 +8,7 @@ interface PageHeroProps {
 
 export function PageHero({ title, description }: PageHeroProps) {
   return (
-    <section className="w-full bg-accent1 py-12">
+    <section className="w-full bg-[#000041] py-12">
       <div className="container mx-auto px-4 text-center">
         <h1 className="text-3xl md:text-4xl font-bold text-white">{title}</h1>
         {description && (

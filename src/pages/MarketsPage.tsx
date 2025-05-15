@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -10,7 +9,72 @@ import { MarketTable, MarketData } from "@/components/ui/market-table";
 import { useSearchParams } from "react-router-dom";
 import PageHero from "@/components/ui/page-hero";
 
-// Traditional TradingView widget component for Forex tab
+// TradingView Crypto Screener widget
+const CryptoWidget = () => {
+  useEffect(() => {
+    // Create container for widget
+    const container = document.getElementById('crypto-widget-container');
+    if (!container) return;
+    
+    // Clear any existing widgets
+    container.innerHTML = '';
+
+    // Create widget script
+    const script = document.createElement('script');
+    script.src = "https://s3.tradingview.com/external-embedding/embed-widget-screener.js";
+    script.async = true;
+    script.innerHTML = JSON.stringify({
+      width: "100%",
+      height: 550,
+      defaultColumn: "overview",
+      screener_type: "crypto_mkt",
+      displayCurrency: "USD",
+      colorTheme: "light",
+      locale: "en"
+    });
+
+    // Create widget container and add script
+    const widgetContainer = document.createElement('div');
+    widgetContainer.className = "tradingview-widget-container";
+    
+    const widgetDiv = document.createElement('div');
+    widgetDiv.className = "tradingview-widget-container__widget";
+    
+    const copyright = document.createElement('div');
+    copyright.className = "tradingview-widget-copyright";
+    
+    const link = document.createElement('a');
+    link.href = "https://www.tradingview.com/";
+    link.rel = "noopener nofollow";
+    link.target = "_blank";
+    
+    const span = document.createElement('span');
+    span.className = "blue-text";
+    span.textContent = "Track all markets on TradingView";
+    
+    link.appendChild(span);
+    copyright.appendChild(link);
+    
+    widgetContainer.appendChild(widgetDiv);
+    widgetContainer.appendChild(copyright);
+    widgetContainer.appendChild(script);
+    
+    container.appendChild(widgetContainer);
+
+    // Clean up
+    return () => {
+      if (container) {
+        container.innerHTML = '';
+      }
+    };
+  }, []);
+
+  return (
+    <div id="crypto-widget-container" className="w-full h-[550px]"></div>
+  );
+};
+
+// Forex widget with light theme
 const ForexWidget = () => {
   useEffect(() => {
     // Create container for widget
@@ -40,9 +104,9 @@ const ForexWidget = () => {
         "INR"
       ],
       isTransparent: false,
-      colorTheme: "dark",
+      colorTheme: "light", // Changed to light theme
       locale: "en",
-      backgroundColor: "#000000"
+      backgroundColor: "#ffffff" // Light background color
     });
 
     // Create widget container and add script
@@ -145,24 +209,6 @@ const MarketsPage = () => {
     // Add more stocks...
   ];
 
-  const crypto: MarketData[] = [
-    { 
-      symbol: "BTC", 
-      name: "Bitcoin", 
-      lastPrice: 67890.12, 
-      changePercent: 1.85,
-      volume: 45678901234
-    },
-    { 
-      symbol: "ETH", 
-      name: "Ethereum", 
-      lastPrice: 3456.78, 
-      changePercent: -1.31,
-      volume: 23456789012
-    },
-    // Add more crypto...
-  ];
-
   const commodities: MarketData[] = [
     { 
       symbol: "GOLD", 
@@ -179,6 +225,7 @@ const MarketsPage = () => {
     // Add more commodities...
   ];
 
+  // Renamed from 'currencies' to 'forex'
   const forex: MarketData[] = [
     { 
       flag: "/flags/us.svg",
@@ -224,7 +271,7 @@ const MarketsPage = () => {
                 <TabsTrigger id="tab-stocks" value="stocks">Stocks</TabsTrigger>
                 <TabsTrigger id="tab-crypto" value="crypto">Crypto</TabsTrigger>
                 <TabsTrigger id="tab-commodities" value="commodities">Commodities</TabsTrigger>
-                <TabsTrigger id="tab-forex" value="forex">Forex</TabsTrigger>
+                <TabsTrigger id="tab-forex" value="forex">Forex</TabsTrigger> {/* Renamed from "Currencies" */}
               </TabsList>
               
               <TabsContent value="indices" className="mt-0">
@@ -236,20 +283,18 @@ const MarketsPage = () => {
               </TabsContent>
               
               <TabsContent value="crypto" className="mt-0">
-                <MarketTable data={crypto} showVolume />
+                {/* Replace market table with TradingView widget */}
+                <CryptoWidget />
               </TabsContent>
               
               <TabsContent value="commodities" className="mt-0">
                 <MarketTable data={commodities} />
               </TabsContent>
               
-              <TabsContent value="forex" className="mt-0">
+              <TabsContent value="forex" className="mt-0"> {/* Renamed from "currencies" */}
                 <div className="space-y-6">
-                  <MarketTable data={forex} />
-                  <div className="mt-6">
-                    <h3 className="text-lg font-semibold mb-4">Forex Cross Rates</h3>
-                    <ForexWidget />
-                  </div>
+                  {/* Remove search bar and market table, keep only the widget */}
+                  <ForexWidget />
                 </div>
               </TabsContent>
             </Tabs>

@@ -46,7 +46,7 @@ const HomePage = () => {
         description="Access comprehensive Indian economic data, financial market analysis, and research. Track markets, economic indicators, and stay informed with IndianMacro."
       />
       
-      <header className="sticky top-0 z-50">
+      <header className="sticky top-0 z-50 bg-[#000041] text-white">
         <Navbar />
       </header>
       
@@ -59,7 +59,7 @@ const HomePage = () => {
           {/* Left Column */}
           <div className="lg:col-span-2 space-y-8">
             <TradingViewChart defaultSymbol="NYSE:SPGI" />
-            {/* Markets table moved above Economic Indicators as requested */}
+            {/* Markets moved above Economic Indicators as requested */}
             <Markets />
             <EconomicIndicatorsDashboard />
           </div>

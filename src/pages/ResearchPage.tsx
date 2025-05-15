@@ -1,3 +1,4 @@
+
 import { useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -24,7 +25,7 @@ const ResearchPage = () => {
         canonicalUrl="/research"
       />
       
-      <header className="sticky top-0 z-50">
+      <header className="sticky top-0 z-50 bg-[#000041] text-white">
         <Navbar />
       </header>
       

@@ -24,53 +24,48 @@ const Markets = () => {
   // Get all market data
   const allMarketData = generateFallbackData();
   
-  // Map market categories to symbol types and include the requested symbols
-  const categoryMap: { [key in MarketCategory]: { types: string[], symbols: string[] } } = {
-    indices: { 
-      types: ["index"],
-      symbols: ["^NSEI", "^NSEBANK", "^BSESN", "^GSPC", "^FTSE", "^SSEC", "^N225", "^BVSP", "^GDAXI", "^FCHI"] 
-    },
-    stocks: { 
-      types: ["stock"],
-      symbols: ["RELIANCE.NS", "TCS.NS", "HDFCBANK.NS", "INFY.NS", "ICICIBANK.NS", "SBIN.NS", "HINDUNILVR.NS", "BHARTIARTL.NS", "WIPRO.NS", "LT.NS"] 
-    },
-    crypto: { 
-      types: ["crypto"],
-      symbols: ["BTCUSD", "ETHUSD", "SOLUSD", "XRPUSD", "DOGEUSD", "ADAUSD", "DOTUSD", "AVAXUSD", "SHIBUSD", "LINKUSD"] 
-    },
-    commodities: { 
-      types: ["commodity"],
-      symbols: ["GC=F", "SI=F", "CL=F", "BZ=F"] 
-    },
-    forex: { 
-      types: ["forex"],
-      symbols: ["USDINR=X", "GBPINR=X", "EURINR=X", "JPYINR=X", "AUDINR=X", "USDJPY=X", "USDEUR=X"] 
-    },
+  // Define preferred symbols for each category
+  const preferredSymbols: Record<MarketCategory, string[]> = {
+    indices: ["^NSEI", "^NSEBANK", "^BSESN", "^GSPC", "^FTSE", "^SSEC", "^N225", "^BVSP", "^GDAXI", "^FCHI"],
+    stocks: ["RELIANCE.NS", "TCS.NS", "HDFCBANK.NS", "INFY.NS", "ICICIBANK.NS", "SBIN.NS", "HINDUNILVR.NS", "BHARTIARTL.NS", "WIPRO.NS", "LT.NS"],
+    crypto: ["BTCUSD", "ETHUSD", "SOLUSD", "XRPUSD", "DOGEUSD", "ADAUSD", "DOTUSD", "AVAXUSD", "SHIBUSD", "LINKUSD"],
+    commodities: ["GC=F", "SI=F", "CL=F", "BZ=F"], // Gold, Silver, WTI Crude, Brent Crude
+    forex: ["USDINR=X", "GBPINR=X", "EURINR=X", "JPYINR=X", "AUDINR=X", "USDJPY=X", "USDEUR=X"]
   };
   
-  // Filter data by the active category using marketSymbols for type information and preferred symbols
-  const currentData = allMarketData.filter(item => {
-    // Find the symbol details from marketSymbols array
+  // Map market categories to symbol types for filtering non-preferred symbols
+  const categoryTypeMap: Record<MarketCategory, string[]> = {
+    indices: ["index"],
+    stocks: ["stock"],
+    crypto: ["crypto"],
+    commodities: ["commodity"],
+    forex: ["forex"]
+  };
+
+  // Filter by active category and preferred symbols
+  const filteredData = allMarketData.filter(item => {
+    // Check if this is a preferred symbol for the active category
+    const isPrefSymbol = preferredSymbols[activeCategory].includes(item.symbol);
+    if (isPrefSymbol) return true;
+    
+    // If not a preferred symbol, check if it matches the category type
     const symbolDetails = marketSymbols.find(s => s.symbol === item.symbol);
-    
-    // First check if this symbol is in our preferred list
-    const isPreferredSymbol = categoryMap[activeCategory].symbols.includes(item.symbol);
-    
-    // If it's a preferred symbol or matches the type, include it
-    return isPreferredSymbol || 
-          (symbolDetails && categoryMap[activeCategory].types.includes(symbolDetails.type));
+    return symbolDetails && categoryTypeMap[activeCategory].includes(symbolDetails.type);
   });
   
-  // Sort to prioritize our preferred symbols
-  const sortedData = [...currentData].sort((a, b) => {
-    const aIndex = categoryMap[activeCategory].symbols.indexOf(a.symbol);
-    const bIndex = categoryMap[activeCategory].symbols.indexOf(b.symbol);
+  // Sort to prioritize preferred symbols
+  const sortedData = [...filteredData].sort((a, b) => {
+    const aIndex = preferredSymbols[activeCategory].indexOf(a.symbol);
+    const bIndex = preferredSymbols[activeCategory].indexOf(b.symbol);
     
     if (aIndex === -1 && bIndex === -1) return 0;
     if (aIndex === -1) return 1;
     if (bIndex === -1) return -1;
     return aIndex - bIndex;
   });
+
+  // Limit to first 5 items for display
+  const displayData = sortedData.slice(0, 5);
 
   return (
     <Card className="shadow-sm">
@@ -109,13 +104,13 @@ const Markets = () => {
               </tr>
             </thead>
             <tbody>
-              {sortedData.slice(0, 5).map((item, index) => (
+              {displayData.map((item, index) => (
                 <tr key={index} className="border-b last:border-b-0 hover:bg-muted/30">
                   <td className="py-2 px-4">
                     <div className="font-medium">{item.name}</div>
                     <div className="text-xs text-muted-foreground">{item.symbol}</div>
                   </td>
-                  <td className="py-2 px-4 text-right">{item.price}</td>
+                  <td className="py-2 px-4 text-right">{item.price.toFixed(2)}</td>
                   <td className={`py-2 px-4 text-right ${item.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                     {item.change >= 0 ? '+' : ''}{item.change.toFixed(2)}
                   </td>

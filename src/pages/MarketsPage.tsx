@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -7,6 +8,83 @@ import MarketTickerLive from "@/components/MarketTickerLive";
 import { Helmet } from "react-helmet-async";
 import { MarketTable, MarketData } from "@/components/ui/market-table";
 import { useSearchParams } from "react-router-dom";
+import PageHero from "@/components/ui/page-hero";
+
+// Traditional TradingView widget component for Forex tab
+const ForexWidget = () => {
+  useEffect(() => {
+    // Create container for widget
+    const container = document.getElementById('forex-widget-container');
+    if (!container) return;
+    
+    // Clear any existing widgets
+    container.innerHTML = '';
+
+    // Create widget script
+    const script = document.createElement('script');
+    script.src = "https://s3.tradingview.com/external-embedding/embed-widget-forex-cross-rates.js";
+    script.async = true;
+    script.innerHTML = JSON.stringify({
+      width: "100%",
+      height: 400,
+      currencies: [
+        "EUR",
+        "USD",
+        "JPY",
+        "GBP",
+        "CHF",
+        "AUD",
+        "CAD",
+        "NZD",
+        "CNY",
+        "INR"
+      ],
+      isTransparent: false,
+      colorTheme: "dark",
+      locale: "en",
+      backgroundColor: "#000000"
+    });
+
+    // Create widget container and add script
+    const widgetContainer = document.createElement('div');
+    widgetContainer.className = "tradingview-widget-container";
+    
+    const widgetDiv = document.createElement('div');
+    widgetDiv.className = "tradingview-widget-container__widget";
+    
+    const copyright = document.createElement('div');
+    copyright.className = "tradingview-widget-copyright";
+    
+    const link = document.createElement('a');
+    link.href = "https://www.tradingview.com/";
+    link.rel = "noopener nofollow";
+    link.target = "_blank";
+    
+    const span = document.createElement('span');
+    span.className = "blue-text";
+    span.textContent = "Track all markets on TradingView";
+    
+    link.appendChild(span);
+    copyright.appendChild(link);
+    
+    widgetContainer.appendChild(widgetDiv);
+    widgetContainer.appendChild(copyright);
+    widgetContainer.appendChild(script);
+    
+    container.appendChild(widgetContainer);
+
+    // Clean up
+    return () => {
+      if (container) {
+        container.innerHTML = '';
+      }
+    };
+  }, []);
+
+  return (
+    <div id="forex-widget-container" className="w-full h-[400px]"></div>
+  );
+};
 
 const MarketsPage = () => {
   const [searchParams] = useSearchParams();
@@ -29,6 +107,13 @@ const MarketsPage = () => {
       name: "Nifty 50", 
       lastPrice: 22147.50, 
       changePercent: 0.56 
+    },
+    { 
+      flag: "/flags/in.svg",
+      symbol: "BANKNIFTY", 
+      name: "Bank Nifty", 
+      lastPrice: 48590.35, 
+      changePercent: 0.89 
     },
     { 
       flag: "/flags/in.svg",
@@ -94,7 +179,7 @@ const MarketsPage = () => {
     // Add more commodities...
   ];
 
-  const currencies: MarketData[] = [
+  const forex: MarketData[] = [
     { 
       flag: "/flags/us.svg",
       symbol: "USD/INR", 
@@ -109,7 +194,7 @@ const MarketsPage = () => {
       lastPrice: 89.8765, 
       changePercent: 0.26 
     },
-    // Add more currencies...
+    // Add more forex pairs...
   ];
 
   return (
@@ -125,15 +210,13 @@ const MarketsPage = () => {
       <Navbar />
       <MarketTickerLive />
       
+      <PageHero 
+        title="Markets" 
+        description="Track Indian financial markets across asset classes"
+      />
+      
       <main className="flex-1 pt-4 pb-8">
         <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
-          <section className="mb-8">
-            <h1 className="text-4xl font-bold mb-4">Markets</h1>
-            <p className="text-muted-foreground">
-              Monitor Indian financial markets across asset classes
-            </p>
-          </section>
-
           <Card className="p-6">
             <Tabs value={activeTab} className="w-full" onValueChange={setActiveTab}>
               <TabsList className="grid w-full grid-cols-5 mb-6">
@@ -141,7 +224,7 @@ const MarketsPage = () => {
                 <TabsTrigger id="tab-stocks" value="stocks">Stocks</TabsTrigger>
                 <TabsTrigger id="tab-crypto" value="crypto">Crypto</TabsTrigger>
                 <TabsTrigger id="tab-commodities" value="commodities">Commodities</TabsTrigger>
-                <TabsTrigger id="tab-currencies" value="currencies">Currencies</TabsTrigger>
+                <TabsTrigger id="tab-forex" value="forex">Forex</TabsTrigger>
               </TabsList>
               
               <TabsContent value="indices" className="mt-0">
@@ -160,8 +243,14 @@ const MarketsPage = () => {
                 <MarketTable data={commodities} />
               </TabsContent>
               
-              <TabsContent value="currencies" className="mt-0">
-                <MarketTable data={currencies} />
+              <TabsContent value="forex" className="mt-0">
+                <div className="space-y-6">
+                  <MarketTable data={forex} />
+                  <div className="mt-6">
+                    <h3 className="text-lg font-semibold mb-4">Forex Cross Rates</h3>
+                    <ForexWidget />
+                  </div>
+                </div>
               </TabsContent>
             </Tabs>
           </Card>
@@ -173,4 +262,4 @@ const MarketsPage = () => {
   );
 };
 
-export default MarketsPage; 
+export default MarketsPage;

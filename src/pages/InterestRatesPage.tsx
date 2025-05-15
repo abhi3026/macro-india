@@ -3,22 +3,31 @@ import { Card } from "@/components/ui/card";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import MarketTickerLive from "@/components/MarketTickerLive";
+import PageHero from "@/components/ui/page-hero";
 
-export default function InterestRatesPage() {
+const InterestRatesPage = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Helmet>
         <title>Interest Rates & Bonds | Macro India</title>
         <meta
           name="description"
-          content="Track interest rates, bond yields, and monetary policy data for India."
+          content="Track interest rates, bond yields, and central bank policies."
         />
       </Helmet>
       
-      <Navbar />
+      <header className="sticky top-0 z-50">
+        <Navbar />
+      </header>
+      
       <MarketTickerLive />
       
-      <main className="flex-1 pt-4 pb-8">
+      <PageHero 
+        title="Interest Rates & Bonds"
+        description="Track interest rates, bond yields, and central bank policies"
+      />
+      
+      <main className="flex-1 py-8">
         <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
           <section className="mb-8">
             <h1 className="text-4xl font-bold mb-4">Interest Rates & Bonds</h1>
@@ -42,4 +51,6 @@ export default function InterestRatesPage() {
       <Footer />
     </div>
   );
-} 
+};
+
+export default InterestRatesPage;

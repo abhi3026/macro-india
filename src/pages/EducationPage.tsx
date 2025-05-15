@@ -16,6 +16,7 @@ import {
 import { fetchMarketPosts, MarketPost } from "@/utils/contentLoader";
 import { updateMetaTags } from "@/utils/metaTags";
 import SEOHead from "@/components/SEOHead";
+import PageHero from "@/components/ui/page-hero";
 
 const categories = [
   "All Categories",
@@ -94,17 +95,14 @@ const EducationPage = () => {
         canonicalUrl="/education"
       />
       
-      <Navbar />
+      <header className="sticky top-0 z-50">
+        <Navbar />
+      </header>
       
-      {/* Header */}
-      <div className="bg-indianmacro-800 text-white pt-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <h1 className="text-3xl md:text-4xl font-bold">Educational Resources</h1>
-          <p className="mt-4 max-w-3xl text-indianmacro-200">
-            Learn about financial markets, macroeconomics, and important financial concepts with our educational resources.
-          </p>
-        </div>
-      </div>
+      <PageHero 
+        title="Educational Resources"
+        description="Learn about economics, markets, and finance with our educational content"
+      />
       
       {/* Featured Post */}
       {!isLoading && filteredPosts.find(post => post.featured) && (
@@ -126,119 +124,121 @@ const EducationPage = () => {
       )}
       
       {/* Main Educational Content */}
-      <div className="flex-grow bg-white dark:bg-indianmacro-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {/* Search and Filter */}
-          <div className="flex flex-col md:flex-row gap-4 mb-8">
-            <div className="relative flex-grow">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-              <Input
-                type="text"
-                placeholder="Search educational resources..."
-                className="pl-10"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
+      <main className="flex-1 container mx-auto px-4 py-8">
+        <div className="flex-grow bg-white dark:bg-indianmacro-900">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            {/* Search and Filter */}
+            <div className="flex flex-col md:flex-row gap-4 mb-8">
+              <div className="relative flex-grow">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <Input
+                  type="text"
+                  placeholder="Search educational resources..."
+                  className="pl-10"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+              
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="flex items-center gap-2">
+                    <Filter className="h-4 w-4" />
+                    Categories
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  {categories.map((category) => (
+                    <DropdownMenuCheckboxItem
+                      key={category}
+                      checked={selectedCategories.includes(category)}
+                      onCheckedChange={(checked) => {
+                        if (category === "All Categories") {
+                          setSelectedCategories(checked ? categories.slice(1) : []);
+                        } else {
+                          setSelectedCategories(
+                            checked
+                              ? [...selectedCategories, category]
+                              : selectedCategories.filter((c) => c !== category)
+                          );
+                        }
+                      }}
+                    >
+                      {category}
+                    </DropdownMenuCheckboxItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
             
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="flex items-center gap-2">
-                  <Filter className="h-4 w-4" />
-                  Categories
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                {categories.map((category) => (
-                  <DropdownMenuCheckboxItem
+            {/* Category Sections */}
+            <div className="mb-10">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {categories.slice(1).map((category) => (
+                  <Button
                     key={category}
-                    checked={selectedCategories.includes(category)}
-                    onCheckedChange={(checked) => {
-                      if (category === "All Categories") {
-                        setSelectedCategories(checked ? categories.slice(1) : []);
-                      } else {
-                        setSelectedCategories(
-                          checked
-                            ? [...selectedCategories, category]
-                            : selectedCategories.filter((c) => c !== category)
-                        );
-                      }
+                    variant={selectedCategories.includes(category) ? "default" : "outline"}
+                    className={`h-auto py-6 justify-start flex-col items-start ${
+                      selectedCategories.includes(category) ? "bg-accent1 hover:bg-accent1/90" : ""
+                    }`}
+                    onClick={() => {
+                      setSelectedCategories(
+                        selectedCategories.includes(category)
+                          ? selectedCategories.filter((c) => c !== category)
+                          : [...selectedCategories, category]
+                      );
                     }}
                   >
-                    {category}
-                  </DropdownMenuCheckboxItem>
+                    <span className="text-lg font-medium">{category}</span>
+                    <span className="text-sm mt-1 text-left">
+                      {educationalPosts.filter(p => p.category === category).length} articles
+                    </span>
+                  </Button>
                 ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-          
-          {/* Category Sections */}
-          <div className="mb-10">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {categories.slice(1).map((category) => (
-                <Button
-                  key={category}
-                  variant={selectedCategories.includes(category) ? "default" : "outline"}
-                  className={`h-auto py-6 justify-start flex-col items-start ${
-                    selectedCategories.includes(category) ? "bg-accent1 hover:bg-accent1/90" : ""
-                  }`}
+              </div>
+            </div>
+            
+            {/* Educational Posts Grid */}
+            {isLoading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {Array(6).fill(0).map((_, i) => (
+                  <div key={i} className="animate-pulse">
+                    <div className="h-48 bg-indianmacro-200 dark:bg-indianmacro-700 rounded-lg mb-4"></div>
+                    <div className="h-6 bg-indianmacro-200 dark:bg-indianmacro-700 rounded w-3/4 mb-2"></div>
+                    <div className="h-4 bg-indianmacro-200 dark:bg-indianmacro-700 rounded w-1/2 mb-4"></div>
+                    <div className="h-4 bg-indianmacro-200 dark:bg-indianmacro-700 rounded w-full mb-2"></div>
+                    <div className="h-4 bg-indianmacro-200 dark:bg-indianmacro-700 rounded w-full mb-2"></div>
+                    <div className="h-4 bg-indianmacro-200 dark:bg-indianmacro-700 rounded w-3/4"></div>
+                  </div>
+                ))}
+              </div>
+            ) : filteredPosts.filter(post => !post.featured).length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredPosts
+                  .filter(post => !post.featured)
+                  .map((post) => (
+                    <Link key={post.id} to={`/education/${post.slug}`}>
+                      <BlogPostCard key={post.id} post={post} />
+                    </Link>
+                  ))}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <p className="text-indianmacro-600 dark:text-indianmacro-400">No educational resources found matching your search criteria.</p>
+                <Button 
+                  variant="link" 
                   onClick={() => {
-                    setSelectedCategories(
-                      selectedCategories.includes(category)
-                        ? selectedCategories.filter((c) => c !== category)
-                        : [...selectedCategories, category]
-                    );
+                    setSearchQuery("");
+                    setSelectedCategories([]);
                   }}
                 >
-                  <span className="text-lg font-medium">{category}</span>
-                  <span className="text-sm mt-1 text-left">
-                    {educationalPosts.filter(p => p.category === category).length} articles
-                  </span>
+                  Clear filters
                 </Button>
-              ))}
-            </div>
+              </div>
+            )}
           </div>
-          
-          {/* Educational Posts Grid */}
-          {isLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {Array(6).fill(0).map((_, i) => (
-                <div key={i} className="animate-pulse">
-                  <div className="h-48 bg-indianmacro-200 dark:bg-indianmacro-700 rounded-lg mb-4"></div>
-                  <div className="h-6 bg-indianmacro-200 dark:bg-indianmacro-700 rounded w-3/4 mb-2"></div>
-                  <div className="h-4 bg-indianmacro-200 dark:bg-indianmacro-700 rounded w-1/2 mb-4"></div>
-                  <div className="h-4 bg-indianmacro-200 dark:bg-indianmacro-700 rounded w-full mb-2"></div>
-                  <div className="h-4 bg-indianmacro-200 dark:bg-indianmacro-700 rounded w-full mb-2"></div>
-                  <div className="h-4 bg-indianmacro-200 dark:bg-indianmacro-700 rounded w-3/4"></div>
-                </div>
-              ))}
-            </div>
-          ) : filteredPosts.filter(post => !post.featured).length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredPosts
-                .filter(post => !post.featured)
-                .map((post) => (
-                  <Link key={post.id} to={`/education/${post.slug}`}>
-                    <BlogPostCard key={post.id} post={post} />
-                  </Link>
-                ))}
-            </div>
-          ) : (
-            <div className="text-center py-12">
-              <p className="text-indianmacro-600 dark:text-indianmacro-400">No educational resources found matching your search criteria.</p>
-              <Button 
-                variant="link" 
-                onClick={() => {
-                  setSearchQuery("");
-                  setSelectedCategories([]);
-                }}
-              >
-                Clear filters
-              </Button>
-            </div>
-          )}
         </div>
-      </div>
+      </main>
       
       <Footer />
     </div>

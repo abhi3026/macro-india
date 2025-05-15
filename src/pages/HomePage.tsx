@@ -8,7 +8,6 @@ import Markets from "@/components/Markets";
 import EconomicIndicatorsDashboard from "@/components/EconomicIndicatorsDashboard";
 import EconomicCalendar from "@/components/EconomicCalendar";
 import TradingViewChart from "@/components/TradingViewChart";
-import AdSpace from "@/components/AdSpace";
 import TradingViewNewsWidget from "@/components/TradingViewNewsWidget";
 import SEOHead from "@/components/SEOHead";
 import FeaturedResearch from "@/components/FeaturedResearch";
@@ -60,8 +59,9 @@ const HomePage = () => {
           {/* Left Column */}
           <div className="lg:col-span-2 space-y-8">
             <TradingViewChart defaultSymbol="NYSE:SPGI" />
-            <EconomicIndicatorsDashboard />
+            {/* Markets table moved above Economic Indicators as requested */}
             <Markets />
+            <EconomicIndicatorsDashboard />
           </div>
 
           {/* Right Column */}

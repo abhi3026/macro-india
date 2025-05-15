@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import MarketTickerLive from "@/components/MarketTickerLive";
+import PageHero from "@/components/ui/page-hero";
 import { EconomicTable, EconomicData } from "@/components/ui/economic-table";
 
 export default function EconomicIndicatorsPage() {
@@ -123,14 +124,22 @@ export default function EconomicIndicatorsPage() {
         <title>Economic Indicators | Macro India</title>
         <meta
           name="description"
-          content="Track key economic indicators for India including GDP, inflation, employment, and more."
+          content="Track key economic indicators of the Indian economy."
         />
       </Helmet>
       
-      <Navbar />
+      <header className="sticky top-0 z-50">
+        <Navbar />
+      </header>
+      
       <MarketTickerLive />
       
-      <main className="flex-1 pt-4 pb-8">
+      <PageHero 
+        title="Economic Indicators"
+        description="Track key economic indicators of the Indian economy"
+      />
+      
+      <main className="flex-1 py-8">
         <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
           <section className="mb-8">
             <h1 className="text-4xl font-bold mb-4">Economic Indicators</h1>
@@ -154,4 +163,4 @@ export default function EconomicIndicatorsPage() {
       <Footer />
     </div>
   );
-} 
+}

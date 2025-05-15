@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { PageHeader } from "@/components/ui/page-header";
+import PageHero from "@/components/ui/page-hero";
 
 const TermsPage = () => {
   useEffect(() => {
@@ -11,21 +11,23 @@ const TermsPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Helmet>
-        <title>Terms of Service | Macro India</title>
-        <meta
-          name="description"
-          content="Our terms of service and usage guidelines."
-        />
-      </Helmet>
+      <header className="sticky top-0 z-50">
+        <Navbar />
+      </header>
       
-      <Navbar />
+      <PageHero 
+        title="Terms of Service"
+        description="Please review our terms of service carefully"
+      />
       
-      <main className="flex-1">
-        <PageHeader 
-          title="Terms of Service"
-          description="Please read these terms carefully before using our services."
-        />
+      <main className="flex-1 container mx-auto px-4 py-8">
+        <Helmet>
+          <title>Terms of Service | Macro India</title>
+          <meta
+            name="description"
+            content="Our terms of service and usage guidelines."
+          />
+        </Helmet>
         
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-3xl font-bold mb-8">Terms of Service</h1>
@@ -115,4 +117,4 @@ const TermsPage = () => {
   );
 };
 
-export default TermsPage; 
+export default TermsPage;

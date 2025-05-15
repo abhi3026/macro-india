@@ -6,37 +6,70 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { generateFallbackData, marketSymbols } from "@/lib/marketData";
 
-type MarketCategory = "indices" | "stocks" | "crypto" | "commodities" | "currencies";
+// Updated type to change "currencies" to "forex"
+type MarketCategory = "indices" | "stocks" | "crypto" | "commodities" | "forex";
 
 const Markets = () => {
   const [activeCategory, setActiveCategory] = useState<MarketCategory>("indices");
 
+  // Updated to rename "Currencies" to "Forex"
   const categories: { id: MarketCategory; label: string }[] = [
     { id: "indices", label: "Indices" },
     { id: "stocks", label: "Stocks" },
     { id: "crypto", label: "Crypto" },
     { id: "commodities", label: "Commodities" },
-    { id: "currencies", label: "Currencies" }
+    { id: "forex", label: "Forex" }  // Renamed from "Currencies"
   ];
 
   // Get all market data
   const allMarketData = generateFallbackData();
   
-  // Map market categories to symbol types
-  const categoryMap: { [key in MarketCategory]: string[] } = {
-    indices: ["index"],
-    stocks: ["stock"],
-    crypto: ["crypto"],
-    commodities: ["commodity"],
-    currencies: ["forex"],
+  // Map market categories to symbol types and include the requested symbols
+  const categoryMap: { [key in MarketCategory]: { types: string[], symbols: string[] } } = {
+    indices: { 
+      types: ["index"],
+      symbols: ["^NSEI", "^NSEBANK", "^BSESN", "^GSPC", "^FTSE", "^SSEC", "^N225", "^BVSP", "^GDAXI", "^FCHI"] 
+    },
+    stocks: { 
+      types: ["stock"],
+      symbols: ["RELIANCE.NS", "TCS.NS", "HDFCBANK.NS", "INFY.NS", "ICICIBANK.NS", "SBIN.NS", "HINDUNILVR.NS", "BHARTIARTL.NS", "WIPRO.NS", "LT.NS"] 
+    },
+    crypto: { 
+      types: ["crypto"],
+      symbols: ["BTCUSD", "ETHUSD", "SOLUSD", "XRPUSD", "DOGEUSD", "ADAUSD", "DOTUSD", "AVAXUSD", "SHIBUSD", "LINKUSD"] 
+    },
+    commodities: { 
+      types: ["commodity"],
+      symbols: ["GC=F", "SI=F", "CL=F", "BZ=F"] 
+    },
+    forex: { 
+      types: ["forex"],
+      symbols: ["USDINR=X", "GBPINR=X", "EURINR=X", "JPYINR=X", "AUDINR=X", "USDJPY=X", "USDEUR=X"] 
+    },
   };
   
-  // Filter data by the active category using marketSymbols for type information
+  // Filter data by the active category using marketSymbols for type information and preferred symbols
   const currentData = allMarketData.filter(item => {
     // Find the symbol details from marketSymbols array
     const symbolDetails = marketSymbols.find(s => s.symbol === item.symbol);
-    // Return true if the symbol's type matches the active category
-    return symbolDetails ? categoryMap[activeCategory].includes(symbolDetails.type) : activeCategory === "indices";
+    
+    // First check if this symbol is in our preferred list
+    const isPreferredSymbol = categoryMap[activeCategory].symbols.includes(item.symbol);
+    
+    // If it's a preferred symbol or matches the type, include it
+    return isPreferredSymbol || 
+          (symbolDetails && categoryMap[activeCategory].types.includes(symbolDetails.type));
+  });
+  
+  // Sort to prioritize our preferred symbols
+  const sortedData = [...currentData].sort((a, b) => {
+    const aIndex = categoryMap[activeCategory].symbols.indexOf(a.symbol);
+    const bIndex = categoryMap[activeCategory].symbols.indexOf(b.symbol);
+    
+    if (aIndex === -1 && bIndex === -1) return 0;
+    if (aIndex === -1) return 1;
+    if (bIndex === -1) return -1;
+    return aIndex - bIndex;
   });
 
   return (
@@ -76,7 +109,7 @@ const Markets = () => {
               </tr>
             </thead>
             <tbody>
-              {currentData.slice(0, 5).map((item, index) => (
+              {sortedData.slice(0, 5).map((item, index) => (
                 <tr key={index} className="border-b last:border-b-0 hover:bg-muted/30">
                   <td className="py-2 px-4">
                     <div className="font-medium">{item.name}</div>
@@ -96,7 +129,7 @@ const Markets = () => {
         </div>
         <div className="mt-4 flex justify-end">
           <Button asChild variant="outline" size="sm">
-            <Link to={`/live-markets?category=${activeCategory}`}>
+            <Link to={`/data-dashboard/markets?tab=${activeCategory}`}>
               Show All {activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1)}
             </Link>
           </Button>

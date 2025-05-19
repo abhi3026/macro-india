@@ -1,73 +1,70 @@
-# Welcome to your Lovable project
+# Macro India
 
-## Project info
+**Macro India** is a professional financial research website designed to provide insights into Indian macroeconomic trends, investment ideas, and real-time financial data. Built using modern web technologies, it serves both educational and analytical purposes.
 
-**URL**: https://lovable.dev/projects/c605e5b5-b9f6-49b4-9d96-3936cee1c62f
+## 🌐 Live Website
+[https://www.indianmacro.com](https://www.indianmacro.com)
 
-## How can I edit this code?
+## 📦 Features
 
-There are several ways of editing your application.
+- 📊 Real-time stock and crypto market data (via API)
+- 📚 CMS integration for easy blog/article publishing
+- 📈 SEO-optimized layout and fast-loading pages
+- 🌓 Light/Dark theme toggle
+- 📰 Newsletter subscription via Buttondown
+- 📡 Auto social media sharing
+- 📈 Google Analytics & AdSense ready
 
-**Use Lovable**
+## 🚀 Tech Stack
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/c605e5b5-b9f6-49b4-9d96-3936cee1c62f) and start prompting.
+- Frontend: React + TypeScript + Tailwind CSS + Vite
+- CMS: Netlify CMS
+- Hosting: Netlify (CI/CD from GitHub)
+- Analytics & Monetization: Google Analytics, Google AdSense (placeholder ready)
+- APIs: Live financial data via integrated endpoints
 
-Changes made via Lovable will be committed automatically to this repo.
+## 📁 Project Structure
 
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```bash
+├── public/                 # Static assets
+├── src/                    # Main source code
+│   ├── components/         # Reusable UI components
+│   ├── pages/              # Page routes
+│   ├── styles/             # Global styles
+│   └── main.tsx            # Entry point
+├── cms/                    # Netlify CMS configuration
+├── vite.config.ts          # Vite config
+├── tailwind.config.ts      # TailwindCSS config
+└── netlify.toml            # Netlify deploy config
 ```
 
-**Edit a file directly in GitHub**
+## 🛠️ Setup Instructions
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/abhi3026/macro-india.git
+   cd macro-india
+   ```
 
-**Use GitHub Codespaces**
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+3. **Start local development server**
+   ```bash
+   npm run dev
+   ```
 
-## What technologies are used for this project?
+4. **Build for production**
+   ```bash
+   npm run build
+   ```
 
-This project is built with:
+## 🤝 Contributing
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+Pull requests are welcome. For major changes, please open an issue first.
 
-## How can I deploy this project?
+## 🛡️ License
 
-Simply open [Lovable](https://lovable.dev/projects/c605e5b5-b9f6-49b4-9d96-3936cee1c62f) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes it is!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+This project is licensed under the MIT License — see the [LICENSE](./LICENSE) file for details.

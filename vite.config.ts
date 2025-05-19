@@ -18,4 +18,8 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    outDir: 'dist',
+    sourcemap: true
+  }
 }));

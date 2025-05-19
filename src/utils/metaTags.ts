@@ -1,4 +1,3 @@
-
 /**
  * Utility for updating meta tags throughout the application
  */
@@ -87,25 +86,29 @@ const updateOrCreateMeta = (
 };
 
 /**
- * Restores market ticker functionality after theme changes
- * This function helps fix any UI elements that might break during theme changes
+ * Restores the market ticker after theme changes
+ * This helps prevent TradingView widget issues during theme toggling
  */
-export const restoreMarketTicker = (): void => {
-  // Find market ticker containers
-  const tickerContainers = document.querySelectorAll('.market-ticker-container');
-  
-  // If there are ticker containers, they may need refreshing
-  if (tickerContainers.length > 0) {
-    // Force a small UI update by toggling a class
-    tickerContainers.forEach(container => {
-      // Add a temporary class
-      container.classList.add('ticker-refreshing');
-      
-      // Remove it after a brief delay to trigger a repaint
+export const restoreMarketTicker = () => {
+  try {
+    const tickerIframe = document.getElementById('market-ticker-iframe') as HTMLIFrameElement;
+    if (tickerIframe) {
+      // Refresh the iframe by reloading its src
+      const currentSrc = tickerIframe.src;
+      tickerIframe.src = '';
       setTimeout(() => {
-        container.classList.remove('ticker-refreshing');
+        tickerIframe.src = currentSrc;
       }, 50);
-    });
+    }
+
+    // Also refresh any tradingview widget containers
+    const widgetContainers = document.querySelectorAll('.tradingview-widget-container__widget');
+    if (widgetContainers.length > 0) {
+      // Force widget reload by triggering a resize event
+      window.dispatchEvent(new Event('resize'));
+    }
+  } catch (error) {
+    console.error('Error restoring market ticker:', error);
   }
 };
 

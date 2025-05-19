@@ -104,21 +104,29 @@ const Markets = () => {
               </tr>
             </thead>
             <tbody>
-              {displayData.map((item, index) => (
-                <tr key={index} className="border-b last:border-b-0 hover:bg-muted/30">
-                  <td className="py-2 px-4">
-                    <div className="font-medium">{item.name}</div>
-                    <div className="text-xs text-muted-foreground">{item.symbol}</div>
-                  </td>
-                  <td className="py-2 px-4 text-right">{item.price.toFixed(2)}</td>
-                  <td className={`py-2 px-4 text-right ${item.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                    {item.change >= 0 ? '+' : ''}{item.change.toFixed(2)}
-                  </td>
-                  <td className={`py-2 px-4 text-right ${item.changePercent >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                    {item.changePercent >= 0 ? '+' : ''}{item.changePercent.toFixed(2)}%
+              {displayData.length > 0 ? (
+                displayData.map((item, index) => (
+                  <tr key={index} className="border-b last:border-b-0 hover:bg-muted/30">
+                    <td className="py-2 px-4">
+                      <div className="font-medium">{item.name}</div>
+                      <div className="text-xs text-muted-foreground">{item.symbol}</div>
+                    </td>
+                    <td className="py-2 px-4 text-right">{item.price.toFixed(2)}</td>
+                    <td className={`py-2 px-4 text-right ${item.change >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                      {item.change >= 0 ? '+' : ''}{item.change.toFixed(2)}
+                    </td>
+                    <td className={`py-2 px-4 text-right ${item.changePercent >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                      {item.changePercent >= 0 ? '+' : ''}{item.changePercent.toFixed(2)}%
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={4} className="py-4 text-center text-muted-foreground">
+                    No data available
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>

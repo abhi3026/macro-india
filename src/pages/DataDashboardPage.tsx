@@ -5,25 +5,25 @@ import { BarChart3, TrendingUp, DollarSign } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import MarketTickerLive from "@/components/MarketTickerLive";
-import { Helmet } from "react-helmet-async";
+import SEOHead from "@/components/SEOHead";
 import PageHero from "@/components/ui/page-hero";
 
 const DataDashboardPage = () => {
   return (
     <div className="min-h-screen flex flex-col">
-      <Helmet>
-        <title>Data Dashboard | Macro India</title>
-        <meta
-          name="description"
-          content="Explore comprehensive data and analytics on the Indian economy and financial markets."
-        />
-      </Helmet>
+      <SEOHead
+        title="Data Dashboard | IndianMacro"
+        description="Explore comprehensive data and analytics on the Indian economy and financial markets."
+        canonicalUrl="/data-dashboard"
+      />
       
       <header className="sticky top-0 z-50 bg-[#000041] text-white">
         <Navbar />
       </header>
       
-      <MarketTickerLive />
+      <div className="pt-0 mt-0">
+        <MarketTickerLive />
+      </div>
       
       <PageHero 
         title="Data Dashboard"

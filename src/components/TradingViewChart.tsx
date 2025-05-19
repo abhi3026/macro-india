@@ -2,6 +2,7 @@
 import { useEffect, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartLine } from "lucide-react";
+import { useTheme } from "@/components/ThemeProvider";
 
 interface TradingViewChartProps {
   defaultSymbol?: string;
@@ -9,12 +10,15 @@ interface TradingViewChartProps {
 
 const TradingViewChart = ({ defaultSymbol = "NYSE:SPGI" }: TradingViewChartProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const { theme } = useTheme();
 
   useEffect(() => {
     // Clean up any existing widgets
     if (containerRef.current) {
       containerRef.current.innerHTML = '';
     }
+
+    const isDarkMode = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
     // Create a new widget
     const script = document.createElement("script");
@@ -27,10 +31,10 @@ const TradingViewChart = ({ defaultSymbol = "NYSE:SPGI" }: TradingViewChartProps
           symbol: defaultSymbol,
           interval: "D",
           timezone: "Asia/Kolkata",
-          theme: "light",
+          theme: isDarkMode ? "dark" : "light",
           style: "1",
           locale: "en",
-          toolbar_bg: "#f1f3f6",
+          toolbar_bg: isDarkMode ? "#2B2B43" : "#f1f3f6",
           enable_publishing: false,
           allow_symbol_change: true,
           container_id: containerRef.current.id,
@@ -50,7 +54,7 @@ const TradingViewChart = ({ defaultSymbol = "NYSE:SPGI" }: TradingViewChartProps
         script.parentNode.removeChild(script);
       }
     };
-  }, [defaultSymbol]);
+  }, [defaultSymbol, theme]);
 
   return (
     <Card className="shadow-sm">
@@ -64,7 +68,7 @@ const TradingViewChart = ({ defaultSymbol = "NYSE:SPGI" }: TradingViewChartProps
         <div 
           ref={containerRef}
           id="tradingview_widget_container"
-          className="w-full h-[400px]"
+          className="w-full h-[400px] rounded-md overflow-hidden"
         />
       </CardContent>
     </Card>

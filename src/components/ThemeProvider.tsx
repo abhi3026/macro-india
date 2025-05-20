@@ -57,7 +57,7 @@ export function ThemeProvider({
     
     // Fix any UI elements that might break during theme change
     setTimeout(() => {
-      restoreMarketTicker();
+        restoreMarketTicker();
     }, 100);
   }, [theme]);
 

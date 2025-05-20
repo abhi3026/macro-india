@@ -4,13 +4,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import MarketTickerLive from "@/components/MarketTickerLive";
-import { Helmet } from "react-helmet-async";
+import SEOHead from "@/components/SEOHead";
 import { MarketTable, MarketData } from "@/components/ui/market-table";
 import { useSearchParams } from "react-router-dom";
 import PageHero from "@/components/ui/page-hero";
 
 // TradingView Crypto Screener widget
 const CryptoWidget = () => {
+  const { theme } = useTheme();
+  const isDarkMode = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  
   useEffect(() => {
     // Create container for widget
     const container = document.getElementById('crypto-widget-container');
@@ -29,7 +32,7 @@ const CryptoWidget = () => {
       defaultColumn: "overview",
       screener_type: "crypto_mkt",
       displayCurrency: "USD",
-      colorTheme: "light",
+      colorTheme: isDarkMode ? "dark" : "light",
       locale: "en"
     });
 
@@ -67,15 +70,18 @@ const CryptoWidget = () => {
         container.innerHTML = '';
       }
     };
-  }, []);
+  }, [isDarkMode]);
 
   return (
     <div id="crypto-widget-container" className="w-full h-[550px]"></div>
   );
 };
 
-// Forex widget with light theme
+// Forex widget with theme support
 const ForexWidget = () => {
+  const { theme } = useTheme();
+  const isDarkMode = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  
   useEffect(() => {
     // Create container for widget
     const container = document.getElementById('forex-widget-container');
@@ -104,9 +110,9 @@ const ForexWidget = () => {
         "INR"
       ],
       isTransparent: false,
-      colorTheme: "light", // Changed to light theme
+      colorTheme: isDarkMode ? "dark" : "light",
       locale: "en",
-      backgroundColor: "#ffffff" // Light background color
+      backgroundColor: isDarkMode ? "#2B2B43" : "#ffffff"
     });
 
     // Create widget container and add script
@@ -143,12 +149,14 @@ const ForexWidget = () => {
         container.innerHTML = '';
       }
     };
-  }, []);
+  }, [isDarkMode]);
 
   return (
     <div id="forex-widget-container" className="w-full h-[400px]"></div>
   );
 };
+
+import { useTheme } from "@/components/ThemeProvider";
 
 const MarketsPage = () => {
   const [searchParams] = useSearchParams();
@@ -246,16 +254,19 @@ const MarketsPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Helmet>
-        <title>Markets | Macro India</title>
-        <meta
-          name="description"
-          content="Track Indian financial markets including stocks, bonds, commodities, and forex."
-        />
-      </Helmet>
+      <SEOHead
+        title="Markets | IndianMacro"
+        description="Track Indian financial markets including stocks, bonds, commodities, and forex."
+        canonicalUrl="/data-dashboard/markets"
+      />
       
-      <Navbar />
-      <MarketTickerLive />
+      <header className="sticky top-0 z-50 bg-[#000041] text-white">
+        <Navbar />
+      </header>
+      
+      <div className="pt-0 mt-0">
+        <MarketTickerLive />
+      </div>
       
       <PageHero 
         title="Markets" 
@@ -275,26 +286,36 @@ const MarketsPage = () => {
               </TabsList>
               
               <TabsContent value="indices" className="mt-0">
-                <MarketTable data={indices} />
+                <div className="overflow-x-auto">
+                  <MarketTable data={indices} />
+                </div>
               </TabsContent>
               
               <TabsContent value="stocks" className="mt-0">
-                <MarketTable data={stocks} showVolume />
+                <div className="overflow-x-auto">
+                  <MarketTable data={stocks} showVolume />
+                </div>
               </TabsContent>
               
               <TabsContent value="crypto" className="mt-0">
                 {/* Replace market table with TradingView widget */}
-                <CryptoWidget />
+                <div className="overflow-hidden rounded-md">
+                  <CryptoWidget />
+                </div>
               </TabsContent>
               
               <TabsContent value="commodities" className="mt-0">
-                <MarketTable data={commodities} />
+                <div className="overflow-x-auto">
+                  <MarketTable data={commodities} />
+                </div>
               </TabsContent>
               
               <TabsContent value="forex" className="mt-0"> {/* Renamed from "currencies" */}
                 <div className="space-y-6">
                   {/* Remove search bar and market table, keep only the widget */}
-                  <ForexWidget />
+                  <div className="overflow-hidden rounded-md">
+                    <ForexWidget />
+                  </div>
                 </div>
               </TabsContent>
             </Tabs>

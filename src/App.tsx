@@ -1,6 +1,7 @@
+
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import { ThemeProvider } from "next-themes";
-import { Toaster } from "@/components/ui/sonner";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { Toaster } from "sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { HelmetProvider } from "react-helmet-async";
@@ -32,7 +33,7 @@ function AppContent() {
   return (
     <QueryClientProvider client={queryClient}>
       <HelmetProvider>
-        <ThemeProvider defaultTheme="light" attribute="class">
+        <ThemeProvider defaultTheme="light" storageKey="indianmacro-theme">
           <TooltipProvider>
             <Routes>
               <Route path="/" element={<HomePage />} />

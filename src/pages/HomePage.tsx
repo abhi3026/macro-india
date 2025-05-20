@@ -25,7 +25,11 @@ const HomePage = () => {
 
     // Show newsletter modal after 5 seconds
     const timer = setTimeout(() => {
-      setShowNewsletter(true);
+      // Only show if user hasn't subscribed before
+      const hasSubscribed = localStorage.getItem("newsletter-subscribed") === "true";
+      if (!hasSubscribed) {
+        setShowNewsletter(true);
+      }
     }, 5000);
 
     // Load widgets after a short delay to prevent race conditions
@@ -58,7 +62,7 @@ const HomePage = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column */}
           <div className="lg:col-span-2 space-y-8">
-            <TradingViewChart defaultSymbol="NYSE:SPGI" />
+            <TradingViewChart defaultSymbol="NSE:NIFTY" />
             {/* Markets moved above Economic Indicators as requested */}
             <Markets />
             <EconomicIndicatorsDashboard />

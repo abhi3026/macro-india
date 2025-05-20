@@ -1,38 +1,74 @@
 
+import React, { useEffect, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Newspaper } from "lucide-react";
 import { useTheme } from "@/components/ThemeProvider";
+import { loadTradingViewWidget } from "@/utils/tradingViewLoader";
 
 interface TradingViewNewsWidgetProps {
-  height?: number;
+  title?: string;
 }
 
-const TradingViewNewsWidget = ({ height = 400 }: TradingViewNewsWidgetProps) => {
+const TradingViewNewsWidget = ({ title = "Market News" }: TradingViewNewsWidgetProps) => {
+  const containerRef = useRef<HTMLDivElement>(null);
   const { theme } = useTheme();
-  const isDarkMode = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  
+  // Determine the appropriate theme for the widget
+  const widgetTheme = theme === "dark" || (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches) 
+    ? "dark" 
+    : "light";
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+    
+    const widgetContainer = containerRef.current.querySelector(".tradingview-widget-container__widget");
+    if (widgetContainer) {
+      containerRef.current.removeChild(widgetContainer);
+    }
+    
+    // Create the widget
+    const script = document.createElement("script");
+    script.src = "https://s3.tradingview.com/external-embedding/embed-widget-timeline.js";
+    script.async = true;
+    script.innerHTML = JSON.stringify({
+      "feedMode": "all_symbols",
+      "colorTheme": widgetTheme,
+      "isTransparent": true,
+      "displayMode": "regular",
+      "width": "100%",
+      "height": 500,
+      "locale": "en"
+    });
+    
+    const container = document.createElement("div");
+    container.className = "tradingview-widget-container__widget";
+    
+    if (containerRef.current) {
+      containerRef.current.appendChild(container);
+      container.appendChild(script);
+    }
+    
+    return () => {
+      if (containerRef.current && container) {
+        try {
+          containerRef.current.removeChild(container);
+        } catch (error) {
+          console.error("Error removing TradingView widget:", error);
+        }
+      }
+    };
+  }, [widgetTheme]);
 
   return (
-    <Card className="shadow-sm">
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="flex items-center gap-2">
-          <Newspaper className="h-5 w-5 text-accent1" />
-          Market News
-        </CardTitle>
+    <Card className="overflow-hidden">
+      <CardHeader className="pb-2">
+        <CardTitle className="text-xl font-bold">{title}</CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="w-full overflow-hidden rounded-md">
-          <iframe
-            src={`https://s.tradingview.com/embed-widget/timeline/?locale=en#%7B%22colorTheme%22%3A%22${isDarkMode ? 'dark' : 'light'}%22%2C%22isTransparent%22%3Afalse%2C%22displayMode%22%3A%22regular%22%2C%22width%22%3A%22100%25%22%2C%22height%22%3A400%2C%22importanceFilter%22%3A%22-1%2C0%2C1%22%2C%22utm_source%22%3A%22www.tradingview.com%22%2C%22utm_medium%22%3A%22widget_new%22%2C%22utm_campaign%22%3A%22timeline%22%7D`}
-            style={{
-              width: "100%",
-              height: `${height}px`,
-              margin: 0,
-              padding: 0,
-              border: "none"
-            }}
-            title="TradingView News"
-          />
-        </div>
+      <CardContent className="p-0 max-w-full">
+        <div 
+          ref={containerRef}
+          className="tradingview-widget-container w-full overflow-hidden"
+          style={{ height: "500px" }}
+        />
       </CardContent>
     </Card>
   );

@@ -1,126 +1,176 @@
-import { useEffect, useState } from "react";
+
+import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import SEOHead from "@/components/SEOHead";
+import PageHero from "@/components/ui/page-hero";
+import MarketTickerLive from "@/components/MarketTickerLive";
 import { Card, CardContent } from "@/components/ui/card";
-import { Loader2 } from "lucide-react";
+import ResearchCard from "@/components/ResearchCard";
+import SearchSuggestions from "@/components/SearchSuggestions";
 
-interface SearchResult {
-  type: "market" | "news" | "research" | "education";
-  title: string;
-  description: string;
-  url: string;
-  date?: string;
-}
+// Mock search results for now
+const mockData = {
+  research: [
+    { id: "1", title: "Impact of RBI Rate Hike on Indian Economy", category: "Monetary Policy", date: "2023-07-15", image: "/uploads/research-1.jpg", slug: "impact-rbi-rate-hike-indian-economy" },
+    { id: "2", title: "Analysis of India's GDP Growth Forecast", category: "Economic Growth", date: "2023-06-25", image: "/uploads/research-2.jpg", slug: "analysis-india-gdp-growth-forecast" },
+  ],
+  news: [
+    { id: "3", title: "India's Trade Deficit Widens to $28.86 Billion in July", category: "Trade", date: "2023-08-05", image: "/uploads/news-1.jpg", slug: "india-trade-deficit-widens-july" },
+    { id: "4", title: "FDI in India Rises 10% to $22.7 Billion", category: "Investments", date: "2023-07-30", image: "/uploads/news-2.jpg", slug: "fdi-india-rises-10-percent" },
+  ],
+  education: [
+    { id: "5", title: "Understanding India's Inflation Dynamics", category: "Inflation", date: "2023-05-20", image: "/uploads/education-1.jpg", slug: "understanding-india-inflation-dynamics" },
+    { id: "6", title: "How to Interpret Economic Indicators", category: "Education", date: "2023-04-12", image: "/uploads/education-2.jpg", slug: "how-to-interpret-economic-indicators" },
+  ]
+};
 
 const SearchPage = () => {
   const [searchParams] = useSearchParams();
   const query = searchParams.get("q") || "";
-  const [results, setResults] = useState<SearchResult[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
+  const [results, setResults] = useState<{
+    research: any[];
+    news: any[];
+    education: any[];
+    total: number;
+  }>({ research: [], news: [], education: [], total: 0 });
+  
   useEffect(() => {
-    const fetchSearchResults = async () => {
-      setIsLoading(true);
-      try {
-        // TODO: Implement actual search API call
-        // For now, returning mock results
-        const mockResults: SearchResult[] = [
-          {
-            type: "market",
-            title: "NIFTY 50 Live Market Data",
-            description: "Real-time market data and analysis for NIFTY 50 index.",
-            url: "/markets/nifty50",
-            date: new Date().toLocaleDateString()
-          },
-          {
-            type: "news",
-            title: "RBI Monetary Policy Update",
-            description: "Latest updates on RBI's monetary policy decisions and impact on markets.",
-            url: "/news/rbi-policy",
-            date: new Date().toLocaleDateString()
-          },
-          {
-            type: "research",
-            title: "Indian Economy Analysis",
-            description: "In-depth analysis of Indian economic indicators and trends.",
-            url: "/research/economy",
-            date: new Date().toLocaleDateString()
-          }
-        ];
-        setResults(mockResults);
-      } catch (error) {
-        console.error("Error fetching search results:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     if (query) {
-      fetchSearchResults();
+      // In a real app, this would be an API call
+      const searchResults = {
+        research: mockData.research.filter(item => 
+          item.title.toLowerCase().includes(query.toLowerCase()) ||
+          item.category.toLowerCase().includes(query.toLowerCase())
+        ),
+        news: mockData.news.filter(item => 
+          item.title.toLowerCase().includes(query.toLowerCase()) ||
+          item.category.toLowerCase().includes(query.toLowerCase())
+        ),
+        education: mockData.education.filter(item => 
+          item.title.toLowerCase().includes(query.toLowerCase()) ||
+          item.category.toLowerCase().includes(query.toLowerCase())
+        )
+      };
+      
+      const totalResults = searchResults.research.length + 
+                          searchResults.news.length + 
+                          searchResults.education.length;
+      
+      setResults({...searchResults, total: totalResults});
+    } else {
+      setResults({ research: [], news: [], education: [], total: 0 });
     }
   }, [query]);
 
   return (
     <div className="min-h-screen flex flex-col">
-      <SEOHead 
-        title={`Search Results for "${query}" - IndianMacro`}
-        description={`Search results for ${query} on IndianMacro platform.`}
+      <Helmet>
+        <title>{query ? `Search: ${query} | IndianMacro` : "Search | IndianMacro"}</title>
+        <meta 
+          name="description" 
+          content={query ? `Search results for ${query} on IndianMacro` : "Search for research, news, and educational content on Indian economy and markets."} 
+        />
+        <meta name="robots" content="noindex" />
+      </Helmet>
+      
+      <header>
+        <Navbar />
+      </header>
+      
+      <MarketTickerLive />
+      
+      <PageHero 
+        title={query ? `Search Results: ${query}` : "Search"} 
+        description={results.total > 0 
+          ? `Found ${results.total} results` 
+          : query 
+            ? "No results found" 
+            : "Search for research, news, and educational content"
+        } 
       />
-      <Navbar />
-      <main className="flex-1 pt-16 pb-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold mb-4">Search Results</h1>
-          <p className="text-muted-foreground mb-8">
-            Showing results for "{query}"
-          </p>
-
-          {isLoading ? (
-            <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin" />
-            </div>
-          ) : results.length > 0 ? (
-            <div className="space-y-4">
-              {results.map((result, index) => (
-                <Card key={index}>
-                  <CardContent className="p-6">
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <span className="inline-block px-2 py-1 text-xs font-medium rounded-full bg-primary/10 text-primary mb-2">
-                          {result.type}
-                        </span>
-                        <h2 className="text-xl font-semibold mb-2">
-                          <a href={result.url} className="hover:underline">
-                            {result.title}
-                          </a>
-                        </h2>
-                        <p className="text-muted-foreground">
-                          {result.description}
-                        </p>
-                      </div>
-                      {result.date && (
-                        <span className="text-sm text-muted-foreground">
-                          {result.date}
-                        </span>
-                      )}
+      
+      <main className="flex-1 container mx-auto px-4 py-8">
+        {query ? (
+          <>
+            {results.total > 0 ? (
+              <div className="space-y-8">
+                {results.research.length > 0 && (
+                  <div>
+                    <h2 className="text-2xl font-bold mb-4">Research ({results.research.length})</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {results.research.map(item => (
+                        <ResearchCard 
+                          key={item.id}
+                          title={item.title}
+                          category={item.category}
+                          date={item.date}
+                          image={item.image}
+                          href={`/research/${item.slug}`}
+                        />
+                      ))}
                     </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground">
-                No results found for "{query}". Try different keywords or browse our categories.
-              </p>
-            </div>
-          )}
-        </div>
+                  </div>
+                )}
+                
+                {results.news.length > 0 && (
+                  <div>
+                    <h2 className="text-2xl font-bold mb-4">News ({results.news.length})</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {results.news.map(item => (
+                        <ResearchCard 
+                          key={item.id}
+                          title={item.title}
+                          category={item.category}
+                          date={item.date}
+                          image={item.image}
+                          href={`/news/${item.slug}`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+                
+                {results.education.length > 0 && (
+                  <div>
+                    <h2 className="text-2xl font-bold mb-4">Education ({results.education.length})</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {results.education.map(item => (
+                        <ResearchCard 
+                          key={item.id}
+                          title={item.title}
+                          category={item.category}
+                          date={item.date}
+                          image={item.image}
+                          href={`/education/${item.slug}`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Card className="bg-muted">
+                <CardContent className="pt-6 text-center">
+                  <p className="text-xl mb-4">No results found for "{query}"</p>
+                  <p className="text-muted-foreground">Try different keywords or check out our popular topics below:</p>
+                  <SearchSuggestions />
+                </CardContent>
+              </Card>
+            )}
+          </>
+        ) : (
+          <div className="text-center">
+            <h2 className="text-2xl font-bold mb-6">Popular Search Topics</h2>
+            <SearchSuggestions />
+          </div>
+        )}
       </main>
+      
       <Footer />
     </div>
   );
 };
 
-export default SearchPage; 
+export default SearchPage;

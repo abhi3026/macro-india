@@ -17,7 +17,6 @@ import InterestRateTracker from "@/components/InterestRateTracker";
 
 const HomePage = () => {
   const [showNewsletter, setShowNewsletter] = useState(false);
-  const [widgetsLoaded, setWidgetsLoaded] = useState(false);
 
   useEffect(() => {
     // Scroll to top on mount
@@ -32,14 +31,8 @@ const HomePage = () => {
       }
     }, 5000);
 
-    // Load widgets after a short delay to prevent race conditions
-    const widgetTimer = setTimeout(() => {
-      setWidgetsLoaded(true);
-    }, 1000);
-
     return () => {
       clearTimeout(timer);
-      clearTimeout(widgetTimer);
     };
   }, []);
 
@@ -48,15 +41,15 @@ const HomePage = () => {
       <SEOHead
         title="IndianMacro | Indian Economic Data & Financial Markets"
         description="Access comprehensive Indian economic data, financial market analysis, and research. Track markets, economic indicators, and stay informed with IndianMacro."
+        canonicalUrl="/"
+        keywords="indian economy, financial data, economic research, market insights, india"
       />
       
-      <header className="sticky top-0 z-50 bg-[#000041] text-white">
+      <header>
         <Navbar />
       </header>
       
-      <div className="pt-0 mt-0">
-        <MarketTickerLive />
-      </div>
+      <MarketTickerLive />
       
       <main className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

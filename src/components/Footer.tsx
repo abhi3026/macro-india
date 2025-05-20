@@ -36,7 +36,7 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-indianmacro-900 text-white">
+    <footer className="bg-[#000041] text-white">
       <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Column 1: Logo and Description */}
@@ -196,7 +196,7 @@ const Footer = () => {
                 <Input
                   type="email"
                   placeholder="Your email address"
-                  className="bg-indianmacro-800 border-indianmacro-700 text-white"
+                  className="bg-[#000060] border-[#00003a] text-white"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -213,7 +213,7 @@ const Footer = () => {
         </div>
 
         {/* Bottom Section with Copyright and Links */}
-        <div className="mt-12 pt-8 border-t border-indianmacro-700 flex flex-col sm:flex-row justify-between items-center">
+        <div className="mt-12 pt-8 border-t border-[#00003a] flex flex-col sm:flex-row justify-between items-center">
           <div className="text-sm text-gray-400 mb-4 sm:mb-0">
             &copy; {new Date().getFullYear()} IndianMacro. All rights reserved.
           </div>

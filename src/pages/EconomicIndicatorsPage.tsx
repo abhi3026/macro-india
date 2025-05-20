@@ -1,3 +1,4 @@
+
 import { Helmet } from "react-helmet-async";
 import { Card } from "@/components/ui/card";
 import Navbar from "@/components/Navbar";
@@ -121,14 +122,18 @@ export default function EconomicIndicatorsPage() {
   return (
     <div className="min-h-screen flex flex-col">
       <Helmet>
-        <title>Economic Indicators | Macro India</title>
+        <title>Economic Indicators | IndianMacro</title>
         <meta
           name="description"
-          content="Track key economic indicators of the Indian economy."
+          content="Track key economic indicators of the Indian economy including GDP, inflation, industrial production, and more."
+        />
+        <meta
+          name="keywords"
+          content="economic indicators, GDP, inflation, IIP, unemployment, Indian economy"
         />
       </Helmet>
       
-      <header className="sticky top-0 z-50">
+      <header>
         <Navbar />
       </header>
       
@@ -139,25 +144,16 @@ export default function EconomicIndicatorsPage() {
         description="Track key economic indicators of the Indian economy"
       />
       
-      <main className="flex-1 py-8">
-        <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
-          <section className="mb-8">
-            <h1 className="text-4xl font-bold mb-4">Economic Indicators</h1>
-            <p className="text-muted-foreground">
-              Track and analyze key economic indicators that drive India's economy
-            </p>
-          </section>
-
-          <Card className="p-6">
-            <EconomicTable 
-              data={defaultCountries}
-              onViewMore={() => {
-                // Handle view more action
-                console.log("View more clicked");
-              }}
-            />
-          </Card>
-        </div>
+      <main className="flex-1 py-8 container mx-auto px-4 sm:px-6 lg:px-8">
+        <Card className="p-6">
+          <EconomicTable 
+            data={defaultCountries}
+            onViewMore={() => {
+              // Handle view more action
+              console.log("View more clicked");
+            }}
+          />
+        </Card>
       </main>
       
       <Footer />

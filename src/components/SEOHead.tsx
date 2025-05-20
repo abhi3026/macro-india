@@ -7,6 +7,7 @@ export interface SEOHeadProps {
   canonicalUrl?: string;
   keywords?: string;
   ogImage?: string;
+  ogType?: string;
 }
 
 const SEOHead = ({ 
@@ -14,7 +15,8 @@ const SEOHead = ({
   description, 
   canonicalUrl, 
   keywords,
-  ogImage = "/og-image.jpg" 
+  ogImage = "/og-image.jpg",
+  ogType = "website"
 }: SEOHeadProps) => {
   const siteUrl = "https://indianmacro.com";
   const fullCanonicalUrl = canonicalUrl ? `${siteUrl}${canonicalUrl}` : undefined;
@@ -26,7 +28,7 @@ const SEOHead = ({
       {keywords && <meta name="keywords" content={keywords} />}
       
       {/* Open Graph / Facebook */}
-      <meta property="og:type" content="website" />
+      <meta property="og:type" content={ogType} />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       {fullCanonicalUrl && <meta property="og:url" content={fullCanonicalUrl} />}

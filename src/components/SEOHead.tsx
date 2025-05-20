@@ -8,6 +8,7 @@ interface SEOHeadProps {
   ogImage?: string;
   ogType?: 'website' | 'article';
   twitterCard?: 'summary' | 'summary_large_image';
+  keywords?: string;
 }
 
 const SEOHead = ({
@@ -16,7 +17,8 @@ const SEOHead = ({
   canonicalUrl,
   ogImage = '/og-image.jpg',
   ogType = 'website',
-  twitterCard = 'summary_large_image'
+  twitterCard = 'summary_large_image',
+  keywords
 }: SEOHeadProps) => {
   // Construct the canonical URL
   const siteUrl = 'https://indianmacro.com';
@@ -28,6 +30,7 @@ const SEOHead = ({
       <title>{title}</title>
       <meta name="description" content={description} />
       <link rel="canonical" href={fullCanonicalUrl} />
+      {keywords && <meta name="keywords" content={keywords} />}
       
       {/* Open Graph / Facebook */}
       <meta property="og:type" content={ogType} />

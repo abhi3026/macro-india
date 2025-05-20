@@ -33,7 +33,7 @@ export function EconomicTable({ data, onViewMore }: EconomicTableProps) {
   return (
     <div className="w-full">
       <div className="rounded-md border bg-background">
-        <ScrollArea className="w-full" orientation="horizontal">
+        <ScrollArea className="w-full">
           <div className="min-w-max">
             <Table>
               <TableHeader>

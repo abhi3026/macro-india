@@ -13,16 +13,16 @@ import SearchSuggestions from "@/components/SearchSuggestions";
 // Mock search results for now
 const mockData = {
   research: [
-    { id: "1", title: "Impact of RBI Rate Hike on Indian Economy", category: "Monetary Policy", date: "2023-07-15", image: "/uploads/research-1.jpg", slug: "impact-rbi-rate-hike-indian-economy" },
-    { id: "2", title: "Analysis of India's GDP Growth Forecast", category: "Economic Growth", date: "2023-06-25", image: "/uploads/research-2.jpg", slug: "analysis-india-gdp-growth-forecast" },
+    { id: "1", title: "Impact of RBI Rate Hike on Indian Economy", category: "Monetary Policy", date: "2023-07-15", image: "/uploads/research-1.jpg", slug: "impact-rbi-rate-hike-indian-economy", description: "An analysis of how the recent RBI rate hike impacts various sectors of the Indian economy" },
+    { id: "2", title: "Analysis of India's GDP Growth Forecast", category: "Economic Growth", date: "2023-06-25", image: "/uploads/research-2.jpg", slug: "analysis-india-gdp-growth-forecast", description: "Detailed analysis and forecast of India's GDP growth trajectory for the coming fiscal year" },
   ],
   news: [
-    { id: "3", title: "India's Trade Deficit Widens to $28.86 Billion in July", category: "Trade", date: "2023-08-05", image: "/uploads/news-1.jpg", slug: "india-trade-deficit-widens-july" },
-    { id: "4", title: "FDI in India Rises 10% to $22.7 Billion", category: "Investments", date: "2023-07-30", image: "/uploads/news-2.jpg", slug: "fdi-india-rises-10-percent" },
+    { id: "3", title: "India's Trade Deficit Widens to $28.86 Billion in July", category: "Trade", date: "2023-08-05", image: "/uploads/news-1.jpg", slug: "india-trade-deficit-widens-july", description: "Analysis of factors contributing to India's widening trade deficit in July" },
+    { id: "4", title: "FDI in India Rises 10% to $22.7 Billion", category: "Investments", date: "2023-07-30", image: "/uploads/news-2.jpg", slug: "fdi-india-rises-10-percent", description: "Overview of foreign direct investment trends in India and key contributing sectors" },
   ],
   education: [
-    { id: "5", title: "Understanding India's Inflation Dynamics", category: "Inflation", date: "2023-05-20", image: "/uploads/education-1.jpg", slug: "understanding-india-inflation-dynamics" },
-    { id: "6", title: "How to Interpret Economic Indicators", category: "Education", date: "2023-04-12", image: "/uploads/education-2.jpg", slug: "how-to-interpret-economic-indicators" },
+    { id: "5", title: "Understanding India's Inflation Dynamics", category: "Inflation", date: "2023-05-20", image: "/uploads/education-1.jpg", slug: "understanding-india-inflation-dynamics", description: "A comprehensive guide to understanding inflation dynamics in the Indian context" },
+    { id: "6", title: "How to Interpret Economic Indicators", category: "Education", date: "2023-04-12", image: "/uploads/education-2.jpg", slug: "how-to-interpret-economic-indicators", description: "Learn how to interpret key economic indicators to gain insights into the economy's performance" },
   ]
 };
 
@@ -107,6 +107,7 @@ const SearchPage = () => {
                           category={item.category}
                           date={item.date}
                           image={item.image}
+                          description={item.description}
                           href={`/research/${item.slug}`}
                         />
                       ))}
@@ -125,6 +126,7 @@ const SearchPage = () => {
                           category={item.category}
                           date={item.date}
                           image={item.image}
+                          description={item.description}
                           href={`/news/${item.slug}`}
                         />
                       ))}
@@ -143,6 +145,7 @@ const SearchPage = () => {
                           category={item.category}
                           date={item.date}
                           image={item.image}
+                          description={item.description}
                           href={`/education/${item.slug}`}
                         />
                       ))}

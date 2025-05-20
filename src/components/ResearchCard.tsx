@@ -18,23 +18,48 @@ export type ResearchItem = {
 };
 
 interface ResearchCardProps {
-  research: ResearchItem;
+  research?: ResearchItem;
   variant?: "default" | "featured";
+  // Add these direct props to support both formats
+  title?: string;
+  description?: string;
+  date?: string;
+  category?: string;
+  image?: string;
+  href?: string;
 }
 
-const ResearchCard = ({ research, variant = "default" }: ResearchCardProps) => {
-  const isFeatured = variant === "featured" || research.featured;
+const ResearchCard = ({ 
+  research, 
+  variant = "default",
+  title: directTitle,
+  description: directDescription,
+  date: directDate,
+  category: directCategory,
+  image: directImage,
+  href
+}: ResearchCardProps) => {
+  // Support both formats - either a research object or direct props
+  const isFeatured = variant === "featured" || research?.featured;
+  
+  // Use research object if available, otherwise use direct props
+  const title = research?.title || directTitle || "";
+  const description = research?.description || directDescription || "";
+  const date = research?.date || directDate || "";
+  const category = research?.category || directCategory || "";
+  const imageUrl = research?.imageUrl || directImage || "";
+  const isPremium = research?.premium || false;
   
   return (
     <Card className={cn(
       "overflow-hidden transition-all hover:shadow-md",
       isFeatured && "border-accent1 border-2"
     )}>
-      {research.imageUrl && (
+      {imageUrl && (
         <div className="relative h-48 w-full overflow-hidden">
           <img 
-            src={research.imageUrl} 
-            alt={research.title} 
+            src={imageUrl} 
+            alt={title} 
             className="h-full w-full object-cover" 
           />
           {isFeatured && (
@@ -42,7 +67,7 @@ const ResearchCard = ({ research, variant = "default" }: ResearchCardProps) => {
               <Badge className="bg-accent1 hover:bg-accent1">Featured</Badge>
             </div>
           )}
-          {research.premium && (
+          {isPremium && (
             <div className="absolute top-2 left-2">
               <Badge variant="secondary" className="bg-indianmacro-800 text-white hover:bg-indianmacro-700">Premium</Badge>
             </div>
@@ -55,31 +80,40 @@ const ResearchCard = ({ research, variant = "default" }: ResearchCardProps) => {
           <div>
             <div className="flex items-center gap-2 mb-2">
               <Badge variant="outline" className="text-xs">
-                {research.category}
+                {category}
               </Badge>
               <span className="text-xs text-gray-500">
-                {research.date}
+                {date}
               </span>
             </div>
-            <CardTitle className="text-xl">{research.title}</CardTitle>
+            <CardTitle className="text-xl">{title}</CardTitle>
           </div>
-          {!research.imageUrl && research.premium && (
+          {!imageUrl && isPremium && (
             <Badge variant="secondary" className="bg-indianmacro-800 text-white hover:bg-indianmacro-700">
               Premium
             </Badge>
           )}
         </div>
         <CardDescription className="line-clamp-2">
-          {research.description}
+          {description}
         </CardDescription>
       </CardHeader>
       
       <CardFooter className="flex justify-between pt-0">
-        <Button variant="outline" size="sm" className="flex items-center gap-2">
-          <Eye className="h-4 w-4" />
-          Read
+        <Button variant="outline" size="sm" className="flex items-center gap-2" asChild={!!href}>
+          {href ? (
+            <a href={href}>
+              <Eye className="h-4 w-4" />
+              Read
+            </a>
+          ) : (
+            <>
+              <Eye className="h-4 w-4" />
+              Read
+            </>
+          )}
         </Button>
-        {research.fileUrl && (
+        {research?.fileUrl && (
           <Button variant="ghost" size="sm" className="flex items-center gap-2">
             <Download className="h-4 w-4" />
             Download

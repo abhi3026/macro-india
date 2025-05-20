@@ -2,7 +2,7 @@
 import React, { useEffect, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useTheme } from "@/components/ThemeProvider";
-import { loadTradingViewWidget } from "@/utils/tradingViewLoader";
+import { loadTradingViewScript } from "@/utils/tradingViewLoader";
 
 interface TradingViewNewsWidgetProps {
   title?: string;

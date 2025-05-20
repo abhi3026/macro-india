@@ -8,6 +8,7 @@ import SEOHead from "@/components/SEOHead";
 import { MarketTable, MarketData } from "@/components/ui/market-table";
 import { useSearchParams } from "react-router-dom";
 import PageHero from "@/components/ui/page-hero";
+import { useTheme } from "@/components/ThemeProvider";
 
 // TradingView Crypto Screener widget
 const CryptoWidget = () => {
@@ -156,8 +157,6 @@ const ForexWidget = () => {
   );
 };
 
-import { useTheme } from "@/components/ThemeProvider";
-
 const MarketsPage = () => {
   const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState(() => {
@@ -194,7 +193,18 @@ const MarketsPage = () => {
       lastPrice: 73058.24, 
       changePercent: 0.63 
     },
-    // Add more indices...
+    { 
+      symbol: "S&P 500",
+      name: "S&P 500",
+      lastPrice: 5000.00,
+      changePercent: 0.25
+    },
+    {
+      symbol: "FTSE 100",
+      name: "FTSE 100",
+      lastPrice: 7800.00,
+      changePercent: -0.10
+    }
   ];
 
   const stocks: MarketData[] = [
@@ -214,7 +224,30 @@ const MarketsPage = () => {
       changePercent: -0.60,
       volume: 1234567
     },
-    // Add more stocks...
+    { 
+      flag: "/flags/in.svg",
+      symbol: "HDFCBANK", 
+      name: "HDFC Bank", 
+      lastPrice: 1500.00, 
+      changePercent: 0.75,
+      volume: 3456789
+    },
+    {
+      flag: "/flags/in.svg",
+      symbol: "INFOSYS",
+      name: "Infosys",
+      lastPrice: 1600.00,
+      changePercent: 0.30,
+      volume: 2345678
+    },
+    {
+      flag: "/flags/in.svg",
+      symbol: "ICICIBANK",
+      name: "ICICI Bank",
+      lastPrice: 850.00,
+      changePercent: 0.90,
+      volume: 4567890
+    }
   ];
 
   const commodities: MarketData[] = [
@@ -230,7 +263,18 @@ const MarketsPage = () => {
       lastPrice: 28.45, 
       changePercent: 1.59 
     },
-    // Add more commodities...
+    {
+      symbol: "WTI Crude",
+      name: "WTI Crude Oil",
+      lastPrice: 80.00,
+      changePercent: 0.50
+    },
+    {
+      symbol: "Brent Crude",
+      name: "Brent Crude Oil",
+      lastPrice: 85.00,
+      changePercent: 0.75
+    }
   ];
 
   // Renamed from 'currencies' to 'forex'
@@ -249,7 +293,27 @@ const MarketsPage = () => {
       lastPrice: 89.8765, 
       changePercent: 0.26 
     },
-    // Add more forex pairs...
+    {
+      flag: "/flags/gb.svg",
+      symbol: "GBP/INR",
+      name: "British Pound",
+      lastPrice: 105.00,
+      changePercent: 0.10
+    },
+    {
+      flag: "/flags/jp.svg",
+      symbol: "JPY/INR",
+      name: "Japanese Yen",
+      lastPrice: 0.75,
+      changePercent: -0.05
+    },
+    {
+      flag: "/flags/au.svg",
+      symbol: "AUD/INR",
+      name: "Australian Dollar",
+      lastPrice: 55.00,
+      changePercent: 0.20
+    }
   ];
 
   return (
@@ -258,6 +322,7 @@ const MarketsPage = () => {
         title="Markets | IndianMacro"
         description="Track Indian financial markets including stocks, bonds, commodities, and forex."
         canonicalUrl="/data-dashboard/markets"
+        keywords="financial markets, stocks, indices, forex, crypto, commodities, market data"
       />
       
       <header className="sticky top-0 z-50 bg-[#000041] text-white">

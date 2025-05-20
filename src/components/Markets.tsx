@@ -1,16 +1,19 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { generateFallbackData, marketSymbols } from "@/lib/marketData";
+import { generateFallbackData, marketSymbols, fetchMarketData } from "@/lib/marketData";
+import { Skeleton } from "@/components/ui/skeleton";
 
 // Updated type to change "currencies" to "forex"
 type MarketCategory = "indices" | "stocks" | "crypto" | "commodities" | "forex";
 
 const Markets = () => {
   const [activeCategory, setActiveCategory] = useState<MarketCategory>("indices");
+  const [marketData, setMarketData] = useState(() => generateFallbackData());
+  const [loading, setLoading] = useState(true);
 
   // Updated to rename "Currencies" to "Forex"
   const categories: { id: MarketCategory; label: string }[] = [
@@ -21,14 +24,34 @@ const Markets = () => {
     { id: "forex", label: "Forex" }  // Renamed from "Currencies"
   ];
 
-  // Get all market data
-  const allMarketData = generateFallbackData();
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const data = await fetchMarketData();
+        setMarketData(data);
+      } catch (error) {
+        console.error("Error fetching market data:", error);
+        // Use fallback data in case of error
+        setMarketData(generateFallbackData());
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+
+    // Set up auto-refresh every 5 minutes
+    const refreshTimer = setInterval(fetchData, 5 * 60 * 1000);
+    
+    return () => clearInterval(refreshTimer);
+  }, []);
   
   // Define preferred symbols for each category
   const preferredSymbols: Record<MarketCategory, string[]> = {
     indices: ["^NSEI", "^NSEBANK", "^BSESN", "^GSPC", "^FTSE", "^SSEC", "^N225", "^BVSP", "^GDAXI", "^FCHI"],
     stocks: ["RELIANCE.NS", "TCS.NS", "HDFCBANK.NS", "INFY.NS", "ICICIBANK.NS", "SBIN.NS", "HINDUNILVR.NS", "BHARTIARTL.NS", "WIPRO.NS", "LT.NS"],
-    crypto: ["BTCUSD", "ETHUSD", "SOLUSD", "XRPUSD", "DOGEUSD", "ADAUSD", "DOTUSD", "AVAXUSD", "SHIBUSD", "LINKUSD"],
+    crypto: ["BTC-USD", "ETH-USD", "SOL-USD", "XRP-USD", "DOGE-USD", "ADA-USD", "DOT-USD", "AVAX-USD", "SHIB-USD", "LINK-USD"],
     commodities: ["GC=F", "SI=F", "CL=F", "BZ=F"], // Gold, Silver, WTI Crude, Brent Crude
     forex: ["USDINR=X", "GBPINR=X", "EURINR=X", "JPYINR=X", "AUDINR=X", "USDJPY=X", "USDEUR=X"]
   };
@@ -43,7 +66,7 @@ const Markets = () => {
   };
 
   // Filter by active category and preferred symbols
-  const filteredData = allMarketData.filter(item => {
+  const filteredData = marketData.filter(item => {
     // Check if this is a preferred symbol for the active category
     const isPrefSymbol = preferredSymbols[activeCategory].includes(item.symbol);
     if (isPrefSymbol) return true;
@@ -104,7 +127,19 @@ const Markets = () => {
               </tr>
             </thead>
             <tbody>
-              {displayData.length > 0 ? (
+              {loading ? (
+                Array(5).fill(0).map((_, index) => (
+                  <tr key={index} className="border-b last:border-b-0">
+                    <td className="py-2 px-4">
+                      <Skeleton className="h-4 w-24 mb-1" />
+                      <Skeleton className="h-3 w-16" />
+                    </td>
+                    <td className="py-2 px-4 text-right"><Skeleton className="h-4 w-16 ml-auto" /></td>
+                    <td className="py-2 px-4 text-right"><Skeleton className="h-4 w-14 ml-auto" /></td>
+                    <td className="py-2 px-4 text-right"><Skeleton className="h-4 w-12 ml-auto" /></td>
+                  </tr>
+                ))
+              ) : displayData.length > 0 ? (
                 displayData.map((item, index) => (
                   <tr key={index} className="border-b last:border-b-0 hover:bg-muted/30">
                     <td className="py-2 px-4">

@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -194,16 +195,53 @@ const MarketsPage = () => {
       changePercent: 0.63 
     },
     { 
+      flag: "/flags/us.svg",
       symbol: "S&P 500",
       name: "S&P 500",
       lastPrice: 5000.00,
       changePercent: 0.25
     },
     {
+      flag: "/flags/uk.svg",
       symbol: "FTSE 100",
       name: "FTSE 100",
       lastPrice: 7800.00,
       changePercent: -0.10
+    },
+    {
+      flag: "/flags/cn.svg",
+      symbol: "SSE",
+      name: "SSE Composite",
+      lastPrice: 3074.95,
+      changePercent: 0.24
+    },
+    {
+      flag: "/flags/jp.svg",
+      symbol: "N225",
+      name: "Nikkei 225",
+      lastPrice: 38467.24,
+      changePercent: -0.35
+    },
+    {
+      flag: "/flags/br.svg",
+      symbol: "BVSP",
+      name: "IBOVESPA",
+      lastPrice: 124568.20,
+      changePercent: 0.74
+    },
+    {
+      flag: "/flags/de.svg",
+      symbol: "DAX",
+      name: "DAX",
+      lastPrice: 17789.38,
+      changePercent: -0.42
+    },
+    {
+      flag: "/flags/fr.svg",
+      symbol: "CAC40",
+      name: "CAC 40",
+      lastPrice: 7645.20,
+      changePercent: -0.38
     }
   ];
 
@@ -247,6 +285,46 @@ const MarketsPage = () => {
       lastPrice: 850.00,
       changePercent: 0.90,
       volume: 4567890
+    },
+    {
+      flag: "/flags/in.svg",
+      symbol: "SBIN",
+      name: "State Bank of India",
+      lastPrice: 625.75,
+      changePercent: 1.25,
+      volume: 3789456
+    },
+    {
+      flag: "/flags/in.svg",
+      symbol: "HINDUNILVR",
+      name: "Hindustan Unilever",
+      lastPrice: 2450.60,
+      changePercent: -0.45,
+      volume: 1234789
+    },
+    {
+      flag: "/flags/in.svg",
+      symbol: "BHARTIARTL",
+      name: "Bharti Airtel",
+      lastPrice: 1140.50,
+      changePercent: 0.85,
+      volume: 2345987
+    },
+    {
+      flag: "/flags/in.svg",
+      symbol: "WIPRO",
+      name: "Wipro",
+      lastPrice: 475.25,
+      changePercent: -0.35,
+      volume: 1678543
+    },
+    {
+      flag: "/flags/in.svg",
+      symbol: "LT",
+      name: "Larsen & Toubro",
+      lastPrice: 3245.80,
+      changePercent: 1.05,
+      volume: 987345
     }
   ];
 
@@ -287,6 +365,13 @@ const MarketsPage = () => {
       changePercent: -0.15 
     },
     { 
+      flag: "/flags/gb.svg",
+      symbol: "GBP/INR", 
+      name: "British Pound", 
+      lastPrice: 105.3456, 
+      changePercent: 0.10 
+    },
+    { 
       flag: "/flags/eu.svg",
       symbol: "EUR/INR", 
       name: "Euro", 
@@ -294,25 +379,32 @@ const MarketsPage = () => {
       changePercent: 0.26 
     },
     {
-      flag: "/flags/gb.svg",
-      symbol: "GBP/INR",
-      name: "British Pound",
-      lastPrice: 105.00,
-      changePercent: 0.10
-    },
-    {
       flag: "/flags/jp.svg",
       symbol: "JPY/INR",
       name: "Japanese Yen",
-      lastPrice: 0.75,
+      lastPrice: 0.5528,
       changePercent: -0.05
     },
     {
       flag: "/flags/au.svg",
       symbol: "AUD/INR",
       name: "Australian Dollar",
-      lastPrice: 55.00,
+      lastPrice: 55.4280,
       changePercent: 0.20
+    },
+    {
+      flag: "/flags/jp.svg",
+      symbol: "USD/JPY",
+      name: "US Dollar/Japanese Yen",
+      lastPrice: 152.30,
+      changePercent: 0.15
+    },
+    {
+      flag: "/flags/eu.svg",
+      symbol: "USD/EUR",
+      name: "US Dollar/Euro",
+      lastPrice: 0.93,
+      changePercent: -0.10
     }
   ];
 
@@ -322,7 +414,6 @@ const MarketsPage = () => {
         title="Markets | IndianMacro"
         description="Track Indian financial markets including stocks, bonds, commodities, and forex."
         canonicalUrl="/data-dashboard/markets"
-        keywords="financial markets, stocks, indices, forex, crypto, commodities, market data"
       />
       
       <header className="sticky top-0 z-50 bg-[#000041] text-white">

@@ -42,7 +42,6 @@ const HomePage = () => {
         title="IndianMacro | Indian Economic Data & Financial Markets"
         description="Access comprehensive Indian economic data, financial market analysis, and research. Track markets, economic indicators, and stay informed with IndianMacro."
         canonicalUrl="/"
-        keywords="indian economy, financial data, economic research, market insights, india"
       />
       
       <header>
@@ -55,7 +54,7 @@ const HomePage = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column */}
           <div className="lg:col-span-2 space-y-8">
-            <TradingViewChart defaultSymbol="NSE:NIFTY" />
+            <TradingViewChart defaultSymbol="NYSE:SPGI" />
             {/* Markets moved above Economic Indicators as requested */}
             <Markets />
             <EconomicIndicatorsDashboard />

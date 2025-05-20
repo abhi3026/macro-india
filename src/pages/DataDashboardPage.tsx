@@ -15,7 +15,6 @@ const DataDashboardPage = () => {
         title="Data Dashboard | IndianMacro"
         description="Explore comprehensive data and analytics on the Indian economy and financial markets."
         canonicalUrl="/data-dashboard"
-        keywords="data dashboard, economic indicators, financial markets, data visualization, Indian economy"
       />
       
       <header>

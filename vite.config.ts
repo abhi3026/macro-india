@@ -32,6 +32,9 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
   },
   build: {
     outDir: 'dist',
-    sourcemap: true
+    sourcemap: true,
+    commonjsOptions: {
+      include: [/node_modules/],
+    }
   }
 }));

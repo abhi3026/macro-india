@@ -1,3 +1,4 @@
+
 /**
  * Market data utilities for fetching and displaying financial market information
  */
@@ -79,6 +80,9 @@ export const marketSymbols: MarketSymbol[] = [
   { id: "shibainucoin", name: "Shiba Inu", symbol: "SHIB-USD", type: "crypto", displayName: "SHIB", currency: "$", apiSymbol: "SHIB-USD" },
   { id: "chainlink", name: "Chainlink", symbol: "LINK-USD", type: "crypto", displayName: "LINK", currency: "$", apiSymbol: "LINK-USD" },
 ];
+
+// API keys
+const ALPHA_VANTAGE_API_KEY = "d0n37t9r01qmjqmkeal0d0n37t9r01qmjqmkealg"; // New API key for Indian indices and stocks
 
 // Initial data with loading state
 export const getInitialMarketData = (): MarketData[] => {
@@ -162,25 +166,89 @@ export const fetchMarketData = async (): Promise<MarketData[]> => {
       console.error("Error fetching crypto data:", cryptoError);
     }
     
-    // Try Alpha Vantage as a backup for Indian indices
+    // Fetch Indian indices and stocks data using the new API key
+    try {
+      // Get processed symbols to avoid duplication
+      const processedSymbols = new Set(resultData.map(d => d.symbol));
+      
+      // For Indian indices
+      const indianIndices = marketSymbols.filter(s => 
+        s.type === "index" && 
+        (s.symbol === "^NSEI" || s.symbol === "^BSESN" || s.symbol === "^NSEBANK") &&
+        !processedSymbols.has(s.symbol)
+      );
+      
+      // For Indian stocks
+      const indianStocks = marketSymbols.filter(s => 
+        s.type === "stock" && 
+        s.symbol.includes(".NS") && 
+        !processedSymbols.has(s.symbol)
+      );
+      
+      // Combine all Indian market symbols to fetch
+      const indianSymbolsToFetch = [...indianIndices, ...indianStocks].slice(0, 5); // Limit API calls
+      
+      for (const symbolObj of indianSymbolsToFetch) {
+        const fetchSymbol = symbolObj.apiSymbol || symbolObj.symbol;
+        const alphaUrl = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${fetchSymbol}&apikey=${ALPHA_VANTAGE_API_KEY}`;
+        
+        try {
+          const response = await fetch(alphaUrl);
+          
+          if (response.ok) {
+            const data = await response.json();
+            
+            if (data["Global Quote"] && Object.keys(data["Global Quote"]).length > 0) {
+              const quote = data["Global Quote"];
+              const price = parseFloat(quote["05. price"] || "0");
+              const change = parseFloat(quote["09. change"] || "0");
+              const changePercent = parseFloat((quote["10. change percent"] || "0%").replace('%', ''));
+              
+              if (!isNaN(price)) {
+                resultData.push({
+                  symbol: symbolObj.symbol,
+                  name: symbolObj.displayName || symbolObj.name,
+                  price,
+                  change,
+                  changePercent,
+                  lastUpdated: new Date(),
+                  currency: symbolObj.currency,
+                });
+                console.log(`Fetched data for ${symbolObj.name}: ${price}`);
+              }
+            } else {
+              console.log(`No data returned for ${symbolObj.name}:`, data);
+            }
+          } else {
+            console.error(`Failed to fetch data for ${symbolObj.name}: ${response.status}`);
+          }
+          
+          // Add a small delay to avoid hitting rate limits
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          
+        } catch (e) {
+          console.error(`Error fetching ${symbolObj.name} data:`, e);
+        }
+      }
+    } catch (alphaError) {
+      console.error("Error with Alpha Vantage API:", alphaError);
+    }
+    
+    // Try Alpha Vantage for other indices if needed
     try {
       // Get processed symbols to avoid duplication
       const processedSymbols = new Set(resultData.map(d => d.symbol));
       
       // Choose one index to fetch (to stay within API limits)
-      const symbolsToTry = ["nifty50", "sensex", "banknifty"];
-      let fetchedAny = false;
+      const symbolsToTry = marketSymbols.filter(s => 
+        s.type === "index" && 
+        !s.symbol.includes("^NSE") && !s.symbol.includes("^BSE") && 
+        !processedSymbols.has(s.symbol)
+      ).slice(0, 2); // Just fetch a couple non-Indian indices
       
-      for (const symbolId of symbolsToTry) {
-        if (fetchedAny) break; // Only fetch one to avoid API rate limits
-        
-        const symbolToFetch = marketSymbols.find(s => s.id === symbolId);
-        if (symbolToFetch && !processedSymbols.has(symbolToFetch.symbol)) {
-          const alphaSymbol = symbolToFetch.id === "nifty50" ? "NIFTY" : 
-                         symbolToFetch.id === "sensex" ? "SENSEX" : 
-                         "BANKNIFTY";
-          
-          const ALPHA_VANTAGE_API_KEY = "B7NMRFKLCBHPB70K";
+      for (const symbolToFetch of symbolsToTry) {
+        if (!processedSymbols.has(symbolToFetch.symbol)) {
+          const alphaSymbol = symbolToFetch.apiSymbol || symbolToFetch.symbol;
           const alphaUrl = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${alphaSymbol}&apikey=${ALPHA_VANTAGE_API_KEY}`;
           
           try {
@@ -205,10 +273,13 @@ export const fetchMarketData = async (): Promise<MarketData[]> => {
                     lastUpdated: new Date(),
                     currency: symbolToFetch.currency,
                   });
-                  fetchedAny = true;
                 }
               }
             }
+            
+            // Add a small delay to avoid hitting rate limits
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
           } catch (e) {
             console.error(`Error fetching ${alphaSymbol} data:`, e);
           }

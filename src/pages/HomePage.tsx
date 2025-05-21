@@ -14,6 +14,7 @@ import FeaturedResearch from "@/components/FeaturedResearch";
 import EducationalResources from "@/components/EducationalResources";
 import WhatWeOffer from "@/components/WhatWeOffer";
 import InterestRateTracker from "@/components/InterestRateTracker";
+import TradingViewTickerTape from "@/components/TradingViewTickerTape";
 
 const HomePage = () => {
   const [showNewsletter, setShowNewsletter] = useState(false);
@@ -48,6 +49,7 @@ const HomePage = () => {
         <Navbar />
       </header>
       
+      <TradingViewTickerTape />
       <MarketTickerLive />
       
       <main className="container mx-auto px-4 py-8">

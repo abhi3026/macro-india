@@ -1,3 +1,4 @@
+
 interface TradingViewWidget {
   widget: new (configuration: any) => any;
 }

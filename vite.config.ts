@@ -18,6 +18,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      "@jridgewell/sourcemap-codec/dist/sourcemap-codec.mjs": path.resolve(__dirname, "node_modules/@jridgewell/sourcemap-codec/dist/sourcemap-codec.cjs")
     },
   },
   build: {

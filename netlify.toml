@@ -6,7 +6,7 @@
 
 [build.environment]
   NODE_VERSION = "16"
-  NPM_FLAGS = "--no-optional"
+  NPM_FLAGS = "--no-optional --legacy-peer-deps"
   NPM_VERSION = "8"
 
 [[redirects]]

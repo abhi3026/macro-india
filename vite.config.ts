@@ -22,7 +22,7 @@ export default defineConfig({
     outDir: 'dist',
     sourcemap: true,
     rollupOptions: {
-      // This can help if there are issues with dependencies
+      // Provide an empty external array to avoid issues
       external: []
     }
   }

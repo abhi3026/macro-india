@@ -4,9 +4,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { BarChart3, TrendingUp, DollarSign } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import MarketTickerLive from "@/components/MarketTickerLive";
 import SEOHead from "@/components/SEOHead";
 import PageHero from "@/components/ui/page-hero";
+import TradingViewTickerTape from "@/components/TradingViewTickerTape";
 
 const DataDashboardPage = () => {
   return (
@@ -21,7 +21,7 @@ const DataDashboardPage = () => {
         <Navbar />
       </header>
       
-      <MarketTickerLive />
+      <TradingViewTickerTape />
       
       <PageHero 
         title="Data Dashboard"

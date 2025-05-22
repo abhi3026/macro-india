@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import MarketTickerLive from "@/components/MarketTickerLive";
 import NewsletterModal from "@/components/NewsletterModal";
 import Markets from "@/components/Markets";
 import EconomicIndicatorsDashboard from "@/components/EconomicIndicatorsDashboard";
@@ -50,7 +49,6 @@ const HomePage = () => {
       </header>
       
       <TradingViewTickerTape />
-      <MarketTickerLive />
       
       <main className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

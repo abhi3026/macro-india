@@ -1,7 +1,6 @@
 
 import { useEffect, useRef } from "react";
 import { useTheme } from "@/components/ThemeProvider";
-import { Card } from "@/components/ui/card";
 
 const TradingViewTickerTape = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -15,67 +14,120 @@ const TradingViewTickerTape = () => {
 
     const isDarkMode = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
     
-    // Create the widget container
+    // Create the widget container div
     const widgetContainer = document.createElement("div");
     widgetContainer.className = "tradingview-widget-container__widget";
     
+    // Create the copyright div
+    const copyrightDiv = document.createElement("div");
+    copyrightDiv.className = "tradingview-widget-copyright";
+    const copyrightLink = document.createElement("a");
+    copyrightLink.href = "https://www.tradingview.com/";
+    copyrightLink.rel = "noopener nofollow";
+    copyrightLink.target = "_blank";
+    const spanElement = document.createElement("span");
+    spanElement.className = "blue-text";
+    spanElement.textContent = "Track all markets on TradingView";
+    copyrightLink.appendChild(spanElement);
+    copyrightDiv.appendChild(copyrightLink);
+    
     // Create the script element
     const script = document.createElement("script");
+    script.type = "text/javascript";
     script.src = "https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js";
     script.async = true;
     script.innerHTML = JSON.stringify({
       "symbols": [
         {
-          "proName": "FOREXCOM:NSXUSD",
-          "title": "Nifty 50"
+          "description": "Nifty 50",
+          "proName": "NSE:NIFTY"
         },
         {
-          "proName": "BSE:SENSEX",
-          "title": "Sensex"
+          "description": "Banknifty",
+          "proName": "NSE:BANKNIFTY"
         },
         {
-          "description": "USD/INR",
-          "proName": "OANDA:USDINR"
+          "description": "Sensex",
+          "proName": "BSE:SENSEX"
         },
         {
-          "description": "BTC/USD",
-          "proName": "BITSTAMP:BTCUSD"
+          "description": "S&P 500",
+          "proName": "SP:SPX"
         },
         {
-          "description": "Gold",
-          "proName": "OANDA:XAUUSD"
+          "description": "Dow Jones",
+          "proName": "TVC:DJI"
         },
         {
-          "description": "Crude Oil",
-          "proName": "NYMEX:CL1!"
+          "description": "FTSE 100",
+          "proName": "SPREADEX:FTSE"
+        },
+        {
+          "description": "SSE",
+          "proName": "SSE:000888"
+        },
+        {
+          "description": "Nikkie",
+          "proName": "INDEX:NTH"
+        },
+        {
+          "description": "CAC 40",
+          "proName": "TVC:CAC40"
+        },
+        {
+          "description": "DAX",
+          "proName": "XETR:DAX"
+        },
+        {
+          "description": "IBOVESPA",
+          "proName": "INDEX:IBOV"
+        },
+        {
+          "description": "BTC",
+          "proName": "CRYPTO:BTCUSD"
+        },
+        {
+          "description": "ETH",
+          "proName": "CRYPTO:ETHUSD"
+        },
+        {
+          "description": "BNB",
+          "proName": "CRYPTO:BNBUSD"
+        },
+        {
+          "description": "SOLANA",
+          "proName": "CRYPTO:SOLUSD"
+        },
+        {
+          "description": "XRP",
+          "proName": "CRYPTO:XRPUSD"
         }
       ],
       "showSymbolLogo": true,
-      "colorTheme": isDarkMode ? "dark" : "light",
-      "isTransparent": true,
+      "isTransparent": false,
+      "largeChartUrl": "https://www.indianmacro.com/data-dashboard/markets",
       "displayMode": "adaptive",
+      "colorTheme": isDarkMode ? "dark" : "light",
       "locale": "en"
     });
 
     // Append elements to the DOM
     if (containerRef.current) {
       containerRef.current.appendChild(widgetContainer);
-      widgetContainer.appendChild(script);
+      containerRef.current.appendChild(copyrightDiv);
+      containerRef.current.appendChild(script);
     }
 
     // Cleanup function
     return () => {
       if (containerRef.current) {
-        const widgetContainer = containerRef.current.querySelector(".tradingview-widget-container__widget");
-        if (widgetContainer) {
-          containerRef.current.removeChild(widgetContainer);
-        }
+        containerRef.current.innerHTML = '';
       }
     };
   }, [theme]);
 
   return (
-    <div className="w-full border-y border-border bg-background py-1">
+    <div className="w-full py-1 bg-background">
       <div
         ref={containerRef}
         className="tradingview-widget-container"

@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import PageHero from "@/components/ui/page-hero";
 import MarketTickerLive from "@/components/MarketTickerLive";
 import ResearchCMS from "@/components/ResearchCMS";
+import TradingViewTickerTape from "@/components/TradingViewTickerTape";
 
 const ResearchPage = () => {
   return (
@@ -26,7 +27,7 @@ const ResearchPage = () => {
         <Navbar />
       </header>
       
-      <MarketTickerLive />
+      <TradingViewTickerTape />
       
       <PageHero 
         title="Research" 

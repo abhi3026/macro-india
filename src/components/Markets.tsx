@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { generateFallbackData, marketSymbols, fetchMarketData } from "@/lib/marketData";
 import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
 
 // Updated type to change "currencies" to "forex"
 type MarketCategory = "indices" | "stocks" | "crypto" | "commodities" | "forex";
@@ -21,7 +22,7 @@ const Markets = () => {
     { id: "stocks", label: "Stocks" },
     { id: "crypto", label: "Crypto" },
     { id: "commodities", label: "Commodities" },
-    { id: "forex", label: "Forex" }  // Renamed from "Currencies"
+    { id: "forex", label: "Forex" }
   ];
 
   useEffect(() => {
@@ -98,22 +99,26 @@ const Markets = () => {
             <BarChart2 className="h-5 w-5 text-accent1" />
             Markets
           </CardTitle>
-          
-          <div className="flex flex-wrap gap-2">
-            {categories.map((category) => (
-              <Button
-                key={category.id}
-                variant={activeCategory === category.id ? "default" : "outline"}
-                size="sm"
-                onClick={() => setActiveCategory(category.id)}
-                className={activeCategory === category.id ? "bg-accent1 hover:bg-accent1/90" : ""}
-              >
-                {category.label}
-              </Button>
-            ))}
-          </div>
         </div>
       </CardHeader>
+      
+      {/* Updated tab buttons to match design */}
+      <div className="grid grid-cols-5 w-full border-b">
+        {categories.map((category) => (
+          <button
+            key={category.id}
+            onClick={() => setActiveCategory(category.id)}
+            className={cn(
+              "py-2 px-4 text-center text-sm font-medium transition-colors",
+              activeCategory === category.id 
+                ? "bg-blue-500 text-white" 
+                : "hover:bg-gray-100 dark:hover:bg-gray-800"
+            )}
+          >
+            {category.label}
+          </button>
+        ))}
+      </div>
       
       <CardContent>
         <div className="overflow-x-auto">

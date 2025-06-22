@@ -23,6 +23,14 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ['@jridgewell/sourcemap-codec']
   },
+  css: {
+    postcss: {
+      plugins: [
+        require('tailwindcss'),
+        require('autoprefixer'),
+      ],
+    },
+  },
   build: {
     outDir: 'dist',
     sourcemap: true,

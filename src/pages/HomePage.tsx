@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import MarketTickerLive from "@/components/MarketTickerLive";
 import NewsletterModal from "@/components/NewsletterModal";
 import Markets from "@/components/Markets";
 import EconomicIndicatorsDashboard from "@/components/EconomicIndicatorsDashboard";
@@ -13,10 +14,10 @@ import FeaturedResearch from "@/components/FeaturedResearch";
 import EducationalResources from "@/components/EducationalResources";
 import WhatWeOffer from "@/components/WhatWeOffer";
 import InterestRateTracker from "@/components/InterestRateTracker";
-import TradingViewTickerTape from "@/components/TradingViewTickerTape";
 
 const HomePage = () => {
   const [showNewsletter, setShowNewsletter] = useState(false);
+  const [widgetsLoaded, setWidgetsLoaded] = useState(false);
 
   useEffect(() => {
     // Scroll to top on mount
@@ -31,8 +32,14 @@ const HomePage = () => {
       }
     }, 5000);
 
+    // Load widgets after a short delay to prevent race conditions
+    const widgetTimer = setTimeout(() => {
+      setWidgetsLoaded(true);
+    }, 1000);
+
     return () => {
       clearTimeout(timer);
+      clearTimeout(widgetTimer);
     };
   }, []);
 
@@ -41,20 +48,21 @@ const HomePage = () => {
       <SEOHead
         title="IndianMacro | Indian Economic Data & Financial Markets"
         description="Access comprehensive Indian economic data, financial market analysis, and research. Track markets, economic indicators, and stay informed with IndianMacro."
-        canonicalUrl="/"
       />
       
-      <header>
+      <header className="sticky top-0 z-50 bg-[#000041] text-white">
         <Navbar />
       </header>
       
-      <TradingViewTickerTape />
+      <div className="pt-0 mt-0">
+        <MarketTickerLive />
+      </div>
       
       <main className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column */}
           <div className="lg:col-span-2 space-y-8">
-            <TradingViewChart defaultSymbol="NYSE:SPGI" />
+            <TradingViewChart defaultSymbol="NSE:NIFTY" />
             {/* Markets moved above Economic Indicators as requested */}
             <Markets />
             <EconomicIndicatorsDashboard />

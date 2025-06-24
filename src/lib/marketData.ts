@@ -1,3 +1,4 @@
+
 /**
  * Market data utilities for fetching and displaying financial market information
  */
@@ -9,7 +10,7 @@ export type MarketSymbol = {
   id: string;
   name: string;
   symbol: string;
-  type: "index" | "forex" | "commodity" | "crypto" | "stock";
+  type: "index" | "forex" | "commodity" | "crypto";
   displayName?: string;
   currency?: string;
   apiSymbol?: string; // Simplified symbol format for API calls
@@ -32,52 +33,20 @@ export const marketSymbols: MarketSymbol[] = [
   { id: "nifty50", name: "NIFTY 50", symbol: "^NSEI", type: "index", currency: "₹", apiSymbol: "NIFTY50.NS" },
   { id: "sensex", name: "SENSEX", symbol: "^BSESN", type: "index", currency: "₹", apiSymbol: "SENSEX.BO" },
   { id: "banknifty", name: "BANK NIFTY", symbol: "^NSEBANK", type: "index", currency: "₹", apiSymbol: "BANKNIFTY.NS" },
+  { id: "nasdaq", name: "NASDAQ", symbol: "^IXIC", type: "index", currency: "$", apiSymbol: "^IXIC" },
   { id: "sp500", name: "S&P 500", symbol: "^GSPC", type: "index", currency: "$", apiSymbol: "^GSPC" },
-  { id: "ftse100", name: "FTSE 100", symbol: "^FTSE", type: "index", currency: "£", apiSymbol: "^FTSE" },
-  { id: "shanghai", name: "SSE Composite", symbol: "^SSEC", type: "index", currency: "¥", apiSymbol: "^SSEC" },
+  { id: "dowjones", name: "DOW JONES", symbol: "^DJI", type: "index", currency: "$", apiSymbol: "^DJI" },
   { id: "nikkei", name: "NIKKEI 225", symbol: "^N225", type: "index", currency: "¥", apiSymbol: "^N225" },
-  { id: "ibovespa", name: "IBOVESPA", symbol: "^BVSP", type: "index", currency: "R$", apiSymbol: "^BVSP" },
-  { id: "dax", name: "DAX", symbol: "^GDAXI", type: "index", currency: "€", apiSymbol: "^GDAXI" },
-  { id: "cac40", name: "CAC 40", symbol: "^FCHI", type: "index", currency: "€", apiSymbol: "^FCHI" },
-  
-  // Indian stocks
-  { id: "reliance", name: "Reliance Industries", symbol: "RELIANCE.NS", type: "stock", currency: "₹", apiSymbol: "RELIANCE.NS" },
-  { id: "tcs", name: "Tata Consultancy", symbol: "TCS.NS", type: "stock", currency: "₹", apiSymbol: "TCS.NS" },
-  { id: "hdfcbank", name: "HDFC Bank", symbol: "HDFCBANK.NS", type: "stock", currency: "₹", apiSymbol: "HDFCBANK.NS" },
-  { id: "infosys", name: "Infosys", symbol: "INFY.NS", type: "stock", currency: "₹", apiSymbol: "INFY.NS" },
-  { id: "icicibank", name: "ICICI Bank", symbol: "ICICIBANK.NS", type: "stock", currency: "₹", apiSymbol: "ICICIBANK.NS" },
-  { id: "sbi", name: "State Bank of India", symbol: "SBIN.NS", type: "stock", currency: "₹", apiSymbol: "SBIN.NS" },
-  { id: "hul", name: "Hindustan Unilever", symbol: "HINDUNILVR.NS", type: "stock", currency: "₹", apiSymbol: "HINDUNILVR.NS" },
-  { id: "airtel", name: "Bharti Airtel", symbol: "BHARTIARTL.NS", type: "stock", currency: "₹", apiSymbol: "BHARTIARTL.NS" },
-  { id: "wipro", name: "Wipro", symbol: "WIPRO.NS", type: "stock", currency: "₹", apiSymbol: "WIPRO.NS" },
-  { id: "lt", name: "Larsen & Toubro", symbol: "LT.NS", type: "stock", currency: "₹", apiSymbol: "LT.NS" },
-  
-  // Forex
-  { id: "usdinr", name: "USD/INR", symbol: "USDINR=X", type: "forex", displayName: "USD/INR", currency: "₹", apiSymbol: "INR=X" },
-  { id: "gbpinr", name: "GBP/INR", symbol: "GBPINR=X", type: "forex", displayName: "GBP/INR", currency: "₹", apiSymbol: "GBPINR=X" },
-  { id: "eurinr", name: "EUR/INR", symbol: "EURINR=X", type: "forex", displayName: "EUR/INR", currency: "₹", apiSymbol: "EURINR=X" },
+  { id: "hangseng", name: "HANG SENG", symbol: "^HSI", type: "index", currency: "HK$", apiSymbol: "^HSI" },
+  { id: "usdinr", name: "USD/INR", symbol: "INR=X", type: "forex", displayName: "USD/INR", currency: "₹", apiSymbol: "INR=X" },
+  { id: "eurusd", name: "EUR/USD", symbol: "EURUSD=X", type: "forex", displayName: "EUR/USD", currency: "$", apiSymbol: "EURUSD=X" },
   { id: "jpyinr", name: "JPY/INR", symbol: "JPYINR=X", type: "forex", displayName: "JPY/INR", currency: "₹", apiSymbol: "JPYINR=X" },
-  { id: "audinr", name: "AUD/INR", symbol: "AUDINR=X", type: "forex", displayName: "AUD/INR", currency: "₹", apiSymbol: "AUDINR=X" },
-  { id: "usdjpy", name: "USD/JPY", symbol: "USDJPY=X", type: "forex", displayName: "USD/JPY", currency: "¥", apiSymbol: "USDJPY=X" },
-  { id: "usdeur", name: "USD/EUR", symbol: "USDEUR=X", type: "forex", displayName: "USD/EUR", currency: "€", apiSymbol: "USDEUR=X" },
-  
-  // Commodities
   { id: "gold", name: "Gold", symbol: "GC=F", type: "commodity", currency: "$", apiSymbol: "GC=F" },
   { id: "silver", name: "Silver", symbol: "SI=F", type: "commodity", currency: "$", apiSymbol: "SI=F" },
-  { id: "wticrude", name: "WTI Crude Oil", symbol: "CL=F", type: "commodity", displayName: "WTI Crude", currency: "$", apiSymbol: "CL=F" },
-  { id: "brentcrudeoil", name: "Brent Crude Oil", symbol: "BZ=F", type: "commodity", displayName: "Brent Crude", currency: "$", apiSymbol: "BZ=F" },
-  
-  // Crypto
+  { id: "brentcrudeoil", name: "Brent Crude Oil", symbol: "BZ=F", type: "commodity", displayName: "Crude Oil", currency: "$", apiSymbol: "BZ=F" },
   { id: "bitcoin", name: "Bitcoin", symbol: "BTC-USD", type: "crypto", displayName: "BTC", currency: "$", apiSymbol: "BTC-USD" },
   { id: "ethereum", name: "Ethereum", symbol: "ETH-USD", type: "crypto", displayName: "ETH", currency: "$", apiSymbol: "ETH-USD" },
   { id: "solana", name: "Solana", symbol: "SOL-USD", type: "crypto", displayName: "SOL", currency: "$", apiSymbol: "SOL-USD" },
-  { id: "xrp", name: "XRP", symbol: "XRP-USD", type: "crypto", displayName: "XRP", currency: "$", apiSymbol: "XRP-USD" },
-  { id: "dogecoin", name: "Dogecoin", symbol: "DOGE-USD", type: "crypto", displayName: "DOGE", currency: "$", apiSymbol: "DOGE-USD" },
-  { id: "cardano", name: "Cardano", symbol: "ADA-USD", type: "crypto", displayName: "ADA", currency: "$", apiSymbol: "ADA-USD" },
-  { id: "polkadot", name: "Polkadot", symbol: "DOT-USD", type: "crypto", displayName: "DOT", currency: "$", apiSymbol: "DOT-USD" },
-  { id: "avalanche", name: "Avalanche", symbol: "AVAX-USD", type: "crypto", displayName: "AVAX", currency: "$", apiSymbol: "AVAX-USD" },
-  { id: "shibainucoin", name: "Shiba Inu", symbol: "SHIB-USD", type: "crypto", displayName: "SHIB", currency: "$", apiSymbol: "SHIB-USD" },
-  { id: "chainlink", name: "Chainlink", symbol: "LINK-USD", type: "crypto", displayName: "LINK", currency: "$", apiSymbol: "LINK-USD" },
 ];
 
 // Initial data with loading state
@@ -238,56 +207,23 @@ export const fetchMarketData = async (): Promise<MarketData[]> => {
 const generateFallbackItem = (marketSymbol: MarketSymbol): MarketData => {
   // Base values with actual price information (kept updated manually)
   const baseValues: {[key: string]: number} = {
-    // Indices
     "^NSEI": 25380.42,
     "^BSESN": 83412.47,
     "^NSEBANK": 48290.00,
+    "^IXIC": 17825.35,
     "^GSPC": 5650.80,
-    "^FTSE": 7920.35,
-    "^SSEC": 3240.65,
+    "^DJI": 42300.95,
     "^N225": 41250.30,
-    "^BVSP": 132450.75,
-    "^GDAXI": 18560.40,
-    "^FCHI": 8150.25,
-    
-    // Indian stocks
-    "RELIANCE.NS": 2980.50,
-    "TCS.NS": 3890.25,
-    "HDFCBANK.NS": 1670.45,
-    "INFY.NS": 1520.30,
-    "ICICIBANK.NS": 1050.75,
-    "SBIN.NS": 720.40,
-    "HINDUNILVR.NS": 2630.80,
-    "BHARTIARTL.NS": 1240.65,
-    "WIPRO.NS": 450.35,
-    "LT.NS": 3450.90,
-    
-    // Forex
-    "USDINR=X": 83.25,
-    "GBPINR=X": 105.45,
-    "EURINR=X": 89.65,
-    "JPYINR=X": 0.55,
-    "AUDINR=X": 55.40,
-    "USDJPY=X": 152.35,
-    "USDEUR=X": 0.93,
-    
-    // Commodities
+    "^HSI": 18750.20,
+    "INR=X": 83.25,
+    "EURUSD=X": 1.0825,
+    "JPYINR=X": 0.5430,
     "GC=F": 2480.50,
     "SI=F": 32.80,
-    "CL=F": 78.45,
     "BZ=F": 82.45,
-    
-    // Crypto
     "BTC-USD": 84650.00, // Updated from CoinGecko
     "ETH-USD": 1593.00,  // Updated from CoinGecko
     "SOL-USD": 139.50,   // Updated from CoinGecko
-    "XRP-USD": 0.55,
-    "DOGE-USD": 0.15,
-    "ADA-USD": 0.45,
-    "DOT-USD": 7.25,
-    "AVAX-USD": 36.40,
-    "SHIB-USD": 0.000025,
-    "LINK-USD": 16.75,
   };
   
   // Generate small random changes to simulate movement

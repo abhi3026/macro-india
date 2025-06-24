@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { updateMetaTags } from "@/utils/metaTags";
-import TradingViewTickerTape from "@/components/TradingViewTickerTape";
+import MarketTickerLive from "@/components/MarketTickerLive";
 
 const Index = () => {
   useEffect(() => {
@@ -16,7 +16,7 @@ const Index = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
-      <TradingViewTickerTape />
+      <MarketTickerLive />
       
       <div className="flex-grow flex items-center justify-center">
         <div className="text-center max-w-3xl px-4">

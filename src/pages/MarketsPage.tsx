@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -9,7 +8,6 @@ import SEOHead from "@/components/SEOHead";
 import { MarketTable, MarketData } from "@/components/ui/market-table";
 import { useSearchParams } from "react-router-dom";
 import PageHero from "@/components/ui/page-hero";
-import { useTheme } from "@/components/ThemeProvider";
 
 // TradingView Crypto Screener widget
 const CryptoWidget = () => {
@@ -158,6 +156,8 @@ const ForexWidget = () => {
   );
 };
 
+import { useTheme } from "@/components/ThemeProvider";
+
 const MarketsPage = () => {
   const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState(() => {
@@ -194,55 +194,7 @@ const MarketsPage = () => {
       lastPrice: 73058.24, 
       changePercent: 0.63 
     },
-    { 
-      flag: "/flags/us.svg",
-      symbol: "S&P 500",
-      name: "S&P 500",
-      lastPrice: 5000.00,
-      changePercent: 0.25
-    },
-    {
-      flag: "/flags/uk.svg",
-      symbol: "FTSE 100",
-      name: "FTSE 100",
-      lastPrice: 7800.00,
-      changePercent: -0.10
-    },
-    {
-      flag: "/flags/cn.svg",
-      symbol: "SSE",
-      name: "SSE Composite",
-      lastPrice: 3074.95,
-      changePercent: 0.24
-    },
-    {
-      flag: "/flags/jp.svg",
-      symbol: "N225",
-      name: "Nikkei 225",
-      lastPrice: 38467.24,
-      changePercent: -0.35
-    },
-    {
-      flag: "/flags/br.svg",
-      symbol: "BVSP",
-      name: "IBOVESPA",
-      lastPrice: 124568.20,
-      changePercent: 0.74
-    },
-    {
-      flag: "/flags/de.svg",
-      symbol: "DAX",
-      name: "DAX",
-      lastPrice: 17789.38,
-      changePercent: -0.42
-    },
-    {
-      flag: "/flags/fr.svg",
-      symbol: "CAC40",
-      name: "CAC 40",
-      lastPrice: 7645.20,
-      changePercent: -0.38
-    }
+    // Add more indices...
   ];
 
   const stocks: MarketData[] = [
@@ -262,70 +214,7 @@ const MarketsPage = () => {
       changePercent: -0.60,
       volume: 1234567
     },
-    { 
-      flag: "/flags/in.svg",
-      symbol: "HDFCBANK", 
-      name: "HDFC Bank", 
-      lastPrice: 1500.00, 
-      changePercent: 0.75,
-      volume: 3456789
-    },
-    {
-      flag: "/flags/in.svg",
-      symbol: "INFOSYS",
-      name: "Infosys",
-      lastPrice: 1600.00,
-      changePercent: 0.30,
-      volume: 2345678
-    },
-    {
-      flag: "/flags/in.svg",
-      symbol: "ICICIBANK",
-      name: "ICICI Bank",
-      lastPrice: 850.00,
-      changePercent: 0.90,
-      volume: 4567890
-    },
-    {
-      flag: "/flags/in.svg",
-      symbol: "SBIN",
-      name: "State Bank of India",
-      lastPrice: 625.75,
-      changePercent: 1.25,
-      volume: 3789456
-    },
-    {
-      flag: "/flags/in.svg",
-      symbol: "HINDUNILVR",
-      name: "Hindustan Unilever",
-      lastPrice: 2450.60,
-      changePercent: -0.45,
-      volume: 1234789
-    },
-    {
-      flag: "/flags/in.svg",
-      symbol: "BHARTIARTL",
-      name: "Bharti Airtel",
-      lastPrice: 1140.50,
-      changePercent: 0.85,
-      volume: 2345987
-    },
-    {
-      flag: "/flags/in.svg",
-      symbol: "WIPRO",
-      name: "Wipro",
-      lastPrice: 475.25,
-      changePercent: -0.35,
-      volume: 1678543
-    },
-    {
-      flag: "/flags/in.svg",
-      symbol: "LT",
-      name: "Larsen & Toubro",
-      lastPrice: 3245.80,
-      changePercent: 1.05,
-      volume: 987345
-    }
+    // Add more stocks...
   ];
 
   const commodities: MarketData[] = [
@@ -341,18 +230,7 @@ const MarketsPage = () => {
       lastPrice: 28.45, 
       changePercent: 1.59 
     },
-    {
-      symbol: "WTI Crude",
-      name: "WTI Crude Oil",
-      lastPrice: 80.00,
-      changePercent: 0.50
-    },
-    {
-      symbol: "Brent Crude",
-      name: "Brent Crude Oil",
-      lastPrice: 85.00,
-      changePercent: 0.75
-    }
+    // Add more commodities...
   ];
 
   // Renamed from 'currencies' to 'forex'
@@ -365,47 +243,13 @@ const MarketsPage = () => {
       changePercent: -0.15 
     },
     { 
-      flag: "/flags/gb.svg",
-      symbol: "GBP/INR", 
-      name: "British Pound", 
-      lastPrice: 105.3456, 
-      changePercent: 0.10 
-    },
-    { 
       flag: "/flags/eu.svg",
       symbol: "EUR/INR", 
       name: "Euro", 
       lastPrice: 89.8765, 
       changePercent: 0.26 
     },
-    {
-      flag: "/flags/jp.svg",
-      symbol: "JPY/INR",
-      name: "Japanese Yen",
-      lastPrice: 0.5528,
-      changePercent: -0.05
-    },
-    {
-      flag: "/flags/au.svg",
-      symbol: "AUD/INR",
-      name: "Australian Dollar",
-      lastPrice: 55.4280,
-      changePercent: 0.20
-    },
-    {
-      flag: "/flags/jp.svg",
-      symbol: "USD/JPY",
-      name: "US Dollar/Japanese Yen",
-      lastPrice: 152.30,
-      changePercent: 0.15
-    },
-    {
-      flag: "/flags/eu.svg",
-      symbol: "USD/EUR",
-      name: "US Dollar/Euro",
-      lastPrice: 0.93,
-      changePercent: -0.10
-    }
+    // Add more forex pairs...
   ];
 
   return (

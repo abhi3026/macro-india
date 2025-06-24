@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -59,65 +58,8 @@ const InterestRateTracker = () => {
       flag: "🇨🇳",
       interestRate: { rate: 3.45, change: -0.25, lastUpdated: "2024-02-20" },
       bondYield: { rate: 2.45, change: -0.03, lastUpdated: "2024-02-20" }
-    },
-    { 
-      country: "Brazil", 
-      flag: "🇧🇷",
-      interestRate: { rate: 10.75, change: -0.50, lastUpdated: "2024-02-15" },
-      bondYield: { rate: 10.92, change: -0.15, lastUpdated: "2024-02-20" }
-    },
-    { 
-      country: "Russia", 
-      flag: "🇷🇺",
-      interestRate: { rate: 16.00, change: 0, lastUpdated: "2024-02-16" },
-      bondYield: { rate: 12.85, change: 0.05, lastUpdated: "2024-02-20" }
-    },
-    { 
-      country: "Australia", 
-      flag: "🇦🇺",
-      interestRate: { rate: 4.35, change: 0, lastUpdated: "2024-02-06" },
-      bondYield: { rate: 4.26, change: 0.03, lastUpdated: "2024-02-20" }
-    },
-    { 
-      country: "Canada", 
-      flag: "🇨🇦",
-      interestRate: { rate: 5.00, change: 0, lastUpdated: "2024-01-24" },
-      bondYield: { rate: 3.62, change: 0.01, lastUpdated: "2024-02-20" }
-    },
-    { 
-      country: "South Korea", 
-      flag: "🇰🇷",
-      interestRate: { rate: 3.50, change: 0, lastUpdated: "2024-02-22" },
-      bondYield: { rate: 3.85, change: -0.02, lastUpdated: "2024-02-20" }
-    },
-    { 
-      country: "Switzerland", 
-      flag: "🇨🇭",
-      interestRate: { rate: 1.75, change: 0, lastUpdated: "2024-03-21" },
-      bondYield: { rate: 1.05, change: 0.02, lastUpdated: "2024-03-21" }
-    },
-    { 
-      country: "South Africa", 
-      flag: "🇿🇦",
-      interestRate: { rate: 8.25, change: 0, lastUpdated: "2024-01-25" },
-      bondYield: { rate: 12.26, change: 0.01, lastUpdated: "2024-02-20" }
-    },
-    { 
-      country: "Mexico", 
-      flag: "🇲🇽",
-      interestRate: { rate: 11.25, change: -0.25, lastUpdated: "2024-03-21" },
-      bondYield: { rate: 9.48, change: -0.10, lastUpdated: "2024-03-21" }
-    },
-    { 
-      country: "Indonesia", 
-      flag: "🇮🇩",
-      interestRate: { rate: 6.25, change: 0, lastUpdated: "2024-02-15" },
-      bondYield: { rate: 6.65, change: -0.04, lastUpdated: "2024-02-20" }
     }
   ]);
-
-  // On homepage, we only show first 6 entries
-  const displayRates = rates.slice(0, 6);
 
   return (
     <Card className="shadow-sm transition-all duration-300 hover:shadow-md w-full">
@@ -139,7 +81,7 @@ const InterestRateTracker = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {displayRates.map((rate) => (
+              {rates.map((rate) => (
                 <TableRow key={rate.country}>
                   <TableCell>
                     <div className="flex items-center gap-2">

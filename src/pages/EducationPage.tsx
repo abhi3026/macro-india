@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
@@ -18,7 +17,6 @@ import { fetchMarketPosts, MarketPost } from "@/utils/contentLoader";
 import { updateMetaTags } from "@/utils/metaTags";
 import SEOHead from "@/components/SEOHead";
 import PageHero from "@/components/ui/page-hero";
-import TradingViewTickerTape from "@/components/TradingViewTickerTape";
 
 const categories = [
   "All Categories",
@@ -101,12 +99,29 @@ const EducationPage = () => {
         <Navbar />
       </header>
       
-      <TradingViewTickerTape />
-      
       <PageHero 
         title="Educational Resources"
         description="Learn about economics, markets, and finance with our educational content"
       />
+      
+      {/* Featured Post */}
+      {!isLoading && filteredPosts.find(post => post.featured) && (
+        <div className="bg-white dark:bg-indianmacro-900 py-12">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-2xl font-bold mb-6">Featured Resource</h2>
+            <div className="max-w-4xl mx-auto">
+              {filteredPosts
+                .filter(post => post.featured)
+                .map(post => (
+                  <Link key={post.id} to={`/education/${post.slug}`}>
+                    <BlogPostCard post={post} variant="featured" />
+                  </Link>
+                ))[0]
+              }
+            </div>
+          </div>
+        </div>
+      )}
       
       {/* Main Educational Content */}
       <main className="flex-1 container mx-auto px-4 py-8">
@@ -197,13 +212,15 @@ const EducationPage = () => {
                   </div>
                 ))}
               </div>
-            ) : filteredPosts.length > 0 ? (
+            ) : filteredPosts.filter(post => !post.featured).length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredPosts.map((post) => (
-                  <Link key={post.id} to={`/education/${post.slug}`}>
-                    <BlogPostCard key={post.id} post={post} />
-                  </Link>
-                ))}
+                {filteredPosts
+                  .filter(post => !post.featured)
+                  .map((post) => (
+                    <Link key={post.id} to={`/education/${post.slug}`}>
+                      <BlogPostCard key={post.id} post={post} />
+                    </Link>
+                  ))}
               </div>
             ) : (
               <div className="text-center py-12">

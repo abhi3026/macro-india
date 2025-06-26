@@ -33,5 +33,13 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
   build: {
     outDir: 'dist',
     sourcemap: true
-  }
+  },
+  css: {
+    postcss: {
+      plugins: [
+        require('tailwindcss'),
+        require('autoprefixer'),
+      ],
+    },
+  },
 }));

@@ -3,8 +3,6 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import type { ConfigEnv } from 'vite';
-import tailwindcss from 'tailwindcss';
-import autoprefixer from 'autoprefixer';
 
 // Only require lovable-tagger in development
 let componentTagger = undefined;
@@ -39,8 +37,8 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
   css: {
     postcss: {
       plugins: [
-        tailwindcss,
-        autoprefixer,
+        require('tailwindcss'),
+        require('autoprefixer'),
       ],
     },
   },

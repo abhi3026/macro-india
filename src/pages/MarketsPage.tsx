@@ -255,9 +255,10 @@ const MarketsPage = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <SEOHead
-        title="Markets | IndianMacro"
-        description="Track Indian financial markets including stocks, bonds, commodities, and forex."
+        title="Live Markets | Stocks, Crypto, Forex & Commodities"
+        description="Track Nifty 50, Sensex, Bank Nifty, cryptocurrency prices, forex rates, and commodity prices in real-time. Live Indian and global market data on IndianMacro."
         canonicalUrl="/data-dashboard/markets"
+        keywords="Nifty 50 live, Sensex today, cryptocurrency prices India, USD INR rate, gold price, stock market India"
       />
       
       <header className="sticky top-0 z-50 bg-[#000041] text-white">

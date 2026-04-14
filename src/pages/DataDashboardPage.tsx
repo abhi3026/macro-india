@@ -6,15 +6,24 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import MarketTickerLive from "@/components/MarketTickerLive";
 import SEOHead from "@/components/SEOHead";
+import StructuredData from "@/components/StructuredData";
 import PageHero from "@/components/ui/page-hero";
 
 const DataDashboardPage = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <SEOHead
-        title="Data Dashboard | IndianMacro"
-        description="Explore comprehensive data and analytics on the Indian economy and financial markets."
+        title="Data Dashboard | Indian Economic & Market Data"
+        description="Access live market data, economic indicators, interest rates, and bond yields for India and global markets. Interactive charts and real-time financial analytics."
         canonicalUrl="/data-dashboard"
+        keywords="Indian economic data, market dashboard, financial data India, economic indicators dashboard"
+      />
+      <StructuredData
+        type="BreadcrumbList"
+        items={[
+          { name: 'Home', url: '/' },
+          { name: 'Data Dashboard', url: '/data-dashboard' },
+        ]}
       />
       
       <header className="sticky top-0 z-50 bg-[#000041] text-white">

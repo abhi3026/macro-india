@@ -2,29 +2,32 @@ import { useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/ui/page-hero";
-import { updateMetaTags } from "@/utils/metaTags";
 import SEOHead from "@/components/SEOHead";
+import StructuredData from "@/components/StructuredData";
 import { BarChart2, LineChart, BookOpen, Globe } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { PageHeader } from "@/components/ui/page-header";
 
 const AboutPage = () => {
   useEffect(() => {
-    updateMetaTags(
-      "About Us | IndianMacro",
-      "Learn about IndianMacro's mission to provide comprehensive macroeconomic data and research for India and global markets.",
-      "/about"
-    );
+    window.scrollTo(0, 0);
   }, []);
 
   return (
     <div className="min-h-screen flex flex-col">
       <SEOHead 
-        title="About Us | IndianMacro"
-        description="Learn about IndianMacro's mission to provide comprehensive macroeconomic data and research for India and global markets."
+        title="About IndianMacro | Our Mission & Team"
+        description="IndianMacro provides data-driven, independent macroeconomic research on India. Learn about our mission to make financial insights accessible to investors and professionals."
         canonicalUrl="/about"
+        keywords="about IndianMacro, Indian economy research team, macroeconomic data platform India"
+      />
+      <StructuredData
+        type="BreadcrumbList"
+        items={[
+          { name: 'Home', url: '/' },
+          { name: 'About', url: '/about' },
+        ]}
       />
       
       <header className="sticky top-0 z-50">
@@ -41,6 +44,7 @@ const AboutPage = () => {
         <div className="bg-white dark:bg-indianmacro-900 py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-3xl mx-auto mb-12">
+              <h1 className="text-3xl font-bold text-indianmacro-900 dark:text-white mb-6">About IndianMacro</h1>
               <p className="text-lg text-indianmacro-600 dark:text-indianmacro-300">
                 At Indian Macro, we are passionate about decoding the complex world of finance, investments, and macroeconomics, with a special focus on India.
                 Our mission is simple: make high-quality financial research accessible and actionable for investors, students, and professionals alike.

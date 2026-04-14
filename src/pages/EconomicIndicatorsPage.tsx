@@ -5,6 +5,8 @@ import Footer from "@/components/Footer";
 import MarketTickerLive from "@/components/MarketTickerLive";
 import PageHero from "@/components/ui/page-hero";
 import { EconomicTable, EconomicData } from "@/components/ui/economic-table";
+import SEOHead from "@/components/SEOHead";
+import StructuredData from "@/components/StructuredData";
 
 export default function EconomicIndicatorsPage() {
   const defaultCountries: EconomicData[] = [
@@ -120,13 +122,29 @@ export default function EconomicIndicatorsPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Helmet>
-        <title>Economic Indicators | Macro India</title>
-        <meta
-          name="description"
-          content="Track key economic indicators of the Indian economy."
-        />
-      </Helmet>
+      <SEOHead
+        title="Economic Indicators by Country | IndianMacro"
+        description="Compare GDP growth, inflation, unemployment, PMI, and trade data across India, US, UK, EU, China, Japan and more. Updated economic indicators dashboard."
+        canonicalUrl="/data-dashboard/economic-indicators"
+        keywords="economic indicators India, GDP growth rate, inflation rate comparison, unemployment data, PMI index, global economic data"
+      />
+      <StructuredData
+        type="Dataset"
+        name="Global Economic Indicators Comparison"
+        description="Key economic indicators including GDP, inflation, unemployment, PMI, exports, and confidence indices for major economies."
+        url="/data-dashboard/economic-indicators"
+        keywords={["GDP", "inflation", "unemployment", "PMI", "economic indicators", "India economy"]}
+        spatialCoverage="Global"
+        temporalCoverage="2024/2025"
+      />
+      <StructuredData
+        type="BreadcrumbList"
+        items={[
+          { name: 'Home', url: '/' },
+          { name: 'Data Dashboard', url: '/data-dashboard' },
+          { name: 'Economic Indicators', url: '/data-dashboard/economic-indicators' },
+        ]}
+      />
       
       <header className="sticky top-0 z-50">
         <Navbar />
@@ -136,15 +154,15 @@ export default function EconomicIndicatorsPage() {
       
       <PageHero 
         title="Economic Indicators"
-        description="Track key economic indicators of the Indian economy"
+        description="Compare key economic indicators across major global economies"
       />
       
       <main className="flex-1 py-8">
         <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
           <section className="mb-8">
-            <h1 className="text-4xl font-bold mb-4">Economic Indicators</h1>
+            <h1 className="text-4xl font-bold mb-4">Global Economic Indicators</h1>
             <p className="text-muted-foreground">
-              Track and analyze key economic indicators that drive India's economy
+              Track and compare GDP growth, inflation, unemployment, PMI, and trade data across the world's largest economies. India leads emerging markets with strong GDP growth at 7.2% YoY.
             </p>
           </section>
 
@@ -152,7 +170,6 @@ export default function EconomicIndicatorsPage() {
             <EconomicTable 
               data={defaultCountries}
               onViewMore={() => {
-                // Handle view more action
                 console.log("View more clicked");
               }}
             />

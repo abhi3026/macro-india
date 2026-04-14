@@ -1,10 +1,11 @@
-
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /admin/*
+Disallow: /search
 
 Sitemap: https://indianmacro.com/sitemap.xml
 
-# Allow specific bots
 User-agent: Googlebot
 Allow: /
 
@@ -16,9 +17,3 @@ Allow: /
 
 User-agent: facebookexternalhit
 Allow: /
-
-# Disallow admin paths
-User-agent: *
-Disallow: /admin
-Disallow: /admin/*
-

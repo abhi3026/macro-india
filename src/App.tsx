@@ -17,7 +17,7 @@ import NewsPage from "@/pages/NewsPage";
 import PrivacyPage from "@/pages/PrivacyPage";
 import TermsPage from "@/pages/TermsPage";
 import SearchPage from "@/pages/SearchPage";
-import MarketsPage from "@/pages/MarketsPage";
+
 import EconomicIndicatorsPage from "@/pages/EconomicIndicatorsPage";
 import InterestRatesPage from "@/pages/InterestRatesPage";
 
@@ -39,7 +39,7 @@ function AppContent() {
               <Route path="/" element={<HomePage />} />
               <Route path="/about" element={<AboutPage />} />
               <Route path="/data-dashboard" element={<DataDashboardPage />} />
-              <Route path="/data-dashboard/markets" element={<MarketsPage />} />
+              
               <Route path="/data-dashboard/economic-indicators" element={<EconomicIndicatorsPage />} />
               <Route path="/data-dashboard/interest-rates-bonds" element={<InterestRatesPage />} />
               <Route path="/education" element={<EducationPage />} />

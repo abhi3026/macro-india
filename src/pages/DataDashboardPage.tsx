@@ -1,10 +1,8 @@
-
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { BarChart3, TrendingUp, DollarSign } from "lucide-react";
+import { BarChart3, DollarSign } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import MarketTickerLive from "@/components/MarketTickerLive";
 import SEOHead from "@/components/SEOHead";
 import StructuredData from "@/components/StructuredData";
 import PageHero from "@/components/ui/page-hero";
@@ -14,7 +12,7 @@ const DataDashboardPage = () => {
     <div className="min-h-screen flex flex-col">
       <SEOHead
         title="Data Dashboard | Indian Economic & Market Data"
-        description="Access live market data, economic indicators, interest rates, and bond yields for India and global markets. Interactive charts and real-time financial analytics."
+        description="Access economic indicators, interest rates, and bond yields for India and global markets. Interactive charts and financial analytics."
         canonicalUrl="/data-dashboard"
         keywords="Indian economic data, market dashboard, financial data India, economic indicators dashboard"
       />
@@ -25,38 +23,19 @@ const DataDashboardPage = () => {
           { name: 'Data Dashboard', url: '/data-dashboard' },
         ]}
       />
-      
+
       <header className="sticky top-0 z-50 bg-[#000041] text-white">
         <Navbar />
       </header>
-      
-      <div className="pt-0 mt-0">
-        <MarketTickerLive />
-      </div>
-      
-      <PageHero 
+
+      <PageHero
         title="Data Dashboard"
         description="Explore comprehensive data and analytics on the Indian economy and financial markets."
       />
-      
+
       <main className="flex-1">
         <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Link to="/data-dashboard/markets">
-              <Card className="h-full hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <TrendingUp className="h-5 w-5" />
-                    Markets
-                  </CardTitle>
-                  <CardDescription>Live market data for indices, stocks, crypto, forex, and commodities</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground">View real-time market data and trends across global financial markets.</p>
-                </CardContent>
-              </Card>
-            </Link>
-
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Link to="/data-dashboard/economic-indicators">
               <Card className="h-full hover:shadow-lg transition-shadow">
                 <CardHeader>
@@ -89,7 +68,7 @@ const DataDashboardPage = () => {
           </div>
         </div>
       </main>
-      
+
       <Footer />
     </div>
   );

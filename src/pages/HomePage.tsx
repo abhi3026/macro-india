@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import NewsletterModal from "@/components/NewsletterModal";
+import HeroSection from "@/components/HeroSection";
 import EconomicIndicatorsDashboard from "@/components/EconomicIndicatorsDashboard";
 import EconomicCalendar from "@/components/EconomicCalendar";
-import TradingViewNewsWidget from "@/components/TradingViewNewsWidget";
 import SEOHead from "@/components/SEOHead";
 import StructuredData from "@/components/StructuredData";
 import FeaturedResearch from "@/components/FeaturedResearch";
@@ -12,15 +12,38 @@ import EducationalResources from "@/components/EducationalResources";
 import WhatWeOffer from "@/components/WhatWeOffer";
 import InterestRateTracker from "@/components/InterestRateTracker";
 
+const TradingViewNewsWidget = lazy(() => import("@/components/TradingViewNewsWidget"));
+
 const HomePage = () => {
   const [showNewsletter, setShowNewsletter] = useState(false);
 
+  // Smarter newsletter trigger: exit-intent + 50% scroll, once per user
   useEffect(() => {
-    const timer = setTimeout(() => {
-      const hasSubscribed = localStorage.getItem("newsletter-subscribed") === "true";
-      if (!hasSubscribed) setShowNewsletter(true);
-    }, 8000);
-    return () => clearTimeout(timer);
+    if (localStorage.getItem("newsletter-subscribed") === "true") return;
+    if (sessionStorage.getItem("newsletter-shown") === "true") return;
+
+    let triggered = false;
+    const trigger = () => {
+      if (triggered) return;
+      triggered = true;
+      sessionStorage.setItem("newsletter-shown", "true");
+      setShowNewsletter(true);
+    };
+
+    const onScroll = () => {
+      const scrolled = window.scrollY + window.innerHeight;
+      if (scrolled / document.documentElement.scrollHeight > 0.55) trigger();
+    };
+    const onMouseLeave = (e: MouseEvent) => {
+      if (e.clientY <= 0) trigger();
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    document.addEventListener("mouseleave", onMouseLeave);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      document.removeEventListener("mouseleave", onMouseLeave);
+    };
   }, []);
 
   return (
@@ -34,25 +57,30 @@ const HomePage = () => {
       <StructuredData type="Organization" />
       <StructuredData type="BreadcrumbList" items={[{ name: 'Home', url: '/' }]} />
 
-      <header className="sticky top-0 z-50 bg-[#000041] text-white">
-        <Navbar />
-      </header>
+      <Navbar />
 
-      <main className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 space-y-8">
-            <EconomicIndicatorsDashboard />
-            <InterestRateTracker />
+      <main>
+        <HeroSection />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2 space-y-8">
+              <EconomicIndicatorsDashboard />
+              <InterestRateTracker />
+            </div>
+            <div className="space-y-8">
+              <EconomicCalendar />
+              <Suspense fallback={<div className="surface h-[460px] animate-pulse" aria-hidden />}>
+                <TradingViewNewsWidget />
+              </Suspense>
+            </div>
           </div>
-          <div className="space-y-8">
-            <EconomicCalendar />
-            <TradingViewNewsWidget />
+
+          <div className="mt-16 space-y-16">
+            <FeaturedResearch />
+            <EducationalResources />
+            <WhatWeOffer />
           </div>
-        </div>
-        <div className="mt-12 space-y-12">
-          <FeaturedResearch />
-          <EducationalResources />
-          <WhatWeOffer />
         </div>
       </main>
 

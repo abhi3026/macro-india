@@ -76,9 +76,26 @@ export default {
 					800: '#1e293b',
 					900: '#0f172a',
 				},
-				accent1: '#3b82f6', // Primary accent (blue)
-				accent2: '#10b981', // Secondary accent (green for positive trends)
-				accent3: '#ef4444', // Tertiary accent (red for negative trends)
+				brand: {
+					DEFAULT: 'hsl(var(--brand))',
+					foreground: 'hsl(var(--brand-foreground))'
+				},
+				gain: 'hsl(var(--gain))',
+				loss: 'hsl(var(--loss))',
+				accent1: 'hsl(var(--brand))', // legacy alias -> sapphire
+				accent2: 'hsl(var(--gain))',
+				accent3: 'hsl(var(--loss))',
+			},
+			fontFamily: {
+				sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+				display: ['Fraunces', 'ui-serif', 'Georgia', 'serif'],
+				mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+			},
+			boxShadow: {
+				elegant: 'var(--shadow-elegant)',
+			},
+			backgroundImage: {
+				'gradient-hero': 'var(--gradient-hero)',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

@@ -29,17 +29,18 @@
     <!-- Canonical URL -->
     <link rel="canonical" href="https://indianmacro.com/" />
     
-    <!-- Google Analytics placeholder -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=MEASUREMENT_ID"></script>
+    <!-- Preconnect to font CDNs for faster LCP -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Google Analytics placeholder (deferred) -->
+    <script defer src="https://www.googletagmanager.com/gtag/js?id=MEASUREMENT_ID"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
       gtag('config', 'MEASUREMENT_ID');
     </script>
-    
-    <!-- Netlify Identity Widget -->
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
   </head>
 
   <body>
@@ -47,18 +48,21 @@
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
     <script type="module" src="/src/main.tsx"></script>
-    
-    <!-- Netlify CMS Script -->
+
+    <!-- Netlify Identity Widget (lazy, only if /admin is used) -->
+    <script defer src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
     <script>
-      if (window.netlifyIdentity) {
-        window.netlifyIdentity.on("init", user => {
-          if (!user) {
-            window.netlifyIdentity.on("login", () => {
-              document.location.href = "/admin/";
-            });
-          }
-        });
-      }
+      window.addEventListener('load', function () {
+        if (window.netlifyIdentity) {
+          window.netlifyIdentity.on('init', function (user) {
+            if (!user) {
+              window.netlifyIdentity.on('login', function () {
+                document.location.href = '/admin/';
+              });
+            }
+          });
+        }
+      });
     </script>
   </body>
 </html>

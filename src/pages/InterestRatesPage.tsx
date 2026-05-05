@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet-async";
 import { Card } from "@/components/ui/card";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import MarketTickerLive from "@/components/MarketTickerLive";
+
 import PageHero from "@/components/ui/page-hero";
 import SEOHead from "@/components/SEOHead";
 import StructuredData from "@/components/StructuredData";
@@ -37,8 +37,6 @@ const InterestRatesPage = () => {
       <header className="sticky top-0 z-50 bg-[#000041] text-white">
         <Navbar />
       </header>
-      
-      <MarketTickerLive />
       
       <PageHero 
         title="Interest Rates & Bonds"

@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { updateMetaTags } from "@/utils/metaTags";
-import MarketTickerLive from "@/components/MarketTickerLive";
+
 
 const Index = () => {
   useEffect(() => {

@@ -5,7 +5,7 @@ import Footer from "@/components/Footer";
 import PageHero from "@/components/ui/page-hero";
 import SEOHead from "@/components/SEOHead";
 import StructuredData from "@/components/StructuredData";
-import MarketTickerLive from "@/components/MarketTickerLive";
+
 
 const ResearchPage = () => {
   useEffect(() => {
@@ -32,10 +32,6 @@ const ResearchPage = () => {
       <header className="sticky top-0 z-50 bg-[#000041] text-white">
         <Navbar />
       </header>
-      
-      <div className="pt-0 mt-0">
-        <MarketTickerLive />
-      </div>
       
       <PageHero 
         title="Research" 

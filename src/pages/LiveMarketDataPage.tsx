@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import MarketTickerLive from "@/components/MarketTickerLive";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
@@ -86,7 +86,6 @@ const LiveMarketDataPage = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      <MarketTickerLive />
       
       <main className="flex-1 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

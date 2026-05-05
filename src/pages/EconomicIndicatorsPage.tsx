@@ -2,7 +2,7 @@ import { Helmet } from "react-helmet-async";
 import { Card } from "@/components/ui/card";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import MarketTickerLive from "@/components/MarketTickerLive";
+
 import PageHero from "@/components/ui/page-hero";
 import { EconomicTable, EconomicData } from "@/components/ui/economic-table";
 import SEOHead from "@/components/SEOHead";
@@ -149,8 +149,6 @@ export default function EconomicIndicatorsPage() {
       <header className="sticky top-0 z-50">
         <Navbar />
       </header>
-      
-      <MarketTickerLive />
       
       <PageHero 
         title="Economic Indicators"

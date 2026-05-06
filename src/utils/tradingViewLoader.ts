@@ -45,10 +45,3 @@ export function loadTradingViewScript(): Promise<void> {
 
   return scriptPromise;
 }
-
-// Add TypeScript type definition for TradingView
-declare global {
-  interface Window {
-    TradingView: any;
-  }
-} 

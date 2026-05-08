@@ -49,17 +49,12 @@ const MacroSummary = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 border rounded-lg overflow-hidden bg-card">
-          {metrics.map((m, idx) => (
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 border rounded-lg overflow-hidden bg-card divide-x divide-y sm:divide-y-0 [&>*:nth-child(-n+3)]:sm:border-b lg:[&>*]:!border-b-0">
+          {metrics.map((m) => (
             <Link
               key={m.label}
               to="/data-dashboard"
-              className={`group p-4 hover:bg-accent/40 transition-colors border-border
-                ${idx % 2 !== 0 ? "border-l" : ""}
-                sm:[&]:border-l ${idx % 3 === 0 ? "sm:!border-l-0" : ""}
-                lg:[&]:border-l ${idx % 6 === 0 ? "lg:!border-l-0" : ""}
-                ${idx >= 2 ? "border-t" : ""} sm:${idx >= 3 ? "border-t" : "!border-t-0"}
-                lg:!border-t-0`}
+              className="group p-4 hover:bg-accent/40 transition-colors"
             >
               <p className="text-[10px] tracking-wider uppercase text-muted-foreground truncate">
                 {m.label}

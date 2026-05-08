@@ -1,47 +1,71 @@
+import { Link } from "react-router-dom";
+import { LineChart, FileText, GraduationCap, Bell, ArrowRight } from "lucide-react";
+import SectionHeader from "@/components/SectionHeader";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { BarChart3, BookOpen, LineChart, ExternalLink } from "lucide-react";
+const offerings = [
+  {
+    icon: LineChart,
+    title: "Live macro dashboard",
+    body: "GDP, inflation, IIP, PMI, trade, fiscal and monetary indicators — visualised, sourced and refreshed continuously.",
+    href: "/data-dashboard",
+    cta: "Open dashboard",
+  },
+  {
+    icon: FileText,
+    title: "Independent research",
+    body: "Sector and policy notes written by economists. No sales pitch, no model portfolios — just analysis.",
+    href: "/research",
+    cta: "Browse research",
+  },
+  {
+    icon: GraduationCap,
+    title: "Macro literacy",
+    body: "Primers, glossaries and explainers that translate central bank speak into investor decisions.",
+    href: "/education",
+    cta: "Start learning",
+  },
+  {
+    icon: Bell,
+    title: "Weekly briefing",
+    body: "One email, every Monday. The five things that moved India's economy and what they imply for markets.",
+    href: "#newsletter",
+    cta: "Subscribe",
+  },
+];
 
 const WhatWeOffer = () => {
   return (
-    <Card className="shadow-sm">
-      <CardHeader>
-        <CardTitle>What We Offer</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="p-4 border rounded-lg hover:shadow-md transition-all">
-            <div className="flex items-center gap-2 mb-2">
-              <LineChart className="h-5 w-5 text-accent1" />
-              <h3 className="font-semibold">Live Market Data</h3>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              Real-time updates on Indian and global markets with advanced charting tools and analysis.
-            </p>
-          </div>
-          
-          <div className="p-4 border rounded-lg hover:shadow-md transition-all">
-            <div className="flex items-center gap-2 mb-2">
-              <ExternalLink className="h-5 w-5 text-accent1" />
-              <h3 className="font-semibold">Research Reports</h3>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              In-depth analysis and research reports on Indian economy, industries, and markets by expert economists.
-            </p>
-          </div>
-          
-          <div className="p-4 border rounded-lg hover:shadow-md transition-all">
-            <div className="flex items-center gap-2 mb-2">
-              <BookOpen className="h-5 w-5 text-accent1" />
-              <h3 className="font-semibold">Educational Content</h3>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              Comprehensive educational resources for understanding macroeconomics, financial markets, and investment strategies.
-            </p>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+    <section aria-labelledby="offer-heading">
+      <SectionHeader
+        id="offer-heading"
+        eyebrow="What we do"
+        title="A single source for India's macro intelligence"
+        description="Built for portfolio managers, research analysts and policy watchers who need primary data, expert context and a clear point of view."
+      />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {offerings.map((o) => {
+          const Icon = o.icon;
+          return (
+            <Link
+              key={o.title}
+              to={o.href}
+              className="group relative flex flex-col rounded-xl border bg-card p-6 hover:border-foreground/20 hover:shadow-[var(--shadow-elegant)] transition-all"
+            >
+              <span className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-accent text-foreground mb-4">
+                <Icon className="h-5 w-5" />
+              </span>
+              <h3 className="font-display text-lg font-semibold tracking-tight mb-2">
+                {o.title}
+              </h3>
+              <p className="text-sm text-muted-foreground leading-relaxed flex-1">{o.body}</p>
+              <span className="mt-5 inline-flex items-center gap-1 text-sm font-medium text-[hsl(var(--brand))] group-hover:gap-2 transition-all">
+                {o.cta} <ArrowRight className="h-3.5 w-3.5" />
+              </span>
+            </Link>
+          );
+        })}
+      </div>
+    </section>
   );
 };
 

@@ -36,7 +36,7 @@ const MacroSummary = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
         <div className="flex items-end justify-between gap-4 mb-5">
           <div>
-            <p className="text-[10px] tracking-[0.18em] uppercase text-muted-foreground mb-1">
+            <p className="text-[10px] tracking-[0.18em] uppercase text-muted-foreground mb-1 font-medium">
               Macro Snapshot
             </p>
             <h2 id="macro-summary" className="font-display text-xl sm:text-2xl font-semibold tracking-tight">
@@ -49,7 +49,7 @@ const MacroSummary = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 divide-x divide-y sm:divide-y-0 border rounded-lg overflow-hidden bg-card">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 border rounded-lg overflow-hidden bg-card divide-x divide-y sm:divide-y-0 [&>*:nth-child(-n+3)]:sm:border-b lg:[&>*]:!border-b-0">
           {metrics.map((m) => (
             <Link
               key={m.label}

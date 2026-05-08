@@ -3,6 +3,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import NewsletterModal from "@/components/NewsletterModal";
 import HeroSection from "@/components/HeroSection";
+import TrustStrip from "@/components/TrustStrip";
 import MacroSummary from "@/components/MacroSummary";
 import InsightLayer from "@/components/InsightLayer";
 import SEOHead from "@/components/SEOHead";
@@ -67,12 +68,13 @@ const HomePage = () => {
 
       <main>
         <HeroSection />
+        <TrustStrip />
         <MacroSummary />
         <InsightLayer />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2 space-y-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+            <div className="lg:col-span-2 space-y-6 lg:space-y-8">
               <Suspense fallback={<Skeleton h={420} />}>
                 <EconomicIndicatorsDashboard />
               </Suspense>
@@ -80,7 +82,7 @@ const HomePage = () => {
                 <InterestRateTracker />
               </Suspense>
             </div>
-            <div className="space-y-8">
+            <div className="space-y-6 lg:space-y-8">
               <Suspense fallback={<Skeleton h={360} />}>
                 <EconomicCalendar />
               </Suspense>
@@ -90,7 +92,7 @@ const HomePage = () => {
             </div>
           </div>
 
-          <div className="mt-16 space-y-16">
+          <div className="mt-20 space-y-20">
             <Suspense fallback={<Skeleton h={320} />}>
               <FeaturedResearch />
             </Suspense>

@@ -3,6 +3,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import NewsletterModal from "@/components/NewsletterModal";
 import HeroSection from "@/components/HeroSection";
+import TrustStrip from "@/components/TrustStrip";
 import MacroSummary from "@/components/MacroSummary";
 import InsightLayer from "@/components/InsightLayer";
 import SEOHead from "@/components/SEOHead";

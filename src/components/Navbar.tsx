@@ -113,11 +113,6 @@ const Navbar = () => {
             </span>
             <span className="font-mono tabular-nums">IST {time}</span>
           </div>
-          <div className="hidden lg:flex items-center gap-5 font-mono tabular-nums">
-            <span>NIFTY <span className="text-foreground">21,651</span> <span className="text-[hsl(var(--gain))]">+0.97%</span></span>
-            <span>USD/INR <span className="text-foreground">83.02</span> <span className="text-[hsl(var(--loss))]">-0.24%</span></span>
-            <span>10Y G-Sec <span className="text-foreground">7.14%</span></span>
-          </div>
         </div>
       </div>
 

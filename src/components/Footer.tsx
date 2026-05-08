@@ -42,7 +42,7 @@ const Footer = () => {
         { label: "Data Dashboard", to: "/data-dashboard" },
         { label: "Economic Indicators", to: "/economic-indicators" },
         { label: "Interest Rates", to: "/interest-rates" },
-        { label: "Live Market Data", to: "/live-market-data" },
+        
       ],
     },
     {

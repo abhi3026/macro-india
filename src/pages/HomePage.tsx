@@ -3,21 +3,27 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import NewsletterModal from "@/components/NewsletterModal";
 import HeroSection from "@/components/HeroSection";
-import EconomicIndicatorsDashboard from "@/components/EconomicIndicatorsDashboard";
-import EconomicCalendar from "@/components/EconomicCalendar";
+import MacroSummary from "@/components/MacroSummary";
+import InsightLayer from "@/components/InsightLayer";
 import SEOHead from "@/components/SEOHead";
 import StructuredData from "@/components/StructuredData";
-import FeaturedResearch from "@/components/FeaturedResearch";
-import EducationalResources from "@/components/EducationalResources";
-import WhatWeOffer from "@/components/WhatWeOffer";
-import InterestRateTracker from "@/components/InterestRateTracker";
 
+// Below-the-fold: code-split for faster LCP
+const EconomicIndicatorsDashboard = lazy(() => import("@/components/EconomicIndicatorsDashboard"));
+const InterestRateTracker = lazy(() => import("@/components/InterestRateTracker"));
+const EconomicCalendar = lazy(() => import("@/components/EconomicCalendar"));
+const FeaturedResearch = lazy(() => import("@/components/FeaturedResearch"));
+const EducationalResources = lazy(() => import("@/components/EducationalResources"));
+const WhatWeOffer = lazy(() => import("@/components/WhatWeOffer"));
 const TradingViewNewsWidget = lazy(() => import("@/components/TradingViewNewsWidget"));
+
+const Skeleton = ({ h = 320 }: { h?: number }) => (
+  <div className="rounded-lg border bg-card animate-pulse" style={{ height: h }} aria-hidden />
+);
 
 const HomePage = () => {
   const [showNewsletter, setShowNewsletter] = useState(false);
 
-  // Smarter newsletter trigger: exit-intent + 50% scroll, once per user
   useEffect(() => {
     if (localStorage.getItem("newsletter-subscribed") === "true") return;
     if (sessionStorage.getItem("newsletter-shown") === "true") return;
@@ -61,25 +67,39 @@ const HomePage = () => {
 
       <main>
         <HeroSection />
+        <MacroSummary />
+        <InsightLayer />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-8">
-              <EconomicIndicatorsDashboard />
-              <InterestRateTracker />
+              <Suspense fallback={<Skeleton h={420} />}>
+                <EconomicIndicatorsDashboard />
+              </Suspense>
+              <Suspense fallback={<Skeleton h={360} />}>
+                <InterestRateTracker />
+              </Suspense>
             </div>
             <div className="space-y-8">
-              <EconomicCalendar />
-              <Suspense fallback={<div className="surface h-[460px] animate-pulse" aria-hidden />}>
+              <Suspense fallback={<Skeleton h={360} />}>
+                <EconomicCalendar />
+              </Suspense>
+              <Suspense fallback={<Skeleton h={460} />}>
                 <TradingViewNewsWidget />
               </Suspense>
             </div>
           </div>
 
           <div className="mt-16 space-y-16">
-            <FeaturedResearch />
-            <EducationalResources />
-            <WhatWeOffer />
+            <Suspense fallback={<Skeleton h={320} />}>
+              <FeaturedResearch />
+            </Suspense>
+            <Suspense fallback={<Skeleton h={320} />}>
+              <EducationalResources />
+            </Suspense>
+            <Suspense fallback={<Skeleton h={280} />}>
+              <WhatWeOffer />
+            </Suspense>
           </div>
         </div>
       </main>

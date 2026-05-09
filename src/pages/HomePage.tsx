@@ -73,32 +73,29 @@ const HomePage = () => {
         <InsightLayer />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
-            <div className="lg:col-span-2 space-y-6 lg:space-y-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
+            <div className="lg:col-span-7 space-y-6 lg:space-y-8">
               <Suspense fallback={<Skeleton h={420} />}>
                 <EconomicIndicatorsDashboard />
               </Suspense>
-              <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 lg:gap-8">
-                <div className="xl:col-span-2">
-                  <Suspense fallback={<Skeleton h={360} />}>
-                    <InterestRateTracker />
-                  </Suspense>
-                </div>
-                <div>
-                  <Suspense fallback={<Skeleton h={360} />}>
-                    <FeaturedResearch vertical />
-                  </Suspense>
-                </div>
-              </div>
-            </div>
-            <div className="space-y-6 lg:space-y-8">
-              <Suspense fallback={<Skeleton h={360} />}>
-                <EconomicCalendar />
+              <Suspense fallback={<Skeleton h={420} />}>
+                <InterestRateTracker />
               </Suspense>
+            </div>
+            <div className="lg:col-span-5 space-y-6 lg:space-y-8">
               <Suspense fallback={<Skeleton h={460} />}>
                 <TradingViewNewsWidget />
               </Suspense>
+              <Suspense fallback={<Skeleton h={420} />}>
+                <FeaturedResearch vertical />
+              </Suspense>
             </div>
+          </div>
+
+          <div className="mt-8 lg:mt-10">
+            <Suspense fallback={<Skeleton h={360} />}>
+              <EconomicCalendar />
+            </Suspense>
           </div>
 
           <div className="mt-20 space-y-20">

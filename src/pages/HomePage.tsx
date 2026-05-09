@@ -78,9 +78,18 @@ const HomePage = () => {
               <Suspense fallback={<Skeleton h={420} />}>
                 <EconomicIndicatorsDashboard />
               </Suspense>
-              <Suspense fallback={<Skeleton h={360} />}>
-                <InterestRateTracker />
-              </Suspense>
+              <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 lg:gap-8">
+                <div className="xl:col-span-2">
+                  <Suspense fallback={<Skeleton h={360} />}>
+                    <InterestRateTracker />
+                  </Suspense>
+                </div>
+                <div>
+                  <Suspense fallback={<Skeleton h={360} />}>
+                    <FeaturedResearch vertical />
+                  </Suspense>
+                </div>
+              </div>
             </div>
             <div className="space-y-6 lg:space-y-8">
               <Suspense fallback={<Skeleton h={360} />}>
@@ -93,9 +102,6 @@ const HomePage = () => {
           </div>
 
           <div className="mt-20 space-y-20">
-            <Suspense fallback={<Skeleton h={320} />}>
-              <FeaturedResearch />
-            </Suspense>
             <Suspense fallback={<Skeleton h={320} />}>
               <EducationalResources />
             </Suspense>

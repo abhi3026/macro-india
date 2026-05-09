@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, TrendingUp, TrendingDown } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const chips = [
-  { label: "GDP (FY25)", value: "7.2%", delta: "+0.3", trend: "up" as const },
-  { label: "CPI Inflation", value: "4.5%", delta: "-0.2", trend: "down" as const },
-  { label: "Repo Rate", value: "6.50%", delta: "0.00", trend: "up" as const },
-  
+const features = [
+  "Macro intelligence",
+  "RBI policy tracking",
+  "Capital market insights",
+  "Institutional-grade research",
 ];
 
 const sources = ["RBI", "MOSPI", "SEBI", "NSE", "World Bank", "IMF"];

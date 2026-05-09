@@ -38,7 +38,7 @@ const HeroSection = () => {
         </defs>
       </svg>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 lg:py-28">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 lg:py-16">
         <div className="grid lg:grid-cols-12 gap-10 items-center">
           <div className="lg:col-span-7">
             <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[11px] font-medium tracking-[0.14em] uppercase backdrop-blur">
@@ -75,8 +75,8 @@ const HeroSection = () => {
             </div>
 
             {/* Sources */}
-            <div className="mt-10">
-              <p className="text-[10px] tracking-[0.18em] uppercase text-white/40 mb-3">Trusted data sources</p>
+            <div className="mt-6">
+              <p className="text-[10px] tracking-[0.18em] uppercase text-white/40 mb-2">Trusted data sources</p>
               <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
                 {sources.map((s) => (
                   <span key={s} className="text-sm font-medium text-white/55 tracking-wide">{s}</span>

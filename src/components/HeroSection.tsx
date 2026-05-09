@@ -2,13 +2,6 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const features = [
-  "Macro intelligence",
-  "RBI policy tracking",
-  "Capital market insights",
-  "Institutional-grade research",
-];
-
 const sources = ["RBI", "MOSPI", "SEBI", "NSE", "World Bank", "IMF"];
 
 const HeroSection = () => {

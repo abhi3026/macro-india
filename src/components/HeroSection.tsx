@@ -85,30 +85,16 @@ const HeroSection = () => {
             </div>
           </div>
 
-          {/* Live chips */}
-          <div className="lg:col-span-5">
-            <div className="grid grid-cols-2 gap-3 sm:gap-4">
-              {chips.map((c) => (
-                <div
-                  key={c.label}
-                  className="rounded-xl border border-white/10 bg-white/[0.04] backdrop-blur p-4 hover:bg-white/[0.07] transition-colors"
-                >
-                  <div className="flex items-center justify-between">
-                    <p className="text-[11px] tracking-wider uppercase text-white/55">{c.label}</p>
-                    {c.trend === "up" ? (
-                      <TrendingUp className="h-3.5 w-3.5 text-emerald-400" />
-                    ) : (
-                      <TrendingDown className="h-3.5 w-3.5 text-rose-400" />
-                    )}
-                  </div>
-                  <p className="mt-2 font-display text-2xl font-semibold tabular-nums">{c.value}</p>
-                  <p className={`mt-1 text-xs tabular-nums ${c.trend === "up" ? "text-emerald-300" : "text-rose-300"}`}>
-                    {c.delta}
-                  </p>
-                </div>
+          {/* Minimal feature strip */}
+          <div className="lg:col-span-5 lg:pl-8 lg:border-l lg:border-white/10">
+            <p className="text-[10px] tracking-[0.18em] uppercase text-white/40 mb-4">What we cover</p>
+            <ul className="space-y-3">
+              {features.map((f) => (
+                <li key={f} className="text-sm sm:text-base font-light text-white/75 tracking-wide">
+                  {f}
+                </li>
               ))}
-            </div>
-            <p className="mt-3 text-[10px] text-white/35 text-right">Indicative · refreshed daily</p>
+            </ul>
           </div>
         </div>
       </div>

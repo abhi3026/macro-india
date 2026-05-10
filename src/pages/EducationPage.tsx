@@ -104,25 +104,6 @@ const EducationPage = () => {
         description="Learn about economics, markets, and finance with our educational content"
       />
       
-      {/* Featured Post */}
-      {!isLoading && filteredPosts.find(post => post.featured) && (
-        <div className="bg-white dark:bg-indianmacro-900 py-12">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-2xl font-bold mb-6">Featured Resource</h2>
-            <div className="max-w-4xl mx-auto">
-              {filteredPosts
-                .filter(post => post.featured)
-                .map(post => (
-                  <Link key={post.id} to={`/education/${post.slug}`}>
-                    <BlogPostCard post={post} variant="featured" />
-                  </Link>
-                ))[0]
-              }
-            </div>
-          </div>
-        </div>
-      )}
-      
       {/* Main Educational Content */}
       <main className="flex-1 container mx-auto px-4 py-8">
         <div className="flex-grow bg-white dark:bg-indianmacro-900">

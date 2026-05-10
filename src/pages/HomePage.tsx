@@ -74,18 +74,9 @@ const HomePage = () => {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
           <div className="space-y-6 lg:space-y-8">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 lg:items-stretch">
-              <div className="lg:col-span-7 flex">
-                <Suspense fallback={<Skeleton h={460} />}>
-                  <EconomicIndicatorsDashboard />
-                </Suspense>
-              </div>
-              <div className="lg:col-span-5 flex">
-                <Suspense fallback={<Skeleton h={460} />}>
-                  <TradingViewNewsWidget />
-                </Suspense>
-              </div>
-            </div>
+            <Suspense fallback={<Skeleton h={460} />}>
+              <EconomicIndicatorsDashboard />
+            </Suspense>
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 lg:items-stretch">
               <div className="lg:col-span-7 flex">
                 <Suspense fallback={<Skeleton h={460} />}>
@@ -98,12 +89,6 @@ const HomePage = () => {
                 </Suspense>
               </div>
             </div>
-          </div>
-
-          <div className="mt-8 lg:mt-10">
-            <Suspense fallback={<Skeleton h={360} />}>
-              <EconomicCalendar />
-            </Suspense>
           </div>
 
           <div className="mt-20 space-y-20">

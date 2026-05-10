@@ -12,7 +12,7 @@ const TradingViewNewsWidget = ({ height = 400 }: TradingViewNewsWidgetProps) => 
   const isDarkMode = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
   return (
-    <Card className="shadow-sm">
+    <Card className="shadow-sm w-full h-full flex flex-col">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle className="flex items-center gap-2">
           <Newspaper className="h-5 w-5 text-accent1" />

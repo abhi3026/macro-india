@@ -62,7 +62,7 @@ const InterestRateTracker = () => {
   ]);
 
   return (
-    <Card className="shadow-sm transition-all duration-300 hover:shadow-md w-full">
+    <Card className="shadow-sm transition-all duration-300 hover:shadow-md w-full h-full flex flex-col">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle className="flex items-center gap-2">
           <BarChart className="h-5 w-5 text-accent1" />

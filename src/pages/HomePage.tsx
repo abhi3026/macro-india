@@ -73,22 +73,30 @@ const HomePage = () => {
         <InsightLayer />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
-            <div className="lg:col-span-7 space-y-6 lg:space-y-8">
-              <Suspense fallback={<Skeleton h={420} />}>
-                <EconomicIndicatorsDashboard />
-              </Suspense>
-              <Suspense fallback={<Skeleton h={420} />}>
-                <InterestRateTracker />
-              </Suspense>
+          <div className="space-y-6 lg:space-y-8">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 lg:items-stretch">
+              <div className="lg:col-span-7 flex">
+                <Suspense fallback={<Skeleton h={460} />}>
+                  <EconomicIndicatorsDashboard />
+                </Suspense>
+              </div>
+              <div className="lg:col-span-5 flex">
+                <Suspense fallback={<Skeleton h={460} />}>
+                  <TradingViewNewsWidget />
+                </Suspense>
+              </div>
             </div>
-            <div className="lg:col-span-5 space-y-6 lg:space-y-8">
-              <Suspense fallback={<Skeleton h={460} />}>
-                <TradingViewNewsWidget />
-              </Suspense>
-              <Suspense fallback={<Skeleton h={420} />}>
-                <FeaturedResearch vertical />
-              </Suspense>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 lg:items-stretch">
+              <div className="lg:col-span-7 flex">
+                <Suspense fallback={<Skeleton h={460} />}>
+                  <InterestRateTracker />
+                </Suspense>
+              </div>
+              <div className="lg:col-span-5 flex">
+                <Suspense fallback={<Skeleton h={460} />}>
+                  <FeaturedResearch vertical />
+                </Suspense>
+              </div>
             </div>
           </div>
 

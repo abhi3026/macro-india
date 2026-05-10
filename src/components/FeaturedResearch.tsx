@@ -27,7 +27,14 @@ const items = [
 
 const FeaturedResearch = ({ vertical = false }: { vertical?: boolean }) => {
   return (
-    <section aria-labelledby="featured-research" className="space-y-5">
+    <section
+      aria-labelledby="featured-research"
+      className={
+        vertical
+          ? "w-full h-full flex flex-col rounded-lg border bg-card shadow-sm p-5 sm:p-6"
+          : "space-y-5"
+      }
+    >
       <div className="flex items-end justify-between gap-4">
         <div>
           <h2 id="featured-research" className="font-display text-xl sm:text-2xl font-semibold tracking-tight">
@@ -40,22 +47,32 @@ const FeaturedResearch = ({ vertical = false }: { vertical?: boolean }) => {
         </Link>
       </div>
 
-      <div className={vertical ? "flex flex-col gap-4" : "grid grid-cols-1 md:grid-cols-3 gap-5"}>
+      <div
+        className={
+          vertical
+            ? "mt-5 flex-1 flex flex-col divide-y divide-border"
+            : "grid grid-cols-1 md:grid-cols-3 gap-5"
+        }
+      >
         {items.map((it) => (
           <Link
             key={it.to}
             to={it.to}
             onClick={() => window.scrollTo(0, 0)}
-            className="group surface p-5 flex flex-col transition-all hover:-translate-y-0.5 hover:shadow-elegant"
+            className={
+              vertical
+                ? "group flex flex-col py-4 first:pt-0 last:pb-0 transition-colors"
+                : "group surface p-5 flex flex-col transition-all hover:-translate-y-0.5 hover:shadow-elegant"
+            }
           >
-            <div className="flex items-center gap-2 text-[11px] uppercase tracking-widest text-brand font-semibold">
+            <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.18em] text-brand font-semibold">
               {it.tag}
             </div>
-            <h3 className="mt-2 font-display text-base font-semibold leading-snug group-hover:text-brand transition-colors">
+            <h3 className="mt-1.5 font-display text-[15px] sm:text-base font-semibold leading-snug group-hover:text-brand transition-colors">
               {it.title}
             </h3>
-            <p className="mt-2 text-sm text-muted-foreground leading-relaxed flex-1">{it.desc}</p>
-            <div className="mt-4 pt-3 border-t border-border flex items-center justify-between text-xs text-muted-foreground">
+            <p className="mt-1.5 text-sm text-muted-foreground leading-relaxed line-clamp-2">{it.desc}</p>
+            <div className="mt-2.5 flex items-center justify-between text-xs text-muted-foreground">
               <span className="inline-flex items-center gap-1.5"><Clock className="h-3.5 w-3.5" />{it.read}</span>
               <span className="inline-flex items-center gap-1 text-foreground font-medium">
                 Read <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />

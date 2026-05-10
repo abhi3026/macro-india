@@ -202,17 +202,6 @@ function getSampleMarketPosts(): MarketPost[] {
       featured: true,
       content: "# Q1 2025 Equity Market Review\n\nIndian equity markets showed remarkable resilience in Q1 2025, with the Nifty 50 gaining 7.3% despite global headwinds...",
       slug: "q1-2025-equity-market-review"
-    },
-    {
-      id: "2",
-      title: "Bond Market Outlook April 2025",
-      summary: "Current trends and future outlook for Indian government and corporate bonds.",
-      date: "2025-04-03",
-      category: "Debt",
-      image: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
-      featured: false,
-      content: "# Bond Market Outlook April 2025\n\nYields on 10-year government securities have stabilized around 7.1% following the RBI's policy decision to maintain status quo on rates...",
-      slug: "bond-market-outlook-april-2025"
     }
   ];
 }

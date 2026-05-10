@@ -12,11 +12,9 @@ import StructuredData from "@/components/StructuredData";
 // Below-the-fold: code-split for faster LCP
 const EconomicIndicatorsDashboard = lazy(() => import("@/components/EconomicIndicatorsDashboard"));
 const InterestRateTracker = lazy(() => import("@/components/InterestRateTracker"));
-const EconomicCalendar = lazy(() => import("@/components/EconomicCalendar"));
 const FeaturedResearch = lazy(() => import("@/components/FeaturedResearch"));
 const EducationalResources = lazy(() => import("@/components/EducationalResources"));
 const WhatWeOffer = lazy(() => import("@/components/WhatWeOffer"));
-const TradingViewNewsWidget = lazy(() => import("@/components/TradingViewNewsWidget"));
 
 const Skeleton = ({ h = 320 }: { h?: number }) => (
   <div className="rounded-lg border bg-card animate-pulse" style={{ height: h }} aria-hidden />

@@ -74,7 +74,7 @@ export default function ResearchCMS() {
     qc.invalidateQueries({ queryKey: ["research-list"] });
   };
 
-  const openNew = () => setEditing({ title: "", slug: "", category: "", excerpt: "", body: "", featured_image: "", tags: [], references_list: [], publish_date: "", status: "draft", featured: false, seo_title: "", seo_description: "", og_image: "", canonical_url: "" }) || setOpen(true);
+  const openNew = () => { setEditing({ title: "", slug: "", category: "", excerpt: "", body: "", featured_image: "", tags: [], references_list: [], publish_date: "", status: "draft", featured: false, seo_title: "", seo_description: "", og_image: "", canonical_url: "" }); setOpen(true); };
   const openEdit = (r: Row) => { setEditing(r); setOpen(true); };
 
   const save = async () => {

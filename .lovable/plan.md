@@ -1,77 +1,85 @@
+## Admin CMS Redesign — Institutional Editorial System
 
-# Institutional Redesign — Phase 2
+This is a large, multi-phase build. Before I start, I need to confirm a few things and lay out the approach.
 
-Bring Navbar, Homepage hero stack, Dashboard, and Research pages up to the same Bloomberg/Economist-grade standard as the FeaturedResearch + Footer work already shipped. All work uses existing design tokens (navy `--primary` #000041, sapphire `--brand`, `font-display` Fraunces, `tabular-nums`, `surface`, `hero-bg`).
+### What this requires
 
----
+To build a secure, role-based CMS that dynamically powers the public website, the project needs a real backend (database, authentication, role checks, row-level security). Right now content lives in a static `contentLoader.ts` file with sample data — there is no auth, no database, no protected routes.
 
-## 1. Navbar (`src/components/Navbar.tsx`)
+I'll enable **Lovable Cloud** (managed Postgres + Auth + Storage) to provide:
+- Authenticated admin login (email/password + optional Google)
+- `user_roles` table with `admin | editor | analyst | contributor` (separate table, security-definer `has_role()` — no privilege-escalation risk)
+- Protected `/admin` routes (redirect non-admins)
+- Tables for all content types with RLS
+- Storage bucket for featured images
 
-Premium two-row structure with command-bar feel.
-
-- **Top utility strip** (hidden < md): live IST clock, market open/closed pill (NSE session), tiny `INR/USD · 10Y G-Sec · NIFTY` mini-tickers, theme toggle.
-- **Main bar**: monogram + wordmark "IndianMacro" with `font-display` and a subtle "Research" tag pill; primary nav becomes hover-underline links with active-route indicator (sapphire underline).
-- **Search**: ⌘K-style search button (not always-open input) opening a Command palette using existing `command.tsx` — searches research/markets/pages. Falls back to `/search?q=`.
-- **CTA**: replace generic "Subscribe" with two-tier `Sign in` (ghost) + `Get research` (primary sapphire). Subscribe modal stays.
-- **Mobile**: full-screen sheet (use `sheet.tsx`) instead of accordion; sectioned nav with descriptions, search at top, CTA pinned bottom.
-- **Scroll behavior**: shrinks from 80px → 56px on scroll, border softens, backdrop blur intensifies.
-
-## 2. Homepage Hero (`src/components/HeroSection.tsx`)
-
-Keep navy bg + bold white type (per memory) but elevate composition.
-
-- **Eyebrow**: "INDIA · MACRO INTELLIGENCE" with live updated date.
-- **Headline**: refined hierarchy — `font-display` 48–80px, single accent gradient word ("India's economy").
-- **Right-side visual**: faint inline SVG of an upward GDP curve + 3 floating "card chips" (CPI, Repo Rate, NIFTY) with mock live values + spark deltas. On mobile this collapses below copy.
-- **Proof bar** below: replace the 3-stat grid with a horizontal logo/source row (RBI · MOSPI · SEBI · NSE · World Bank) in white/40 opacity — institutional trust signal.
-- **Dual CTA** preserved; secondary becomes "View live indicators" anchor link.
-- Subtle animated grid + radial glow already present; tune opacity.
-
-## 3. Dashboard Page (`src/pages/DashboardPage.tsx`)
-
-Currently uses old `bg-indianmacro-800` + `bg-white`. Rebuild to match the new system.
-
-- **Hero**: replace with `PageHero` component (consistent with Research page). Adds breadcrumb + last-refresh meta.
-- **KPI strip**: above tabs, add 4 hero KPI tiles (GDP, CPI, Repo, NIFTY) with value, delta chip (gain/loss colors), 30-day sparkline.
-- **Tabs**: keep Economic / Markets, add a third "FX & Rates" tab; tab triggers restyled as pill underline.
-- **Widgets**: wrap each `DataWidget` in `surface` class for consistent card chrome; add source attribution + "as of" timestamp footer to each card.
-- **External sources**: redesigned as compact `surface` link cards with tiny logo monogram, hover shows arrow.
-- **TradingView placeholder**: replace with actual `TradingViewNewsWidget` or proper market overview embed using existing `tradingViewLoader`.
-- **Refresh control**: moved into the KPI strip with relative time ("Updated 2 min ago").
-- Background switches from hard-coded `bg-white` to `bg-background` so dark mode works.
-
-## 4. Research Page (`src/pages/ResearchPage.tsx`)
-
-Today it's hard-coded 3 cards with no real content. Convert to a research index.
-
-- **Header**: keep `PageHero` but enrich with subtitle + tag chips (Macro · Policy · Markets · Sectors).
-- **Toolbar**: search input, category filter pills, sort dropdown (Newest / Most read), view toggle (grid/list).
-- **Featured strip**: 1 large editor's pick card (image left, headline right) + 2 secondary cards.
-- **Grid**: use existing `ResearchCard` component, pulling from `contentLoader` (`content/research`). Empty state if none.
-- **Sidebar (lg)**: "Latest insights" list, newsletter mini-signup (Buttondown), and "Methodology" link.
-- **Pagination/Load more** at bottom.
-
----
-
-## Technical notes
-
-- Reuse existing components: `surface` utility, `PageHero`, `ResearchCard`, `ThemeToggle`, `Sheet`, `Command`, `Tabs`, `Badge`. No new deps.
-- Respect memories: navy hero bg + white text preserved; theme persists via existing `ThemeProvider`; TradingView via `tradingViewLoader.ts`; newsletter still uses `subscribeToNewsletter` (Buttondown).
-- All new typography uses `font-display` for headings, `tabular-nums` for any numeric data.
-- Keep all changes responsive-first (test at 375 / 768 / 1280); mobile menu becomes Sheet.
-- No backend changes; KPI sparkline data uses small inline mock array (or `marketData.ts` if values exist) clearly marked for future API swap.
-- Build must remain green — avoid removing exports used by other pages.
-
----
-
-## Files to be edited
+### Database schema
 
 ```text
-src/components/Navbar.tsx          rebuilt
-src/components/HeroSection.tsx     rebuilt with chips + sources
-src/pages/DashboardPage.tsx        rebuilt with PageHero + KPI strip
-src/pages/ResearchPage.tsx         rebuilt as research index
-src/components/ui/page-hero.tsx    minor: support eyebrow + breadcrumb props
+profiles            (id, email, display_name, created_at)
+user_roles          (id, user_id, role)              -- enum: admin/editor/analyst/contributor
+educational_posts   (id, serial, title, slug, category, body, image, status, seo_*, author_id, dates)
+research_articles   (id, serial, title, slug, category, body, featured_image, tags[], references[],
+                     publish_date, status, seo_title, seo_description, og_image, canonical, author_id)
+economic_indicators (id, serial, indicator, current_value, previous_value, source, last_updated, status)
+weekly_reads        (id, serial, section[Policy|Market|Risk], heading, body, image, status)
+invitations         (id, email, role, token, invited_by, accepted_at)
+
+status enum: draft | pending | approved | published | declined
 ```
 
-No files deleted. No routing changes.
+All tables get RLS:
+- Public read: only `status = 'published'`
+- Admins/editors: full CRUD via `has_role()`
+- Contributors/analysts: insert + edit own drafts
+
+### Admin UI (Bloomberg/FT-inspired)
+
+`/admin` layout with sidebar navigation:
+1. **Dashboard** — counts by status, recent activity
+2. **Educational Content** — table: `# | Title | Category | Status | Approve | Decline` + search, category filter, sort, pagination, row → editor drawer
+3. **Research Articles** — table: `# | Title | Category | Publish Date | Status | Approve | Decline` + rich editor (tiptap), featured image upload, SEO fields, tags, references
+4. **Economic Indicators** — editable inline table: `# | Indicator | Current | Previous | Source | Last Updated | Status`
+5. **This Week's Read** — table: `# | Section | Heading | Status | Approve | Decline`
+6. **Users & Invitations** — admin-only; invite by email, assign role
+
+Approve action sets `status = 'published'` and stamps publish date. Decline sets `status = 'declined'`.
+
+Styling: monospace serial numbers, condensed tables, neutral palette, subtle borders, no cards-around-everything — newsroom feel.
+
+### Public site wiring
+
+Replace static `contentLoader.ts` sample data with Supabase queries:
+- `ResearchPage` + homepage `FeaturedResearch` → `research_articles` where `status = 'published'`
+- `EducationPage` → `educational_posts` where `status = 'published'`
+- Homepage indicators / dashboard → `economic_indicators`
+- Homepage editorial strip → `weekly_reads`
+
+### Auth flow
+
+- `/auth` login page (email/password, optional Google)
+- `useAuth()` hook with `onAuthStateChange` listener set up before `getSession()`
+- `<ProtectedAdminRoute>` checks `has_role(uid, 'admin'|'editor')` server-side
+- Invite system: admin sends invite → email with signup link bound to pre-assigned role
+
+### Build phases
+
+1. Enable Lovable Cloud, create schema + RLS + roles + storage bucket
+2. Auth pages, `useAuth`, protected route wrapper
+3. Admin shell + sidebar + dashboard
+4. Educational Content CMS (table + editor)
+5. Research Articles CMS (table + rich editor + image upload + SEO)
+6. Economic Indicators CMS (inline-edit table)
+7. This Week's Read CMS
+8. Users & Invitations
+9. Wire public pages to live data, remove static fallbacks
+10. SEO meta wiring (slug routes, OG images, canonical)
+
+### Questions before I start
+
+1. **Auth methods** — email/password only, or also Google sign-in?
+2. **Rich editor** — Tiptap (recommended, lightweight, extensible) okay?
+3. **Initial admin** — what email should I seed as the first admin? (Otherwise I'll add a one-time bootstrap: first user to sign up becomes admin.)
+4. **Scope of this turn** — this is ~10 phases. Do you want me to ship it all in one go (long run, may take several iterations), or phase 1–4 first (backend + auth + Education CMS) and continue after you verify?
+
+Once you answer, I'll proceed.

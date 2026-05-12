@@ -1,6 +1,6 @@
 import { ArrowUpRight, ArrowDownRight, Minus } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useHomepageIndicators, diff, formatValue } from "@/hooks/useEconomicIndicators";
+import { useDashboardIndicators, diff, formatValue } from "@/hooks/useEconomicIndicators";
 
 const KEYS = ["gdp_growth", "inflation", "repo_rate", "g_sec_10y", "usd_inr", "forex_reserves"];
 
@@ -11,12 +11,7 @@ const TrendIcon = ({ trend }: { trend: "up" | "down" | "flat" }) => {
 };
 
 const MacroSummary = () => {
-  // We use the dashboard query (not homepage) so India-only indicators (repo rate, forex etc.) are available.
-  const { data } = useHomepageIndicators();
-  // Note: hook above filters to homepage indicators. We instead pull all defs by reading a lightweight query.
-  // To keep things simple we fetch dashboard data via a separate hook call:
-  // (kept inline to avoid hook complexity)
-  // — but we need defs for all keys. Use a separate fetch.
+  const { data } = useDashboardIndicators();
 
   const updated = new Date().toLocaleDateString("en-IN", {
     day: "numeric",

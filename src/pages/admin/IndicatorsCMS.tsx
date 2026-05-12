@@ -287,7 +287,7 @@ export default function IndicatorsCMS() {
           <TableBody>
             {isLoading && (
               <TableRow>
-                <TableCell colSpan={(data?.defs?.length ?? 0) + 3} className="text-center py-8 text-muted-foreground">Loading…</TableCell>
+                <TableCell colSpan={((data?.defs?.length ?? 0) + 3) as number} className="text-center py-8 text-muted-foreground">Loading…</TableCell>
               </TableRow>
             )}
             {filtered.map((country) => {

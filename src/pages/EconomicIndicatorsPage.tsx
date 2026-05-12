@@ -34,6 +34,7 @@ export default function EconomicIndicatorsPage() {
     c.name.toLowerCase().includes(search.toLowerCase())
   );
   const visible = showAll ? filtered : filtered.slice(0, DEFAULT_VISIBLE);
+  const colCount = (data?.defs?.length ?? 0) + 1;
 
   return (
     <div className="min-h-screen flex flex-col">

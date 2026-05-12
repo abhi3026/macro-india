@@ -14,7 +14,7 @@ Thumbs.db
 .idea/
 
 # Environment
-.env
+# .env managed by Lovable Cloud — must be in build
 
 # Output archives
 *.zip

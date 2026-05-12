@@ -145,7 +145,7 @@ export default function EconomicIndicatorsPage() {
                     ))}
                     {!isLoading && visible.length === 0 && (
                       <TableRow>
-                        <TableCell colSpan={(data?.defs.length ?? 0) + 1} className="text-center py-8 text-muted-foreground">
+                        <TableCell colSpan={colCount} className="text-center py-8 text-muted-foreground">
                           No countries match your search.
                         </TableCell>
                       </TableRow>

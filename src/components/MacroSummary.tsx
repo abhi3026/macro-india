@@ -1,35 +1,44 @@
 import { ArrowUpRight, ArrowDownRight, Minus } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useDashboardIndicators, diff, formatValue } from "@/hooks/useEconomicIndicators";
 
-type Trend = "up" | "down" | "flat";
+const KEYS = ["gdp_growth", "inflation", "repo_rate", "g_sec_10y", "usd_inr", "forex_reserves"];
 
-interface Metric {
-  label: string;
-  value: string;
-  delta: string;
-  trend: Trend;
-  context: string;
-}
-
-const metrics: Metric[] = [
-  { label: "Real GDP Growth", value: "7.2%", delta: "+0.3 pp YoY", trend: "up", context: "Above 10-yr avg" },
-  { label: "CPI Inflation", value: "4.5%", delta: "-0.2 pp MoM", trend: "down", context: "Within RBI band" },
-  { label: "Repo Rate", value: "6.50%", delta: "Unchanged", trend: "flat", context: "On hold since Feb '23" },
-  { label: "10Y G-Sec", value: "7.14%", delta: "-4 bps WoW", trend: "down", context: "Curve steepening" },
-  { label: "USD/INR", value: "83.02", delta: "-0.24%", trend: "down", context: "RBI defending 83.5" },
-  { label: "Forex Reserves", value: "$642B", delta: "+$2.1B", trend: "up", context: "Near record high" },
-];
-
-const TrendIcon = ({ trend }: { trend: Trend }) => {
+const TrendIcon = ({ trend }: { trend: "up" | "down" | "flat" }) => {
   if (trend === "up") return <ArrowUpRight className="h-3.5 w-3.5 text-[hsl(var(--gain))]" />;
   if (trend === "down") return <ArrowDownRight className="h-3.5 w-3.5 text-[hsl(var(--loss))]" />;
   return <Minus className="h-3.5 w-3.5 text-muted-foreground" />;
 };
 
 const MacroSummary = () => {
+  const { data } = useDashboardIndicators();
+
   const updated = new Date().toLocaleDateString("en-IN", {
-    day: "numeric", month: "short", year: "numeric",
+    day: "numeric",
+    month: "short",
+    year: "numeric",
   });
+
+  // Build metrics from any India indicators available in current cache
+  const indiaRows = data?.byCountry["in"] ?? {};
+  const defsByKey = Object.fromEntries((data?.defs ?? []).map((d) => [d.key, d]));
+
+  const metrics = KEYS.map((key) => {
+    const def = defsByKey[key];
+    const row = indiaRows[key];
+    if (!def || !row) return null;
+    const d = diff(row.current_value, row.previous_value);
+    const trend: "up" | "down" | "flat" = d == null || d === 0 ? "flat" : d > 0 ? "up" : "down";
+    return {
+      label: def.label,
+      value: formatValue(row.current_value, def.unit),
+      delta: d == null ? "—" : `${d > 0 ? "+" : ""}${d}${def.unit === "%" ? " pp" : ""}`,
+      trend,
+      context: row.notes ?? row.period_label ?? "",
+    };
+  }).filter(Boolean) as { label: string; value: string; delta: string; trend: "up" | "down" | "flat"; context: string }[];
+
+  if (metrics.length === 0) return null;
 
   return (
     <section aria-labelledby="macro-summary" className="border-y bg-card/50">
@@ -74,7 +83,7 @@ const MacroSummary = () => {
               >
                 {m.delta}
               </p>
-              <p className="mt-1.5 text-[11px] text-muted-foreground leading-snug">{m.context}</p>
+              {m.context && <p className="mt-1.5 text-[11px] text-muted-foreground leading-snug">{m.context}</p>}
             </Link>
           ))}
         </div>

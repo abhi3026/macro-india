@@ -120,7 +120,7 @@ export default function EconomicIndicatorsPage() {
                           </div>
                         </TableCell>
                         {data?.defs.map((def) => {
-                          const row = data.byCountry[country.code]?.[def.key];
+                          const row = data!.byCountry[country.code]?.[def.key];
                           const d = diff(row?.current_value, row?.previous_value);
                           const better = def.higher_is_better;
                           let chg = "text-muted-foreground";

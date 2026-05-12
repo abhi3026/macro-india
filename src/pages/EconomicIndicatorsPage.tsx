@@ -107,7 +107,7 @@ export default function EconomicIndicatorsPage() {
                   <TableBody>
                     {isLoading && (
                       <TableRow>
-                        <TableCell colSpan={((data?.defs?.length ?? 0) as number) + 1} className="text-center py-8 text-muted-foreground">
+                        <TableCell colSpan={colCount} className="text-center py-8 text-muted-foreground">
                           Loading…
                         </TableCell>
                       </TableRow>

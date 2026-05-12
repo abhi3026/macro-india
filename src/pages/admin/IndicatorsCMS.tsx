@@ -106,9 +106,11 @@ export default function IndicatorsCMS() {
         last_updated: new Date().toISOString(),
       };
       ops.push(
-        supabase
-          .from("country_indicators")
-          .upsert(payload, { onConflict: "country_code,indicator_key" })
+        Promise.resolve(
+          supabase
+            .from("country_indicators")
+            .upsert(payload, { onConflict: "country_code,indicator_key" })
+        )
       );
     }
     const results = await Promise.all(ops);
@@ -138,7 +140,8 @@ export default function IndicatorsCMS() {
   };
 
   const toggleHomepageDef = async (key: string, field: "show_on_homepage" | "show_on_dashboard", value: boolean) => {
-    const { error } = await supabase.from("indicator_definitions").update({ [field]: value }).eq("key", key);
+    const patch: any = { [field]: value };
+    const { error } = await supabase.from("indicator_definitions").update(patch).eq("key", key);
     if (error) return toast.error(error.message);
     invalidate();
   };

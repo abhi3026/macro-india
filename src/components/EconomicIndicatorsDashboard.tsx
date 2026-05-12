@@ -201,10 +201,7 @@ const EconomicIndicatorsDashboard = () => {
               {data.map((country) => (
                 <TableRow key={country.code}>
                   <TableCell>
-                    <div className="flex items-center gap-2">
-                      <span className="text-base">{country.flag}</span>
-                      <span>{country.name}</span>
-                    </div>
+                    <span>{country.name}</span>
                   </TableCell>
                   <TableCell className="text-right">
                     {country.gdp && formatValue(country.gdp.value, country.gdp.unit)}

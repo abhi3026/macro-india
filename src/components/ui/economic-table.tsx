@@ -71,14 +71,7 @@ export function EconomicTable({
             {visibleData.map((item) => (
               <TableRow key={item.country} className="hover:bg-muted/50">
                 <TableCell className="sticky left-0 bg-background font-medium">
-                  <div className="flex items-center gap-2">
-                    <img
-                      src={item.flag}
-                      alt={`${item.country} flag`}
-                      className="h-4 w-6 object-cover rounded"
-                    />
-                    {item.country}
-                  </div>
+                  {item.country}
                 </TableCell>
                 <TableCell className="text-right">{item.gdp.toLocaleString()}</TableCell>
                 <TableCell className="text-right">{item.gdpGrowth.toFixed(1)}%</TableCell>

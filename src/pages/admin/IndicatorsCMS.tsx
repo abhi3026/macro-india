@@ -28,6 +28,7 @@ export default function IndicatorsCMS() {
   const qc = useQueryClient();
   const { canManage } = useAuth();
   const { data, isLoading } = useAllIndicatorsAdmin();
+  const defsCount = data?.defs?.length ?? 0;
   const [search, setSearch] = useState("");
   const [editing, setEditing] = useState<string | null>(null); // country_code
   const [drafts, setDrafts] = useState<Record<string, Record<string, Draft>>>({}); // [code][key] = draft
@@ -287,7 +288,7 @@ export default function IndicatorsCMS() {
           <TableBody>
             {isLoading && (
               <TableRow>
-                <TableCell colSpan={((data?.defs?.length ?? 0) + 3) as number} className="text-center py-8 text-muted-foreground">Loading…</TableCell>
+                <TableCell colSpan={defsCount + 3} className="text-center py-8 text-muted-foreground">Loading…</TableCell>
               </TableRow>
             )}
             {filtered.map((country) => {

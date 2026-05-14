@@ -106,7 +106,7 @@ const Footer = () => {
             <p className="text-sm text-white/60 mb-3">Weekly macro brief. No spam.</p>
             <form onSubmit={handleSubscribe} className="space-y-2">
               <Input type="email" placeholder="you@firm.com"
-                className="bg-white/5 border-white/10 text-white placeholder:text-white/40 h-9"
+                className="bg-white/5 border-white/10 text-white placeholder:text-white/70 h-9"
                 value={email} onChange={(e) => setEmail(e.target.value)} />
               <Button type="submit" size="sm" className="w-full bg-white text-[hsl(240_100%_13%)] hover:bg-white/90"
                 disabled={isSubmitting}>
@@ -118,7 +118,7 @@ const Footer = () => {
 
         {/* Sources strip */}
         <div className="mt-12 pt-8 border-t border-white/10 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div className="text-xs text-white/40 tracking-widest uppercase">Data Sources</div>
+          <div className="text-xs text-white/70 tracking-widest uppercase">Data Sources</div>
           <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs text-white/60">
             {[
               { l: "RBI", h: "https://www.rbi.org.in/" },
@@ -135,7 +135,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="mt-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 text-xs text-white/40">
+        <div className="mt-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 text-xs text-white/70">
           <div>&copy; {new Date().getFullYear()} IndianMacro. All rights reserved.</div>
           <div>For informational purposes only. Not investment advice.</div>
         </div>

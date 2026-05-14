@@ -53,11 +53,11 @@ const BlogPostCard = ({ post, variant = "default" }: BlogPostCardProps) => {
           <Badge variant="outline" className="text-xs">
             {post.category}
           </Badge>
-          <div className="flex items-center text-xs text-gray-500">
+          <div className="flex items-center text-xs text-muted-foreground">
             <CalendarIcon className="mr-1 h-3 w-3" />
             <span>{post.date}</span>
           </div>
-          <div className="flex items-center text-xs text-gray-500">
+          <div className="flex items-center text-xs text-muted-foreground">
             <Clock className="mr-1 h-3 w-3" />
             <span>{post.readTime}</span>
           </div>
@@ -77,7 +77,7 @@ const BlogPostCard = ({ post, variant = "default" }: BlogPostCardProps) => {
               className="h-6 w-6 rounded-full"
             />
           ) : (
-            <User className="h-5 w-5 text-gray-400" />
+            <User className="h-5 w-5 text-muted-foreground" />
           )}
           <span className="text-sm text-gray-600">{post.author.name}</span>
         </div>

@@ -11,6 +11,8 @@ import { Search, ArrowRight, BookOpen } from "lucide-react";
 import { fetchResearchPosts, type ResearchPost } from "@/utils/contentLoader";
 import { Link } from "react-router-dom";
 
+import NewsletterSignupDialog from "@/components/NewsletterSignupDialog";
+
 const CATEGORIES = ["All", "Economic Outlook", "Monetary Policy", "Markets", "Sectors", "Agriculture"] as const;
 
 const ResearchPage = () => {
@@ -18,6 +20,7 @@ const ResearchPage = () => {
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<string>("All");
+  const [subscribeOpen, setSubscribeOpen] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -186,8 +189,8 @@ const ResearchPage = () => {
                 <p className="text-[11px] tracking-[0.14em] uppercase text-white/60">Newsletter</p>
                 <h3 className="font-display text-xl font-semibold mt-1">The Weekly Brief</h3>
                 <p className="text-sm text-white/70 mt-2">India's macro & markets, distilled into one email every Monday.</p>
-                <Button asChild className="mt-4 w-full bg-white text-[hsl(240_100%_13%)] hover:bg-white/90">
-                  <Link to="/?subscribe=1">Subscribe free</Link>
+                <Button onClick={() => setSubscribeOpen(true)} className="mt-4 w-full bg-white text-[hsl(240_100%_13%)] hover:bg-white/90">
+                  Subscribe free
                 </Button>
               </div>
 
@@ -206,6 +209,7 @@ const ResearchPage = () => {
       </main>
 
       <Footer />
+      <NewsletterSignupDialog open={subscribeOpen} onOpenChange={setSubscribeOpen} />
     </div>
   );
 };

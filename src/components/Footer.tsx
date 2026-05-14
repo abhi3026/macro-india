@@ -31,9 +31,6 @@ const Footer = () => {
       title: "Research",
       links: [
         { label: "All Research", to: "/research" },
-        { label: "RBI Policy", to: "/research/rbi-policy" },
-        { label: "Budget Impact", to: "/research/budget-impact" },
-        { label: "Agriculture Outlook", to: "/research/agriculture-outlook" },
       ],
     },
     {
@@ -42,7 +39,6 @@ const Footer = () => {
         { label: "Data Dashboard", to: "/data-dashboard" },
         { label: "Economic Indicators", to: "/economic-indicators" },
         { label: "Interest Rates", to: "/interest-rates" },
-        
       ],
     },
     {
@@ -51,8 +47,6 @@ const Footer = () => {
         { label: "About", to: "/about" },
         { label: "Education", to: "/education" },
         { label: "Contact", to: "/contact" },
-        { label: "Privacy", to: "/privacy" },
-        { label: "Terms", to: "/terms" },
       ],
     },
   ];

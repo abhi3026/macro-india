@@ -99,8 +99,20 @@ const Footer = () => {
                 value={email} onChange={(e) => setEmail(e.target.value)} />
               <Button type="submit" size="sm" className="w-full bg-white text-[hsl(240_100%_13%)] hover:bg-white/90"
                 disabled={isSubmitting}>
-                {isSubmitting ? "..." : (<>Subscribe <ArrowRight className="ml-1 h-3.5 w-3.5" /></>)}
+                {isSubmitting ? (<><Loader2 className="mr-1 h-3.5 w-3.5 animate-spin" /> Subscribing…</>) : (<>Subscribe <ArrowRight className="ml-1 h-3.5 w-3.5" /></>)}
               </Button>
+              {result && (
+                <p
+                  role="status"
+                  aria-live="polite"
+                  className={[
+                    "text-xs mt-1",
+                    result.alreadySubscribed ? "text-amber-300" : result.success ? "text-emerald-300" : "text-red-300",
+                  ].join(" ")}
+                >
+                  {result.message}
+                </p>
+              )}
             </form>
           </div>
         </div>

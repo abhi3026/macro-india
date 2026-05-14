@@ -73,7 +73,7 @@ const EducationalPostPage = () => {
         <div className="flex-grow bg-white dark:bg-indianmacro-900 flex items-center justify-center py-10">
           <div className="text-center">
             <h1 className="text-2xl font-bold mb-4">Post not found</h1>
-            <p className="text-gray-500 mb-6">The educational resource you're looking for doesn't exist or has been moved.</p>
+            <p className="text-muted-foreground mb-6">The educational resource you're looking for doesn't exist or has been moved.</p>
             <Button asChild>
               <Link to="/education">Back to Educational Resources</Link>
             </Button>
@@ -114,7 +114,7 @@ const EducationalPostPage = () => {
           <h1 className="text-3xl md:text-4xl font-bold mb-6">{post.title}</h1>
           
           {/* Meta information */}
-          <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-8">
+          <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground dark:text-muted-foreground mb-8">
             <div className="flex items-center">
               <Calendar className="h-4 w-4 mr-1" />
               <span>{new Date(post.date).toLocaleDateString('en-US', {
@@ -148,7 +148,7 @@ const EducationalPostPage = () => {
                 className="w-full h-auto rounded-lg object-cover"
               />
               {post.imageCaption && (
-                <p className="text-sm text-gray-500 mt-2 text-center italic">{post.imageCaption}</p>
+                <p className="text-sm text-muted-foreground mt-2 text-center italic">{post.imageCaption}</p>
               )}
             </div>
           )}

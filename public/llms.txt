@@ -1,0 +1,21 @@
+# IndianMacro
+
+> India's premier platform for macroeconomic data, financial research, and market insights — covering GDP, inflation, RBI policy, interest rates, bonds, and live markets.
+
+IndianMacro publishes original research, curated economic indicators, and educational content focused on the Indian economy and capital markets.
+
+## Pages
+
+- [Home](/): Overview of Indian macroeconomic indicators, markets, and featured research.
+- [Research](/research): In-depth research articles on the Indian economy, sectors, and policy.
+- [Data Dashboard](/data-dashboard): Hub for economic indicators, interest rates, and market data.
+- [Economic Indicators](/data-dashboard/economic-indicators): GDP, inflation, IIP, PMI and other key Indian indicators.
+- [Interest Rates & Bonds](/data-dashboard/interest-rates-bonds): RBI policy rates, government bond yields, and rate trackers.
+- [Education](/education): Explainers and learning resources on macroeconomics and markets.
+- [News](/news): Curated financial and economic news for India.
+- [About](/about): About IndianMacro and our mission.
+
+## Optional
+
+- [Privacy](/privacy): Privacy policy.
+- [Terms](/terms): Terms of service.

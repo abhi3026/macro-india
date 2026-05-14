@@ -1,168 +1,178 @@
-
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import FeedbackForm from "@/components/FeedbackForm";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Mail, Linkedin, Instagram, Send } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
-import { useState } from "react";
 import SEOHead from "@/components/SEOHead";
 import StructuredData from "@/components/StructuredData";
+import { Mail, Linkedin, Instagram, ArrowUpRight } from "lucide-react";
+
+interface ContactMethod {
+  label: string;
+  value: string;
+  description: string;
+  href: string;
+  external: boolean;
+  Icon: typeof Mail;
+  cta: string;
+}
+
+const methods: ContactMethod[] = [
+  {
+    label: "Email",
+    value: "contact@indianmacro.com",
+    description: "Research inquiries, partnerships, editorial collaboration and press.",
+    href: "mailto:contact@indianmacro.com",
+    external: false,
+    Icon: Mail,
+    cta: "Open mail client",
+  },
+  {
+    label: "LinkedIn",
+    value: "linkedin.com/company/indian-macro",
+    description: "Follow our company page for institutional updates and macro commentary.",
+    href: "https://www.linkedin.com/company/indian-macro",
+    external: true,
+    Icon: Linkedin,
+    cta: "Visit profile",
+  },
+  {
+    label: "Instagram",
+    value: "@indianmacroinsights",
+    description: "Daily visual briefings on India's economy, markets and policy moves.",
+    href: "https://www.instagram.com/indianmacroinsights",
+    external: true,
+    Icon: Instagram,
+    cta: "Visit profile",
+  },
+];
 
 const ContactPage = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [subject, setSubject] = useState("");
-  const [message, setMessage] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-  const { toast } = useToast();
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitting(true);
-    try {
-      console.log("Contact form submitted:", { name, email, subject, message });
-      toast({
-        title: "Message sent!",
-        description: "Thank you for reaching out. We'll get back to you soon.",
-      });
-      setName("");
-      setEmail("");
-      setSubject("");
-      setMessage("");
-    } catch (error) {
-      toast({
-        title: "Submission failed",
-        description: "There was an error sending your message. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-background">
       <SEOHead
-        title="Contact IndianMacro | Research Inquiries & Partnerships"
-        description="Get in touch with IndianMacro for economic research inquiries, data requests, partnership opportunities, or custom analysis. Based in Delhi, India."
+        title="Contact IndianMacro | Research, Partnerships & Editorial"
+        description="Reach IndianMacro for research inquiries, partnerships, editorial collaboration and macroeconomic insights. Email, LinkedIn and Instagram."
         canonicalUrl="/contact"
-        keywords="contact IndianMacro, economic research inquiry, financial data request, partnership India"
+        keywords="contact IndianMacro, research inquiry, partnerships, editorial collaboration, macro insights"
       />
       <StructuredData
         type="BreadcrumbList"
         items={[
-          { name: 'Home', url: '/' },
-          { name: 'Contact', url: '/contact' },
+          { name: "Home", url: "/" },
+          { name: "Contact", url: "/contact" },
         ]}
       />
-      
+
       <Navbar />
-      
-      {/* Header */}
-      <div className="bg-indianmacro-800 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <h1 className="text-3xl md:text-4xl font-bold">Contact Us</h1>
-          <p className="mt-4 max-w-3xl text-indianmacro-200">
-            Have questions, suggestions, or want to collaborate? Reach out to our team and we'll get back to you promptly.
-          </p>
-        </div>
-      </div>
-      
-      {/* Contact Form Section */}
-      <div className="bg-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-            <div>
-              <h2 className="text-2xl font-bold text-indianmacro-800 mb-6">Get in Touch</h2>
-              <p className="text-indianmacro-600 mb-8">
-                Whether you're looking for specific economic research, have feedback, or want to explore partnership opportunities, we'd love to hear from you.
-              </p>
-              <div className="space-y-6">
-                <div className="flex items-start">
-                  <Mail className="h-6 w-6 text-accent1 mr-4 mt-1" />
-                  <div>
-                    <h3 className="font-medium text-indianmacro-800">Email</h3>
-                    <a href="mailto:contact@indianmacro.com" className="text-indianmacro-600 hover:text-accent1 transition-colors">
-                      contact@indianmacro.com
-                    </a>
-                    <p className="text-indianmacro-500 text-sm">For general inquiries</p>
-                  </div>
-                </div>
-                <div className="flex items-start">
-                  <Linkedin className="h-6 w-6 text-accent1 mr-4 mt-1" />
-                  <div>
-                    <h3 className="font-medium text-indianmacro-800">LinkedIn</h3>
-                    <a href="https://www.linkedin.com/company/indian-macro" target="_blank" rel="noopener noreferrer"
-                      className="text-indianmacro-600 hover:text-accent1 transition-colors">
-                      linkedin.com/company/indian-macro
-                    </a>
-                  </div>
-                </div>
-                <div className="flex items-start">
-                  <Instagram className="h-6 w-6 text-accent1 mr-4 mt-1" />
-                  <div>
-                    <h3 className="font-medium text-indianmacro-800">Instagram</h3>
-                    <a href="https://www.instagram.com/indianmacroinsights" target="_blank" rel="noopener noreferrer"
-                      className="text-indianmacro-600 hover:text-accent1 transition-colors">
-                      @indianmacroinsights
-                    </a>
-                  </div>
-                </div>
-              </div>
+
+      {/* Hero */}
+      <section className="bg-[hsl(240_100%_13%)] text-white border-b border-white/5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
+          <div className="max-w-3xl">
+            <div className="inline-flex items-center gap-2 text-[11px] font-medium tracking-[0.2em] uppercase text-white/60 mb-6">
+              <span className="h-px w-8 bg-white/30" />
+              Contact
             </div>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle>Send us a Message</CardTitle>
-                <CardDescription>Fill out the form below and we'll respond as soon as possible.</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="space-y-2">
-                    <label htmlFor="name" className="text-sm font-medium">Your Name</label>
-                    <Input id="name" placeholder="Full name" value={name} onChange={(e) => setName(e.target.value)} required />
-                  </div>
-                  <div className="space-y-2">
-                    <label htmlFor="email" className="text-sm font-medium">Email Address</label>
-                    <Input id="email" type="email" placeholder="your@email.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
-                  </div>
-                  <div className="space-y-2">
-                    <label htmlFor="subject" className="text-sm font-medium">Subject</label>
-                    <Input id="subject" placeholder="How can we help you?" value={subject} onChange={(e) => setSubject(e.target.value)} required />
-                  </div>
-                  <div className="space-y-2">
-                    <label htmlFor="message" className="text-sm font-medium">Message</label>
-                    <Textarea id="message" placeholder="Please provide details about your inquiry..." rows={4} value={message} onChange={(e) => setMessage(e.target.value)} required />
-                  </div>
-                  <Button type="submit" className="w-full bg-accent1 hover:bg-accent1/90" disabled={submitting}>
-                    {submitting ? "Sending..." : (<><Send className="mr-2 h-4 w-4" />Send Message</>)}
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </div>
-      
-      {/* Research Request Section */}
-      <div className="bg-indianmacro-50 py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-indianmacro-800">Request Custom Research</h2>
-            <p className="text-indianmacro-600 mt-2 max-w-2xl mx-auto">
-              Looking for specific economic data or analysis? Let us know what research would be valuable for you.
+            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight">
+              Talk to IndianMacro
+            </h1>
+            <p className="mt-6 text-base md:text-lg text-white/70 leading-relaxed max-w-2xl">
+              Connect with us for research, partnerships, editorial collaboration
+              and macroeconomic insights. We respond to institutional inquiries
+              within one business day.
             </p>
           </div>
-          <div className="max-w-md mx-auto">
-            <FeedbackForm />
+        </div>
+      </section>
+
+      {/* Contact methods */}
+      <section className="flex-1">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10 md:mb-14">
+            <div>
+              <div className="text-[11px] font-medium tracking-[0.2em] uppercase text-muted-foreground mb-3">
+                Direct Channels
+              </div>
+              <h2 className="font-display text-2xl md:text-3xl font-semibold tracking-tight text-foreground">
+                Choose the channel that fits your inquiry
+              </h2>
+            </div>
+            <p className="text-sm text-muted-foreground max-w-sm">
+              For confidential or contractual matters, email remains the preferred
+              and fastest channel.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6">
+            {methods.map(({ label, value, description, href, external, Icon, cta }) => (
+              <a
+                key={label}
+                href={href}
+                {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                className="group relative flex flex-col rounded-xl border border-border bg-card p-6 md:p-7
+                           transition-all duration-300 ease-out
+                           hover:-translate-y-1 hover:border-foreground/20
+                           hover:shadow-[0_20px_50px_-20px_hsl(240_100%_13%/0.25)]
+                           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              >
+                <div className="flex items-start justify-between mb-8">
+                  <div className="inline-flex h-11 w-11 items-center justify-center rounded-lg bg-[hsl(240_100%_13%)] text-white transition-transform duration-300 group-hover:scale-105">
+                    <Icon className="h-5 w-5" strokeWidth={1.75} />
+                  </div>
+                  <ArrowUpRight
+                    className="h-5 w-5 text-muted-foreground transition-all duration-300
+                               group-hover:text-foreground group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                    strokeWidth={1.75}
+                  />
+                </div>
+
+                <div className="text-[11px] font-medium tracking-[0.2em] uppercase text-muted-foreground mb-2">
+                  {label}
+                </div>
+                <div className="font-display text-lg md:text-xl font-semibold text-foreground tracking-tight break-all">
+                  {value}
+                </div>
+                <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
+                  {description}
+                </p>
+
+                <div className="mt-6 pt-6 border-t border-border">
+                  <span className="text-xs font-medium text-foreground/80 group-hover:text-foreground transition-colors">
+                    {cta} →
+                  </span>
+                </div>
+              </a>
+            ))}
+          </div>
+
+          {/* Footnote / trust strip */}
+          <div className="mt-16 md:mt-20 pt-10 border-t border-border grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+              <div className="text-[11px] font-medium tracking-[0.2em] uppercase text-muted-foreground mb-2">
+                Response Time
+              </div>
+              <p className="text-sm text-foreground/80 leading-relaxed">
+                Within one business day for institutional inquiries.
+              </p>
+            </div>
+            <div>
+              <div className="text-[11px] font-medium tracking-[0.2em] uppercase text-muted-foreground mb-2">
+                Working Hours
+              </div>
+              <p className="text-sm text-foreground/80 leading-relaxed">
+                Monday – Friday, 09:30 – 18:30 IST.
+              </p>
+            </div>
+            <div>
+              <div className="text-[11px] font-medium tracking-[0.2em] uppercase text-muted-foreground mb-2">
+                Editorial & Press
+              </div>
+              <p className="text-sm text-foreground/80 leading-relaxed">
+                For media, attribution or syndication, please email us directly.
+              </p>
+            </div>
           </div>
         </div>
-      </div>
-      
+      </section>
+
       <Footer />
     </div>
   );

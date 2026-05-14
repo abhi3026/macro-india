@@ -1,15 +1,17 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/ui/page-hero";
 import SEOHead from "@/components/SEOHead";
 import StructuredData from "@/components/StructuredData";
+import NewsletterSignupDialog from "@/components/NewsletterSignupDialog";
 import { BarChart2, LineChart, BookOpen, Globe } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
 const AboutPage = () => {
+  const [subscribeOpen, setSubscribeOpen] = useState(false);
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -173,10 +175,8 @@ const AboutPage = () => {
             <h2 className="text-3xl font-bold text-indianmacro-900 dark:text-white mb-8">Join Our Community</h2>
             
             <div className="flex flex-col md:flex-row justify-center items-center gap-6 max-w-2xl mx-auto mb-8">
-              <Button asChild size="lg" className="w-full md:w-auto">
-                <Link to="/newsletter">
-                  Subscribe to our Newsletter
-                </Link>
+              <Button onClick={() => setSubscribeOpen(true)} size="lg" className="w-full md:w-auto">
+                Subscribe to our Newsletter
               </Button>
               
               <Button asChild variant="outline" size="lg" className="w-full md:w-auto">
@@ -203,6 +203,7 @@ const AboutPage = () => {
       </main>
       
       <Footer />
+      <NewsletterSignupDialog open={subscribeOpen} onOpenChange={setSubscribeOpen} />
     </div>
   );
 };

@@ -209,6 +209,7 @@ const ResearchPage = () => {
       </main>
 
       <Footer />
+      <NewsletterSignupDialog open={subscribeOpen} onOpenChange={setSubscribeOpen} />
     </div>
   );
 };

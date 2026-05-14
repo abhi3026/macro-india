@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Mail, Phone, MapPin, Send } from "lucide-react";
+import { Mail, Linkedin, Instagram, Send } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { useState } from "react";
 import SEOHead from "@/components/SEOHead";
@@ -86,23 +86,30 @@ const ContactPage = () => {
                   <Mail className="h-6 w-6 text-accent1 mr-4 mt-1" />
                   <div>
                     <h3 className="font-medium text-indianmacro-800">Email</h3>
-                    <p className="text-indianmacro-600">contact@indianmacro.com</p>
+                    <a href="mailto:contact@indianmacro.com" className="text-indianmacro-600 hover:text-accent1 transition-colors">
+                      contact@indianmacro.com
+                    </a>
                     <p className="text-indianmacro-500 text-sm">For general inquiries</p>
                   </div>
                 </div>
                 <div className="flex items-start">
-                  <Phone className="h-6 w-6 text-accent1 mr-4 mt-1" />
+                  <Linkedin className="h-6 w-6 text-accent1 mr-4 mt-1" />
                   <div>
-                    <h3 className="font-medium text-indianmacro-800">Phone</h3>
-                    <p className="text-indianmacro-600">+91 7033816204</p>
-                    <p className="text-indianmacro-500 text-sm">Mon-Fri, 9:30 AM - 6:30 PM IST</p>
+                    <h3 className="font-medium text-indianmacro-800">LinkedIn</h3>
+                    <a href="https://www.linkedin.com/company/indian-macro" target="_blank" rel="noopener noreferrer"
+                      className="text-indianmacro-600 hover:text-accent1 transition-colors">
+                      linkedin.com/company/indian-macro
+                    </a>
                   </div>
                 </div>
                 <div className="flex items-start">
-                  <MapPin className="h-6 w-6 text-accent1 mr-4 mt-1" />
+                  <Instagram className="h-6 w-6 text-accent1 mr-4 mt-1" />
                   <div>
-                    <h3 className="font-medium text-indianmacro-800">Location</h3>
-                    <p className="text-indianmacro-600">Delhi, India</p>
+                    <h3 className="font-medium text-indianmacro-800">Instagram</h3>
+                    <a href="https://www.instagram.com/indianmacroinsights" target="_blank" rel="noopener noreferrer"
+                      className="text-indianmacro-600 hover:text-accent1 transition-colors">
+                      @indianmacroinsights
+                    </a>
                   </div>
                 </div>
               </div>

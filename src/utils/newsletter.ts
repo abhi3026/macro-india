@@ -1,7 +1,4 @@
-
-/**
- * Utility functions for newsletter subscription
- */
+import { supabase } from "@/integrations/supabase/client";
 
 export interface SubscriptionResult {
   success: boolean;
@@ -9,48 +6,31 @@ export interface SubscriptionResult {
 }
 
 /**
- * Subscribe an email to the newsletter
- * 
- * @param email The email to subscribe
- * @returns Promise with subscription result
+ * Subscribe an email to the Buttondown newsletter via the
+ * `subscribe-newsletter` edge function.
  */
 export const subscribeToNewsletter = async (email: string): Promise<SubscriptionResult> => {
-  // For now, this is a mock implementation
-  // TODO: Replace with actual API call when backend is ready
-  
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return { success: false, message: "Please enter a valid email address." };
+  }
+
   try {
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    const { data, error } = await supabase.functions.invoke("subscribe-newsletter", {
+      body: { email },
+    });
+
+    if (error) {
+      const fallback = (data as SubscriptionResult | null)?.message;
       return {
         success: false,
-        message: "Please enter a valid email address"
+        message: fallback || error.message || "Subscription failed. Please try again.",
       };
     }
 
-    console.log(`Subscribing email: ${email} to newsletter`);
-    
-    // In the future, this would make an actual API call
-    // const response = await fetch('/api/newsletter/subscribe', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ email })
-    // });
-    // const data = await response.json();
-    // return data;
-    
-    return {
-      success: true,
-      message: "Successfully subscribed to newsletter!"
-    };
-  } catch (error) {
-    console.error("Newsletter subscription error:", error);
-    return {
-      success: false,
-      message: "An error occurred. Please try again later."
-    };
+    return (data as SubscriptionResult) ?? { success: true, message: "Subscribed!" };
+  } catch (err) {
+    console.error("Newsletter subscription error:", err);
+    return { success: false, message: "An error occurred. Please try again later." };
   }
 };

@@ -1,29 +1,24 @@
 import { Link } from "react-router-dom";
-import { Instagram, Linkedin, Mail, ExternalLink, ArrowRight } from "lucide-react";
+import { Instagram, Linkedin, Mail, ExternalLink, ArrowRight, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { subscribeToNewsletter } from "@/utils/newsletter";
-import { toast } from "sonner";
+import { subscribeToNewsletter, type SubscriptionResult } from "@/utils/newsletter";
 
 const Footer = () => {
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [result, setResult] = useState<SubscriptionResult | null>(null);
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return toast.error("Please enter your email address");
+    if (isSubmitting) return;
+    setResult(null);
     setIsSubmitting(true);
-    try {
-      await subscribeToNewsletter(email);
-      toast.success("Thanks for subscribing!");
-      setEmail("");
-    } catch (error) {
-      toast.error("Failed to subscribe. Please try again later.");
-      console.error(error);
-    } finally {
-      setIsSubmitting(false);
-    }
+    const res = await subscribeToNewsletter(email);
+    setResult(res);
+    if (res.success && !res.alreadySubscribed) setEmail("");
+    setIsSubmitting(false);
   };
 
   const navCols = [
@@ -104,8 +99,20 @@ const Footer = () => {
                 value={email} onChange={(e) => setEmail(e.target.value)} />
               <Button type="submit" size="sm" className="w-full bg-white text-[hsl(240_100%_13%)] hover:bg-white/90"
                 disabled={isSubmitting}>
-                {isSubmitting ? "..." : (<>Subscribe <ArrowRight className="ml-1 h-3.5 w-3.5" /></>)}
+                {isSubmitting ? (<><Loader2 className="mr-1 h-3.5 w-3.5 animate-spin" /> Subscribing…</>) : (<>Subscribe <ArrowRight className="ml-1 h-3.5 w-3.5" /></>)}
               </Button>
+              {result && (
+                <p
+                  role="status"
+                  aria-live="polite"
+                  className={[
+                    "text-xs mt-1",
+                    result.alreadySubscribed ? "text-amber-300" : result.success ? "text-emerald-300" : "text-red-300",
+                  ].join(" ")}
+                >
+                  {result.message}
+                </p>
+              )}
             </form>
           </div>
         </div>

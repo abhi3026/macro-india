@@ -1,28 +1,35 @@
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 
+interface Result {
+  success: boolean;
+  alreadySubscribed?: boolean;
+  message: string;
+}
+
+const json = (body: Result, status = 200) =>
+  new Response(JSON.stringify(body), {
+    status,
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+  });
+
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
-  }
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
 
   try {
-    const { email } = await req.json();
-    if (!email || typeof email !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return new Response(
-        JSON.stringify({ success: false, message: 'Please enter a valid email address.' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
-      );
+    const { email: raw } = await req.json().catch(() => ({ email: '' }));
+    const email = typeof raw === 'string' ? raw.trim().toLowerCase() : '';
+
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return json({ success: false, message: 'Please enter a valid email address.' });
     }
 
     const apiKey = Deno.env.get('BUTTONDOWN_API_KEY');
     if (!apiKey) {
-      return new Response(
-        JSON.stringify({ success: false, message: 'Newsletter is not configured.' }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
-      );
+      console.error('BUTTONDOWN_API_KEY missing');
+      return json({ success: false, message: 'Newsletter is temporarily unavailable.' });
     }
 
-    const res = await fetch('https://api.buttondown.email/v1/subscribers', {
+    const res = await fetch('https://api.buttondown.com/v1/subscribers', {
       method: 'POST',
       headers: {
         Authorization: `Token ${apiKey}`,
@@ -31,34 +38,44 @@ Deno.serve(async (req) => {
       body: JSON.stringify({ email_address: email, type: 'regular' }),
     });
 
-    const data = await res.json().catch(() => ({}));
+    const data: any = await res.json().catch(() => ({}));
 
     if (res.ok) {
-      return new Response(
-        JSON.stringify({ success: true, message: "You're subscribed! Check your inbox to confirm." }),
-        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
-      );
+      return json({
+        success: true,
+        message: 'We have sent you a mail, please verify.',
+      });
     }
 
-    // Already subscribed → treat as success
-    const detail = (data?.detail || data?.email_address?.[0] || '').toString().toLowerCase();
-    if (res.status === 400 && (detail.includes('already') || detail.includes('exists'))) {
-      return new Response(
-        JSON.stringify({ success: true, message: "You're already subscribed — thanks!" }),
-        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
-      );
+    // Detect "already exists" across Buttondown's various response shapes
+    const blob = JSON.stringify(data).toLowerCase();
+    const code = (data?.code || '').toString().toLowerCase();
+    const isAlready =
+      code.includes('already') ||
+      blob.includes('already') ||
+      blob.includes('exists') ||
+      blob.includes('duplicate');
+
+    if (isAlready) {
+      return json({
+        success: true,
+        alreadySubscribed: true,
+        message: 'User already exists',
+      });
+    }
+
+    // Buttondown firewall / spam block — surface friendly message
+    if (blob.includes('firewall') || blob.includes('blocked')) {
+      return json({
+        success: false,
+        message: 'This email could not be subscribed. Please try a different address.',
+      });
     }
 
     console.error('Buttondown error', res.status, data);
-    return new Response(
-      JSON.stringify({ success: false, message: data?.detail || 'Subscription failed. Please try again.' }),
-      { status: 502, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
-    );
+    return json({ success: false, message: 'Something went wrong. Please try again.' });
   } catch (err) {
     console.error('subscribe-newsletter error', err);
-    return new Response(
-      JSON.stringify({ success: false, message: 'An error occurred. Please try again later.' }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
-    );
+    return json({ success: false, message: 'Something went wrong. Please try again.' });
   }
 });

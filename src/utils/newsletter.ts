@@ -2,35 +2,34 @@ import { supabase } from "@/integrations/supabase/client";
 
 export interface SubscriptionResult {
   success: boolean;
+  alreadySubscribed?: boolean;
   message: string;
 }
 
-/**
- * Subscribe an email to the Buttondown newsletter via the
- * `subscribe-newsletter` edge function.
- */
-export const subscribeToNewsletter = async (email: string): Promise<SubscriptionResult> => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
+export const subscribeToNewsletter = async (
+  emailRaw: string,
+): Promise<SubscriptionResult> => {
+  const email = (emailRaw ?? "").trim();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return { success: false, message: "Please enter a valid email address." };
   }
 
   try {
-    const { data, error } = await supabase.functions.invoke("subscribe-newsletter", {
-      body: { email },
-    });
+    const { data, error } = await supabase.functions.invoke<SubscriptionResult>(
+      "subscribe-newsletter",
+      { body: { email } },
+    );
+
+    if (data && typeof data.success === "boolean") return data;
 
     if (error) {
-      const fallback = (data as SubscriptionResult | null)?.message;
-      return {
-        success: false,
-        message: fallback || error.message || "Subscription failed. Please try again.",
-      };
+      console.error("Newsletter subscription error:", error);
+      return { success: false, message: "Something went wrong. Please try again." };
     }
 
-    return (data as SubscriptionResult) ?? { success: true, message: "Subscribed!" };
+    return { success: true, message: "We have sent you a mail, please verify." };
   } catch (err) {
     console.error("Newsletter subscription error:", err);
-    return { success: false, message: "An error occurred. Please try again later." };
+    return { success: false, message: "Something went wrong. Please try again." };
   }
 };

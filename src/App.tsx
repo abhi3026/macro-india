@@ -14,6 +14,7 @@ import DataDashboardPage from "@/pages/DataDashboardPage";
 import EducationPage from "@/pages/EducationPage";
 import ResearchPage from "@/pages/ResearchPage";
 import NewsPage from "@/pages/NewsPage";
+import ContactPage from "@/pages/ContactPage";
 import PrivacyPage from "@/pages/PrivacyPage";
 import TermsPage from "@/pages/TermsPage";
 import SearchPage from "@/pages/SearchPage";
@@ -49,6 +50,7 @@ function AppContent() {
                 <Route path="/education" element={<EducationPage />} />
                 <Route path="/research" element={<ResearchPage />} />
                 <Route path="/news" element={<NewsPage />} />
+                <Route path="/contact" element={<ContactPage />} />
                 <Route path="/privacy" element={<PrivacyPage />} />
                 <Route path="/terms" element={<TermsPage />} />
                 <Route path="/search" element={<SearchPage />} />

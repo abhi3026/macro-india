@@ -1,6 +1,6 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { LayoutDashboard, GraduationCap, FileText, LineChart, Newspaper, Users, LogOut, Lock } from "lucide-react";
+import { LayoutDashboard, GraduationCap, FileText, LineChart, Globe2, Newspaper, Users, LogOut, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -9,6 +9,7 @@ const items = [
   { to: "/admin/education", icon: GraduationCap, label: "Educational" },
   { to: "/admin/research", icon: FileText, label: "Research" },
   { to: "/admin/indicators", icon: LineChart, label: "Indicators" },
+  { to: "/admin/country-indicators", icon: Globe2, label: "Economic Indicators" },
   { to: "/admin/weekly", icon: Newspaper, label: "This Week's Read" },
   { to: "/admin/users", icon: Users, label: "Users", adminOnly: true },
 ];

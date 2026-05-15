@@ -13,7 +13,7 @@ import { Link } from "react-router-dom";
 
 import NewsletterSignupDialog from "@/components/NewsletterSignupDialog";
 
-const CATEGORIES = ["All", "Economic Outlook", "Monetary Policy", "Markets", "Sectors", "Agriculture"] as const;
+const CATEGORIES = ["All", "Economic Outlook", "Monetary Policy", "Markets", "Sectors"] as const;
 
 const ResearchPage = () => {
   const [posts, setPosts] = useState<ResearchPost[]>([]);

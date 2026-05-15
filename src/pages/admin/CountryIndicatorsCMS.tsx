@@ -283,8 +283,8 @@ function CountryBlock({
   setDrafts: React.Dispatch<React.SetStateAction<Record<string, Draft>>>;
   startEdit: (cc: string, def: IndicatorDef) => void;
   cancelEdit: (k: string) => void;
-  saveCell: (cc: string, def: IndicatorDef) => Promise<void>;
-  toggleHomepage: (c: Country, v: boolean) => Promise<void>;
+  saveCell: (cc: string, def: IndicatorDef) => Promise<unknown>;
+  toggleHomepage: (c: Country, v: boolean) => Promise<unknown>;
 }) {
   const cellKey = (ik: string) => `${country.code}-${ik}`;
 

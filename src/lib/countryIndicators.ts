@@ -82,11 +82,20 @@ export function diffColorClass(diff: number | null, higherIsBetter: boolean | nu
 
 /** Fetch published country indicators + countries + defs (public, RLS-friendly). */
 export async function fetchIndicatorsBundle(opts: { homepageOnly?: boolean } = {}) {
-  const countriesQuery = supabase.from("countries").select("*").order("display_order", { ascending: true }).order("name", { ascending: true });
-  if (opts.homepageOnly) countriesQuery.eq("show_on_homepage", true);
+  // NOTE: Supabase filter/transform builders are immutable — `.eq()` returns a NEW builder.
+  // We MUST reassign, otherwise the filter is silently dropped.
+  let countriesQuery = supabase
+    .from("countries")
+    .select("*")
+    .order("display_order", { ascending: true })
+    .order("name", { ascending: true });
+  if (opts.homepageOnly) countriesQuery = countriesQuery.eq("show_on_homepage", true) as typeof countriesQuery;
 
-  const defsQuery = supabase.from("indicator_definitions").select("*").order("display_order", { ascending: true });
-  if (opts.homepageOnly) defsQuery.eq("show_on_homepage", true);
+  let defsQuery = supabase
+    .from("indicator_definitions")
+    .select("*")
+    .order("display_order", { ascending: true });
+  if (opts.homepageOnly) defsQuery = defsQuery.eq("show_on_homepage", true) as typeof defsQuery;
 
   const [{ data: countries, error: cErr }, { data: defs, error: dErr }, { data: rows, error: rErr }] = await Promise.all([
     countriesQuery,

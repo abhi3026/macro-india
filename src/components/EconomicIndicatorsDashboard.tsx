@@ -20,6 +20,17 @@ import {
   diffColorClass,
 } from "@/lib/countryIndicators";
 
+const HOMEPAGE_KEYS = [
+  "gdp",
+  "gdp_growth",
+  "pmi",
+  "unemployment",
+  "inflation",
+  "exports",
+  "business_confidence",
+  "consumer_confidence",
+];
+
 const EconomicIndicatorsDashboard = () => {
   const { data, isLoading } = useQuery({
     queryKey: ["economic-indicators", "homepage"],
@@ -28,7 +39,10 @@ const EconomicIndicatorsDashboard = () => {
   });
 
   const countries = data?.countries ?? [];
-  const defs = data?.defs ?? [];
+  const allDefs = data?.defs ?? [];
+  const defs = HOMEPAGE_KEYS
+    .map((k) => allDefs.find((d) => d.key === k))
+    .filter((d): d is NonNullable<typeof d> => Boolean(d));
   const matrix = data?.matrix ?? {};
 
   return (

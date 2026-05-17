@@ -1,26 +1,19 @@
-## Problem
+## Plan
 
-The published site (`macro-india-insights.lovable.app`) is fully blank. Browser console on the live site shows:
+1. **Fix role-loading timing**
+   - Update the auth hook so `loading` stays true until both the user session and role query are complete.
+   - Ensure auth state changes also wait for roles before allowing protected routes to evaluate access.
 
-```
-Uncaught Error: supabaseUrl is required.
-```
+2. **Handle role query failures safely**
+   - Track role-loading errors and clear roles only when the role query actually finishes.
+   - Avoid showing “not authorised” during the short moment between login and role fetch.
 
-The live preview renders fine because Vite injects env vars at dev time. The production build does not have access to `VITE_SUPABASE_URL` / `VITE_SUPABASE_PUBLISHABLE_KEY`, so `createClient(undefined, undefined)` throws at module load — React never mounts, hence the white screen.
-
-Root cause: `.gitignore` contains `.env`, so the managed `.env` file is excluded from the build. This is a classic-Vite-stack issue (the Supabase client reads `import.meta.env.VITE_SUPABASE_*` at build time).
-
-## Fix
-
-1. Remove the `.env` line from `.gitignore` so the auto-generated env file is included in builds.
-2. Republish the project (Publish → Update) so a new production bundle is built with the env vars baked in.
-
-That's the entire change — no app code touched.
+3. **Improve the protected admin route state**
+   - Keep showing the loading screen while roles are being fetched.
+   - Only show “not authorised” after the user is logged in and the role fetch has completed with no roles.
 
 ## Technical details
 
-- File to edit: `.gitignore` — delete the line `.env` (under the `# Environment` comment).
-- `.env` is auto-managed by the Lovable Cloud integration; it contains `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`, `VITE_SUPABASE_PROJECT_ID`. It must be present on disk during `vite build`.
-- After the edit, click **Publish → Update** to redeploy. The preview is unaffected (already working).
-
-No database, schema, or feature changes are required.
+- The backend already shows `abhigourav13@gmail.com` has the `admin` role.
+- The issue is in `src/hooks/useAuth.tsx`: `onAuthStateChange` sets the user immediately, but role loading is deferred with `setTimeout`, so `ProtectedAdminRoute` can see `user` + empty `roles` and incorrectly render the unauthorized message.
+- No database changes are needed.

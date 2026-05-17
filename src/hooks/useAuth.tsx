@@ -51,6 +51,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const { data: sub } = supabase.auth.onAuthStateChange((_event, sess) => {
       // Defer to avoid recursive call during auth callback
+      setLoading(true);
       setTimeout(() => { applySession(sess); }, 0);
     });
     supabase.auth.getSession().then(({ data: { session: sess } }) => {

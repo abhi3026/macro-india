@@ -27,12 +27,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const authLoadId = useRef(0);
 
-  const loadRoles = async (uid: string | undefined) => {
-    if (!uid) { setRoles([]); setRoleError(null); return; }
+  const loadRoles = async (uid: string | undefined, loadId: number) => {
+    if (!uid) {
+      if (authLoadId.current === loadId) { setRoles([]); setRoleError(null); }
+      return;
+    }
     const { data, error } = await supabase.from("user_roles").select("role").eq("user_id", uid);
+    if (authLoadId.current !== loadId) return; // stale
     if (error) {
+      console.error("[useAuth] loadRoles error", error);
       setRoles([]);
-      setRoleError(error.message);
+      setRoleError(error.message || "Failed to load roles");
       return;
     }
     setRoleError(null);
@@ -44,18 +49,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setLoading(true);
     setSession(sess);
     setUser(sess?.user ?? null);
-    await loadRoles(sess?.user?.id);
+    await loadRoles(sess?.user?.id, loadId);
     if (authLoadId.current === loadId) setLoading(false);
   };
 
   useEffect(() => {
+    // onAuthStateChange fires INITIAL_SESSION on mount, so no need to also call getSession().
     const { data: sub } = supabase.auth.onAuthStateChange((_event, sess) => {
-      // Defer to avoid recursive call during auth callback
-      setLoading(true);
       setTimeout(() => { applySession(sess); }, 0);
-    });
-    supabase.auth.getSession().then(({ data: { session: sess } }) => {
-      applySession(sess);
     });
     return () => sub.subscription.unsubscribe();
   }, []);

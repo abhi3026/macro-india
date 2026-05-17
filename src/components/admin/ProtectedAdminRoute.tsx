@@ -3,12 +3,17 @@ import { useAuth } from "@/hooks/useAuth";
 import { ReactNode } from "react";
 
 export default function ProtectedAdminRoute({ children, requireManage = false }: { children: ReactNode; requireManage?: boolean }) {
-  const { user, loading, canManage, roles } = useAuth();
+  const { user, loading, canManage, roles, roleError } = useAuth();
   const loc = useLocation();
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center text-sm text-muted-foreground">Loading…</div>;
   }
   if (!user) return <Navigate to="/auth" replace state={{ from: loc.pathname }} />;
+  if (roleError) {
+    return <div className="min-h-screen flex items-center justify-center text-sm text-muted-foreground p-6 text-center">
+      We could not verify your admin access. Please refresh and try again.
+    </div>;
+  }
   // Any authenticated user with at least one role can enter admin shell (read-only views allowed for analyst/contributor)
   if (roles.length === 0) {
     return <div className="min-h-screen flex items-center justify-center text-sm text-muted-foreground p-6 text-center">

@@ -5,6 +5,16 @@ import { Link } from "react-router-dom";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { TrendingUp, TrendingDown, BarChart } from "lucide-react";
+import { CountryFlag } from "@/components/ui/country-flag";
+
+const COUNTRY_CODES: Record<string, string> = {
+  India: "in",
+  USA: "us",
+  UK: "gb",
+  EU: "eu",
+  Japan: "jp",
+  China: "cn",
+};
 
 interface RateData {
   country: string;

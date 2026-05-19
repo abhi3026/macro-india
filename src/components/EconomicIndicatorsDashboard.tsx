@@ -80,7 +80,7 @@ const EconomicIndicatorsDashboard = () => {
                   <TableRow key={country.code}>
                     <TableCell>
                       <span className="flex items-center gap-2">
-                        {country.flag_emoji && <span className="text-base">{country.flag_emoji}</span>}
+                        <CountryFlag code={country.code} />
                         {country.name}
                       </span>
                     </TableCell>

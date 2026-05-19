@@ -141,7 +141,7 @@ export default function EconomicIndicatorsPage() {
                         <TableRow key={country.code} className="hover:bg-muted/50">
                           <TableCell className="sticky left-0 bg-background font-medium">
                             <span className="flex items-center gap-2">
-                              {country.flag_emoji && <span className="text-base">{country.flag_emoji}</span>}
+                              <CountryFlag code={country.code} />
                               {country.name}
                             </span>
                           </TableCell>

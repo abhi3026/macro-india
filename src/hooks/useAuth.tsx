@@ -65,8 +65,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setLoading(true);
     setSession(sess);
     setUser(sess?.user ?? null);
-    await loadRoles(sess?.user ?? null, loadId);
-    if (authLoadId.current === loadId) setLoading(false);
+    try {
+      await loadRoles(sess?.user ?? null, loadId);
+    } catch (err: any) {
+      if (authLoadId.current === loadId) {
+        console.error("[useAuth] applySession error", err);
+        setRoles([]);
+        setRoleError(err?.message || "Failed to verify CMS access");
+      }
+    } finally {
+      if (authLoadId.current === loadId) setLoading(false);
+    }
   };
 
   useEffect(() => {

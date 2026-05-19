@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useRef, useState, ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useRef, useState, ReactNode } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -19,6 +19,8 @@ interface AuthCtx {
 
 const Ctx = createContext<AuthCtx | undefined>(undefined);
 
+const getErrorMessage = (err: unknown, fallback: string) => err instanceof Error ? err.message : fallback;
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
@@ -27,7 +29,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const authLoadId = useRef(0);
 
-  const ensureProfile = async (currentUser: User) => {
+  const ensureProfile = useCallback(async (currentUser: User) => {
     const email = currentUser.email?.trim().toLowerCase();
     if (!email) return;
 
@@ -38,9 +40,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }, { onConflict: "id" });
 
     if (error) throw error;
-  };
+  }, []);
 
-  const loadRoles = async (currentUser: User | null, loadId: number) => {
+  const loadRoles = useCallback(async (currentUser: User | null, loadId: number) => {
     const uid = currentUser?.id;
     if (!uid) {
       if (authLoadId.current === loadId) { setRoles([]); setRoleError(null); }
@@ -48,7 +50,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
     await ensureProfile(currentUser);
 
-    const { data, error } = await supabase.from("user_roles").select("role").eq("user_id", uid);
+    const { data, error } = await supabase.from("user_roles").select("role").eq("user_id", uid).returns<{ role: AppRole }[]>();
     if (authLoadId.current !== loadId) return; // stale
     if (error) {
       console.error("[useAuth] loadRoles error", error);
@@ -57,26 +59,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return;
     }
     setRoleError(null);
-    setRoles((data ?? []).map((r: any) => r.role as AppRole));
-  };
+    setRoles((data ?? []).map((r) => r.role));
+  }, [ensureProfile]);
 
-  const applySession = async (sess: Session | null) => {
+  const applySession = useCallback(async (sess: Session | null) => {
     const loadId = ++authLoadId.current;
     setLoading(true);
     setSession(sess);
     setUser(sess?.user ?? null);
     try {
       await loadRoles(sess?.user ?? null, loadId);
-    } catch (err: any) {
+    } catch (err: unknown) {
       if (authLoadId.current === loadId) {
         console.error("[useAuth] applySession error", err);
         setRoles([]);
-        setRoleError(err?.message || "Failed to verify CMS access");
+        setRoleError(getErrorMessage(err, "Failed to verify CMS access"));
       }
     } finally {
       if (authLoadId.current === loadId) setLoading(false);
     }
-  };
+  }, [loadRoles]);
 
   useEffect(() => {
     // onAuthStateChange fires INITIAL_SESSION on mount, so no need to also call getSession().
@@ -84,7 +86,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setTimeout(() => { applySession(sess); }, 0);
     });
     return () => sub.subscription.unsubscribe();
-  }, []);
+  }, [applySession]);
 
   const isAdmin = roles.includes("admin");
   const isEditor = roles.includes("editor");

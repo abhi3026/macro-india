@@ -446,6 +446,10 @@ export type Database = {
     }
     Functions: {
       can_manage: { Args: { _user_id: string }; Returns: boolean }
+      ensure_current_user_access: {
+        Args: never
+        Returns: Database["public"]["Enums"]["app_role"][]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

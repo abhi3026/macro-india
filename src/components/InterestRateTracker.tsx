@@ -5,6 +5,16 @@ import { Link } from "react-router-dom";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { TrendingUp, TrendingDown, BarChart } from "lucide-react";
+import { CountryFlag } from "@/components/ui/country-flag";
+
+const COUNTRY_CODES: Record<string, string> = {
+  India: "in",
+  USA: "us",
+  UK: "gb",
+  EU: "eu",
+  Japan: "jp",
+  China: "cn",
+};
 
 interface RateData {
   country: string;
@@ -85,7 +95,7 @@ const InterestRateTracker = () => {
                 <TableRow key={rate.country}>
                   <TableCell>
                     <div className="flex items-center gap-2">
-                      <span className="text-base">{rate.flag}</span>
+                      <CountryFlag code={COUNTRY_CODES[rate.country] ?? rate.country.toLowerCase()} />
                       <span>{rate.country}</span>
                     </div>
                   </TableCell>

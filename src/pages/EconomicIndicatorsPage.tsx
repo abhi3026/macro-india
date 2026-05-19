@@ -25,6 +25,7 @@ import {
   formatDiff,
   diffColorClass,
 } from "@/lib/countryIndicators";
+import { CountryFlag } from "@/components/ui/country-flag";
 
 const DEFAULT_VISIBLE = 12;
 

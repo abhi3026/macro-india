@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, Navigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -20,7 +20,6 @@ type Mode = "signin" | "signup" | "forgot" | "otp";
 
 export default function AuthPage() {
   const { user, loading } = useAuth();
-  const nav = useNavigate();
   const [mode, setMode] = useState<Mode>("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -42,7 +41,6 @@ export default function AuthPage() {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
         toast.success("Signed in");
-        nav("/admin");
       } else {
         const { error } = await supabase.auth.signUp({
           email, password,
@@ -83,7 +81,7 @@ export default function AuthPage() {
       const { error: uErr } = await supabase.auth.updateUser({ password: newPassword });
       if (uErr) throw uErr;
       toast.success("Password reset. You're signed in.");
-      nav("/admin");
+      setMode("signin");
     } catch (err: any) {
       toast.error(err.message ?? "Could not reset password");
     } finally { setBusy(false); }

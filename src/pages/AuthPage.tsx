@@ -18,6 +18,8 @@ const credsSchema = z.object({
 
 type Mode = "signin" | "signup" | "forgot" | "otp";
 
+const getErrorMessage = (err: unknown, fallback: string) => err instanceof Error ? err.message : fallback;
+
 export default function AuthPage() {
   const { user, loading } = useAuth();
   const [mode, setMode] = useState<Mode>("signin");
@@ -50,13 +52,13 @@ export default function AuthPage() {
         toast.success("Account created. You can sign in now.");
         setMode("signin");
       }
-    } catch (err: any) {
-      toast.error(err.message ?? "Authentication failed");
+    } catch (err: unknown) {
+      toast.error(getErrorMessage(err, "Authentication failed"));
     } finally { setBusy(false); }
   };
 
-  const sendOtp = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const sendOtp = async (e?: React.FormEvent) => {
+    e?.preventDefault();
     const parsed = z.string().email().safeParse(email);
     if (!parsed.success) { toast.error("Enter a valid email"); return; }
     setBusy(true);
@@ -65,8 +67,8 @@ export default function AuthPage() {
       if (error) throw error;
       toast.success("OTP sent. Check your email.");
       setMode("otp");
-    } catch (err: any) {
-      toast.error(err.message ?? "Failed to send OTP");
+    } catch (err: unknown) {
+      toast.error(getErrorMessage(err, "Failed to send OTP"));
     } finally { setBusy(false); }
   };
 
@@ -82,8 +84,8 @@ export default function AuthPage() {
       if (uErr) throw uErr;
       toast.success("Password reset. You're signed in.");
       setMode("signin");
-    } catch (err: any) {
-      toast.error(err.message ?? "Could not reset password");
+    } catch (err: unknown) {
+      toast.error(getErrorMessage(err, "Could not reset password"));
     } finally { setBusy(false); }
   };
 
@@ -146,7 +148,7 @@ export default function AuthPage() {
             <Button type="submit" disabled={busy} className="w-full">
               {busy ? "Resetting…" : "Reset password"}
             </Button>
-            <button type="button" onClick={() => sendOtp(new Event("submit") as any)} disabled={busy} className="text-xs text-muted-foreground hover:text-foreground w-full text-center">
+            <button type="button" onClick={() => sendOtp()} disabled={busy} className="text-xs text-muted-foreground hover:text-foreground w-full text-center">
               Resend code
             </button>
           </form>

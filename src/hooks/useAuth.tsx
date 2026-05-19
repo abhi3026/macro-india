@@ -27,11 +27,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const authLoadId = useRef(0);
 
-  const loadRoles = async (uid: string | undefined, loadId: number) => {
+  const ensureProfile = async (currentUser: User) => {
+    const email = currentUser.email?.trim().toLowerCase();
+    if (!email) return;
+
+    const { error } = await supabase.from("profiles").upsert({
+      id: currentUser.id,
+      email,
+      display_name: currentUser.user_metadata?.display_name ?? email.split("@")[0],
+    }, { onConflict: "id" });
+
+    if (error) throw error;
+  };
+
+  const loadRoles = async (currentUser: User | null, loadId: number) => {
+    const uid = currentUser?.id;
     if (!uid) {
       if (authLoadId.current === loadId) { setRoles([]); setRoleError(null); }
       return;
     }
+    await ensureProfile(currentUser);
+
     const { data, error } = await supabase.from("user_roles").select("role").eq("user_id", uid);
     if (authLoadId.current !== loadId) return; // stale
     if (error) {
@@ -49,7 +65,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setLoading(true);
     setSession(sess);
     setUser(sess?.user ?? null);
-    await loadRoles(sess?.user?.id, loadId);
+    await loadRoles(sess?.user ?? null, loadId);
     if (authLoadId.current === loadId) setLoading(false);
   };
 
@@ -69,7 +85,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     <Ctx.Provider value={{
       user, session, roles, roleError, loading, isAdmin, isEditor, canManage,
       signOut: async () => { await supabase.auth.signOut(); },
-      refreshRoles: () => loadRoles(user?.id, ++authLoadId.current),
+      refreshRoles: () => loadRoles(user, ++authLoadId.current),
     }}>
       {children}
     </Ctx.Provider>

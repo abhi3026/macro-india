@@ -95,7 +95,7 @@ const InterestRateTracker = () => {
                 <TableRow key={rate.country}>
                   <TableCell>
                     <div className="flex items-center gap-2">
-                      <span className="text-base">{rate.flag}</span>
+                      <CountryFlag code={COUNTRY_CODES[rate.country] ?? rate.country.toLowerCase()} />
                       <span>{rate.country}</span>
                     </div>
                   </TableCell>

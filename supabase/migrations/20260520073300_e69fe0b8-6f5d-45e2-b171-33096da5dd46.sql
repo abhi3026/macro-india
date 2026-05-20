@@ -1,0 +1,10 @@
+REVOKE EXECUTE ON FUNCTION public.has_role(uuid, public.app_role) FROM anon;
+REVOKE EXECUTE ON FUNCTION public.can_manage(uuid) FROM anon;
+REVOKE EXECUTE ON FUNCTION public.touch_updated_at() FROM anon;
+REVOKE EXECUTE ON FUNCTION public.assign_role_from_profile() FROM anon;
+REVOKE EXECUTE ON FUNCTION public.has_role(uuid, public.app_role) FROM public;
+REVOKE EXECUTE ON FUNCTION public.can_manage(uuid) FROM public;
+REVOKE EXECUTE ON FUNCTION public.touch_updated_at() FROM public;
+REVOKE EXECUTE ON FUNCTION public.assign_role_from_profile() FROM public;
+GRANT EXECUTE ON FUNCTION public.has_role(uuid, public.app_role) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.can_manage(uuid) TO authenticated;

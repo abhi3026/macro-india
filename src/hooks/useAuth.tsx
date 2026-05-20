@@ -42,13 +42,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (error) throw error;
   }, []);
 
+  const tryEnsureProfile = useCallback(async (currentUser: User) => {
+    try {
+      await ensureProfile(currentUser);
+    } catch (error) {
+      // Profile sync should never block CMS access; roles are the source of truth.
+      console.warn("[useAuth] profile sync skipped", error);
+    }
+  }, [ensureProfile]);
+
   const loadRoles = useCallback(async (currentUser: User | null, loadId: number) => {
     const uid = currentUser?.id;
     if (!uid) {
       if (authLoadId.current === loadId) { setRoles([]); setRoleError(null); }
       return;
     }
-    await ensureProfile(currentUser);
+    await tryEnsureProfile(currentUser);
 
     const { data, error } = await supabase.from("user_roles").select("role").eq("user_id", uid).returns<{ role: AppRole }[]>();
     if (authLoadId.current !== loadId) return; // stale
@@ -60,7 +69,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
     setRoleError(null);
     setRoles((data ?? []).map((r) => r.role));
-  }, [ensureProfile]);
+  }, [tryEnsureProfile]);
 
   const applySession = useCallback(async (sess: Session | null) => {
     const loadId = ++authLoadId.current;

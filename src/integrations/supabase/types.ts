@@ -254,6 +254,48 @@ export type Database = {
         }
         Relationships: []
       }
+      interest_rates: {
+        Row: {
+          bond_yield: number | null
+          bond_yield_change: number | null
+          bond_yield_updated: string | null
+          country_code: string
+          created_at: string
+          id: string
+          interest_rate: number | null
+          interest_rate_change: number | null
+          interest_rate_updated: string | null
+          status: Database["public"]["Enums"]["content_status"]
+          updated_at: string
+        }
+        Insert: {
+          bond_yield?: number | null
+          bond_yield_change?: number | null
+          bond_yield_updated?: string | null
+          country_code: string
+          created_at?: string
+          id?: string
+          interest_rate?: number | null
+          interest_rate_change?: number | null
+          interest_rate_updated?: string | null
+          status?: Database["public"]["Enums"]["content_status"]
+          updated_at?: string
+        }
+        Update: {
+          bond_yield?: number | null
+          bond_yield_change?: number | null
+          bond_yield_updated?: string | null
+          country_code?: string
+          created_at?: string
+          id?: string
+          interest_rate?: number | null
+          interest_rate_change?: number | null
+          interest_rate_updated?: string | null
+          status?: Database["public"]["Enums"]["content_status"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
       invitations: {
         Row: {
           accepted_at: string | null

@@ -1,9 +1,12 @@
 import { ArrowUpRight, ArrowDownRight, Minus } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 type Trend = "up" | "down" | "flat";
 
 interface Metric {
+  id?: string;
   label: string;
   value: string;
   delta: string;
@@ -11,7 +14,7 @@ interface Metric {
   context: string;
 }
 
-const metrics: Metric[] = [
+const FALLBACK: Metric[] = [
   { label: "Real GDP Growth", value: "7.2%", delta: "+0.3 pp YoY", trend: "up", context: "Above 10-yr avg" },
   { label: "CPI Inflation", value: "4.5%", delta: "-0.2 pp MoM", trend: "down", context: "Within RBI band" },
   { label: "Repo Rate", value: "6.50%", delta: "Unchanged", trend: "flat", context: "On hold since Feb '23" },
@@ -27,6 +30,21 @@ const TrendIcon = ({ trend }: { trend: Trend }) => {
 };
 
 const MacroSummary = () => {
+  const { data } = useQuery({
+    queryKey: ["macro-snapshot-home"],
+    queryFn: async () => {
+      const { data, error } = await (supabase as any)
+        .from("macro_snapshot")
+        .select("*")
+        .eq("status", "published")
+        .order("display_order", { ascending: true });
+      if (error) throw error;
+      return (data ?? []) as Metric[];
+    },
+  });
+
+  const metrics: Metric[] = data && data.length ? data : FALLBACK;
+
   const updated = new Date().toLocaleDateString("en-IN", {
     day: "numeric", month: "short", year: "numeric",
   });
@@ -52,7 +70,7 @@ const MacroSummary = () => {
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 border rounded-lg overflow-hidden bg-card divide-x divide-y sm:divide-y-0 [&>*:nth-child(-n+3)]:sm:border-b lg:[&>*]:!border-b-0">
           {metrics.map((m) => (
             <Link
-              key={m.label}
+              key={m.id ?? m.label}
               to="/data-dashboard"
               className="group p-4 hover:bg-accent/40 transition-colors"
             >

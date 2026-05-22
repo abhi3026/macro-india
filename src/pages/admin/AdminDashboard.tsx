@@ -19,8 +19,6 @@ export default function AdminDashboard() {
           out[t][s] = count ?? 0;
         }
       }
-      const { count: indCount } = await supabase.from("economic_indicators").select("id", { count: "exact", head: true });
-      out["economic_indicators"] = { total: indCount ?? 0 } as any;
       return out;
     },
   });
@@ -53,13 +51,6 @@ export default function AdminDashboard() {
             </div>
           </div>
         ))}
-        <div className="border bg-card rounded-md p-5">
-          <p className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground">Economic Indicators</p>
-          <p className="font-display text-3xl font-semibold mt-2">
-            {(data?.["economic_indicators"] as any)?.total ?? 0}
-            <span className="text-sm text-muted-foreground font-normal ml-1">tracked</span>
-          </p>
-        </div>
       </div>
     </div>
   );

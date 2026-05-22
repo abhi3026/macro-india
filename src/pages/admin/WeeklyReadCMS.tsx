@@ -1,81 +1,63 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { Check, X, Trash2 } from "lucide-react";
-import StatusBadge from "@/components/admin/StatusBadge";
-import CMSToolbar from "@/components/admin/CMSToolbar";
+import { Pencil, Plus, Trash2, Save, TrendingUp, Lightbulb, AlertCircle, type LucideIcon } from "lucide-react";
 import ImageUpload from "@/components/admin/ImageUpload";
+import StatusBadge from "@/components/admin/StatusBadge";
 
 const SECTIONS = ["Policy", "Market", "Risk"] as const;
+
+const META: Record<string, { icon: LucideIcon; accent: string }> = {
+  Policy: { icon: TrendingUp, accent: "text-[hsl(var(--brand))]" },
+  Market: { icon: Lightbulb, accent: "text-amber-600 dark:text-amber-400" },
+  Risk: { icon: AlertCircle, accent: "text-[hsl(var(--loss))]" },
+};
 
 export default function WeeklyReadCMS() {
   const qc = useQueryClient();
   const { user, canManage } = useAuth();
-  const [search, setSearch] = useState(""); const [status, setStatus] = useState("all");
-  const [sort, setSort] = useState("updated"); const [page, setPage] = useState(0);
-  const [editing, setEditing] = useState<any | null>(null); const [open, setOpen] = useState(false);
-  const PAGE = 10;
+  const [editing, setEditing] = useState<any | null>(null);
+  const [open, setOpen] = useState(false);
 
   const { data, isLoading } = useQuery({
     queryKey: ["weekly-list"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("weekly_reads").select("*").order("updated_at", { ascending: false });
+      const { data, error } = await supabase
+        .from("weekly_reads").select("*")
+        .order("updated_at", { ascending: false });
       if (error) throw error;
       return data as any[];
     },
   });
 
-  const filtered = useMemo(() => {
-    let rows = data ?? [];
-    if (search) rows = rows.filter(r => r.heading.toLowerCase().includes(search.toLowerCase()));
-    if (status !== "all") rows = rows.filter(r => r.status === status);
-    rows = [...rows].sort((a, b) => {
-      if (sort === "title") return a.heading.localeCompare(b.heading);
-      if (sort === "status") return a.status.localeCompare(b.status);
-      if (sort === "created") return +new Date(b.created_at) - +new Date(a.created_at);
-      return +new Date(b.updated_at) - +new Date(a.updated_at);
-    });
-    return rows;
-  }, [data, search, status, sort]);
-
-  const paged = filtered.slice(page * PAGE, page * PAGE + PAGE);
-  const pages = Math.max(1, Math.ceil(filtered.length / PAGE));
-
-  const setStatusOf = async (id: string, next: string) => {
-    const patch: any = { status: next };
-    if (next === "published") patch.published_at = new Date().toISOString();
-    const { error } = await supabase.from("weekly_reads").update(patch).eq("id", id);
-    if (error) return toast.error(error.message);
-    toast.success(`Status: ${next}`);
-    qc.invalidateQueries({ queryKey: ["weekly-list"] });
+  const openNew = () => {
+    setEditing({ section: "Policy", heading: "", body: "", image: "", link_url: "", status: "published" });
+    setOpen(true);
   };
 
-  const remove = async (id: string) => {
-    if (!confirm("Delete entry?")) return;
-    const { error } = await supabase.from("weekly_reads").delete().eq("id", id);
-    if (error) return toast.error(error.message);
-    qc.invalidateQueries({ queryKey: ["weekly-list"] });
-  };
-
-  const openNew = () => { setEditing({ section: "Policy", heading: "", body: "", image: "", link_url: "", status: "draft" }); setOpen(true); };
+  const openEdit = (r: any) => { setEditing(r); setOpen(true); };
 
   const save = async () => {
     if (!editing.heading) return toast.error("Heading required");
     const payload: any = {
-      section: editing.section, heading: editing.heading.trim(),
-      body: editing.body || null, image: editing.image || null, link_url: editing.link_url || null,
+      section: editing.section,
+      heading: editing.heading.trim(),
+      body: editing.body || null,
+      image: editing.image || null,
+      link_url: editing.link_url || null,
       status: editing.status,
     };
     if (editing.id) {
-      if (payload.status === "published" && editing.status !== "published") payload.published_at = new Date().toISOString();
+      if (payload.status === "published" && editing.status !== "published") {
+        payload.published_at = new Date().toISOString();
+      }
       const { error } = await supabase.from("weekly_reads").update(payload).eq("id", editing.id);
       if (error) return toast.error(error.message);
     } else {
@@ -87,69 +69,77 @@ export default function WeeklyReadCMS() {
     toast.success("Saved");
     setOpen(false); setEditing(null);
     qc.invalidateQueries({ queryKey: ["weekly-list"] });
+    qc.invalidateQueries({ queryKey: ["weekly-reads-home"] });
   };
+
+  const remove = async (id: string) => {
+    if (!confirm("Delete entry?")) return;
+    const { error } = await supabase.from("weekly_reads").delete().eq("id", id);
+    if (error) return toast.error(error.message);
+    qc.invalidateQueries({ queryKey: ["weekly-list"] });
+    qc.invalidateQueries({ queryKey: ["weekly-reads-home"] });
+  };
+
+  const rows = data ?? [];
 
   return (
     <div className="p-8">
-      <header className="mb-6">
-        <p className="text-[11px] tracking-[0.2em] uppercase text-muted-foreground">Editorial</p>
-        <h1 className="font-display text-2xl font-semibold">This Week's Read</h1>
+      <header className="mb-6 flex items-end justify-between">
+        <div>
+          <p className="text-[11px] tracking-[0.2em] uppercase text-muted-foreground">Editorial</p>
+          <h1 className="font-display text-2xl font-semibold">This Week's Read</h1>
+          <p className="text-sm text-muted-foreground mt-1">Wired to the "What the data is telling us" section on the homepage.</p>
+        </div>
+        {canManage && <Button size="sm" onClick={openNew}><Plus className="h-4 w-4" /> Add entry</Button>}
       </header>
 
-      <CMSToolbar
-        search={search} onSearch={(v) => { setSearch(v); setPage(0); }}
-        status={status} onStatus={(v) => { setStatus(v); setPage(0); }}
-        sort={sort} onSort={setSort}
-        onNew={openNew}
-      />
+      {isLoading ? (
+        <div className="text-muted-foreground text-sm">Loading…</div>
+      ) : rows.length === 0 ? (
+        <div className="border rounded-xl bg-card p-12 text-center text-muted-foreground text-sm">No entries yet.</div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+          {rows.map((r) => {
+            const meta = META[r.section] ?? META.Policy;
+            const Icon = meta.icon;
+            return (
+              <article key={r.id} className="group relative rounded-xl border bg-card p-6 flex flex-col">
+                <div className="flex items-center justify-between gap-2 mb-4">
+                  <div className="flex items-center gap-2">
+                    <span className={`inline-flex items-center justify-center h-7 w-7 rounded-md bg-accent ${meta.accent}`}>
+                      <Icon className="h-3.5 w-3.5" />
+                    </span>
+                    <span className="text-[10px] tracking-[0.16em] uppercase text-muted-foreground font-medium">
+                      {r.section}
+                    </span>
+                  </div>
+                  <StatusBadge status={r.status} />
+                </div>
+                <h3 className="font-display text-lg font-semibold leading-snug tracking-tight mb-3">
+                  {r.heading}
+                </h3>
+                <p className="text-sm text-muted-foreground leading-relaxed flex-1">{r.body}</p>
 
-      <div className="border rounded-md bg-card overflow-x-auto">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-14 font-mono text-xs">#</TableHead>
-              <TableHead className="w-28">Section</TableHead>
-              <TableHead>Heading</TableHead>
-              <TableHead className="w-28">Status</TableHead>
-              <TableHead className="w-20 text-right">Approve</TableHead>
-              <TableHead className="w-20 text-right">Decline</TableHead>
-              <TableHead className="w-12"></TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {isLoading && <TableRow><TableCell colSpan={7} className="text-center py-8 text-muted-foreground">Loading…</TableCell></TableRow>}
-            {!isLoading && paged.length === 0 && <TableRow><TableCell colSpan={7} className="text-center py-8 text-muted-foreground">No entries.</TableCell></TableRow>}
-            {paged.map((r) => (
-              <TableRow key={r.id} className="cursor-pointer" onClick={() => { setEditing(r); setOpen(true); }}>
-                <TableCell className="font-mono text-xs text-muted-foreground">{String(r.serial).padStart(4, "0")}</TableCell>
-                <TableCell><span className="text-[10px] uppercase tracking-wider px-2 py-0.5 border rounded-sm">{r.section}</span></TableCell>
-                <TableCell className="font-medium">{r.heading}</TableCell>
-                <TableCell><StatusBadge status={r.status} /></TableCell>
-                <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
-                  <Button size="sm" variant="ghost" disabled={!canManage || r.status === "published"} onClick={() => setStatusOf(r.id, "published")}><Check className="h-4 w-4 text-emerald-600" /></Button>
-                </TableCell>
-                <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
-                  <Button size="sm" variant="ghost" disabled={!canManage || r.status === "declined"} onClick={() => setStatusOf(r.id, "declined")}><X className="h-4 w-4 text-rose-600" /></Button>
-                </TableCell>
-                <TableCell onClick={(e) => e.stopPropagation()}>
-                  {canManage && <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => remove(r.id)}><Trash2 className="h-3.5 w-3.5" /></Button>}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-
-      <div className="flex justify-between items-center mt-4 text-xs text-muted-foreground">
-        <span>{filtered.length} entries</span>
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm" disabled={page === 0} onClick={() => setPage(p => p - 1)}>Prev</Button>
-          <span className="px-2 self-center">{page + 1} / {pages}</span>
-          <Button variant="outline" size="sm" disabled={page + 1 >= pages} onClick={() => setPage(p => p + 1)}>Next</Button>
+                {canManage && (
+                  <div className="mt-5 pt-4 border-t flex gap-2">
+                    <Button size="sm" variant="outline" className="h-8" onClick={() => openEdit(r)}>
+                      <Pencil className="h-3.5 w-3.5" /> Edit
+                    </Button>
+                    <Button size="sm" variant="default" className="h-8" onClick={() => openEdit(r)}>
+                      <Save className="h-3.5 w-3.5" /> Update
+                    </Button>
+                    <Button size="sm" variant="ghost" className="h-8 ml-auto" onClick={() => remove(r.id)}>
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </Button>
+                  </div>
+                )}
+              </article>
+            );
+          })}
         </div>
-      </div>
+      )}
 
-      <Sheet open={open} onOpenChange={setOpen}>
+      <Sheet open={open} onOpenChange={(o) => { setOpen(o); if (!o) setEditing(null); }}>
         <SheetContent side="right" className="w-full sm:max-w-2xl overflow-y-auto">
           <SheetHeader><SheetTitle>{editing?.id ? "Edit entry" : "New entry"}</SheetTitle></SheetHeader>
           {editing && (
@@ -171,8 +161,8 @@ export default function WeeklyReadCMS() {
             </div>
           )}
           <div className="flex justify-end gap-2 mt-6">
-            <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
-            <Button onClick={save}>Save</Button>
+            <Button variant="outline" onClick={() => { setOpen(false); setEditing(null); }}>Cancel</Button>
+            <Button onClick={save}><Save className="h-4 w-4" /> Update</Button>
           </div>
         </SheetContent>
       </Sheet>

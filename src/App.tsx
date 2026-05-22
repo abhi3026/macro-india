@@ -25,7 +25,7 @@ import AdminLayout from "@/pages/admin/AdminLayout";
 import AdminDashboard from "@/pages/admin/AdminDashboard";
 import EducationCMS from "@/pages/admin/EducationCMS";
 import ResearchAdminCMS from "@/pages/admin/ResearchAdminCMS";
-import IndicatorsCMS from "@/pages/admin/IndicatorsCMS";
+import SnapshotCMS from "@/pages/admin/SnapshotCMS";
 import CountryIndicatorsCMS from "@/pages/admin/CountryIndicatorsCMS";
 import InterestRatesCMS from "@/pages/admin/InterestRatesCMS";
 import WeeklyReadCMS from "@/pages/admin/WeeklyReadCMS";
@@ -61,7 +61,7 @@ function AppContent() {
                   <Route index element={<AdminDashboard />} />
                   <Route path="education" element={<EducationCMS />} />
                   <Route path="research" element={<ResearchAdminCMS />} />
-                  <Route path="indicators" element={<IndicatorsCMS />} />
+                  <Route path="snapshot" element={<SnapshotCMS />} />
                   <Route path="country-indicators" element={<CountryIndicatorsCMS />} />
                   <Route path="interest-rates" element={<InterestRatesCMS />} />
                   <Route path="weekly" element={<WeeklyReadCMS />} />

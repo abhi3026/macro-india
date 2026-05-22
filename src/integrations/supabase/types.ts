@@ -323,6 +323,45 @@ export type Database = {
         }
         Relationships: []
       }
+      macro_snapshot: {
+        Row: {
+          context: string
+          created_at: string
+          delta: string
+          display_order: number
+          id: string
+          label: string
+          status: Database["public"]["Enums"]["content_status"]
+          trend: string
+          updated_at: string
+          value: string
+        }
+        Insert: {
+          context?: string
+          created_at?: string
+          delta?: string
+          display_order?: number
+          id?: string
+          label: string
+          status?: Database["public"]["Enums"]["content_status"]
+          trend?: string
+          updated_at?: string
+          value?: string
+        }
+        Update: {
+          context?: string
+          created_at?: string
+          delta?: string
+          display_order?: number
+          id?: string
+          label?: string
+          status?: Database["public"]["Enums"]["content_status"]
+          trend?: string
+          updated_at?: string
+          value?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string

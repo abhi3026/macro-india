@@ -28,7 +28,7 @@ export function PageHero({ title, description, eyebrow, breadcrumbs, meta, align
       <div className={`relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20 ${aside ? "grid lg:grid-cols-12 gap-8 lg:gap-10 items-center" : ""}`}>
         <div className={`${aside ? "lg:col-span-7" : ""} ${align === "center" ? "text-center" : ""}`}>
           {breadcrumbs && breadcrumbs.length > 0 && (
-            <nav className="mb-5 flex items-center gap-1 text-xs text-white/60" aria-label="Breadcrumb">
+            <nav className="mb-5 flex items-center gap-1 text-xs text-white/75" aria-label="Breadcrumb">
               {breadcrumbs.map((c, i) => (
                 <span key={i} className="inline-flex items-center gap-1">
                   {c.href ? (
@@ -36,7 +36,7 @@ export function PageHero({ title, description, eyebrow, breadcrumbs, meta, align
                   ) : (
                     <span className="text-white/80">{c.name}</span>
                   )}
-                  {i < breadcrumbs.length - 1 && <ChevronRight className="h-3 w-3 text-white/30" />}
+                  {i < breadcrumbs.length - 1 && <ChevronRight className="h-3 w-3 text-white/75" />}
                 </span>
               ))}
             </nav>

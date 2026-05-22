@@ -78,7 +78,7 @@ const Footer = () => {
           {/* Nav columns */}
           {navCols.map((col) => (
             <div key={col.title} className="md:col-span-2">
-              <h3 className="text-xs font-semibold tracking-widest uppercase text-white/50 mb-4">{col.title}</h3>
+              <h3 className="text-xs font-semibold tracking-widest uppercase text-white/70 mb-4">{col.title}</h3>
               <ul className="space-y-2.5 text-sm">
                 {col.links.map((l) => (
                   <li key={l.to}>
@@ -91,7 +91,7 @@ const Footer = () => {
 
           {/* Newsletter */}
           <div className="md:col-span-2">
-            <h3 className="text-xs font-semibold tracking-widest uppercase text-white/50 mb-4">Newsletter</h3>
+            <h3 className="text-xs font-semibold tracking-widest uppercase text-white/70 mb-4">Newsletter</h3>
             <p className="text-sm text-white/60 mb-3">Weekly macro brief. No spam.</p>
             <form onSubmit={handleSubscribe} className="space-y-2">
               <Input type="email" placeholder="you@firm.com"

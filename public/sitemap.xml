@@ -1,52 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://indianmacro.com/</loc>
+    <loc>https://macro-india-insights.lovable.app/</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://indianmacro.com/research</loc>
+    <loc>https://macro-india-insights.lovable.app/research</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://indianmacro.com/data-dashboard</loc>
+    <loc>https://macro-india-insights.lovable.app/data-dashboard</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://indianmacro.com/data-dashboard/economic-indicators</loc>
+    <loc>https://macro-india-insights.lovable.app/data-dashboard/economic-indicators</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://indianmacro.com/data-dashboard/interest-rates-bonds</loc>
+    <loc>https://macro-india-insights.lovable.app/data-dashboard/interest-rates-bonds</loc>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://indianmacro.com/education</loc>
+    <loc>https://macro-india-insights.lovable.app/education</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://indianmacro.com/news</loc>
+    <loc>https://macro-india-insights.lovable.app/news</loc>
     <changefreq>hourly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://indianmacro.com/about</loc>
+    <loc>https://macro-india-insights.lovable.app/about</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://indianmacro.com/privacy</loc>
+    <loc>https://macro-india-insights.lovable.app/contact</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://macro-india-insights.lovable.app/privacy</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://indianmacro.com/terms</loc>
+    <loc>https://macro-india-insights.lovable.app/terms</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>

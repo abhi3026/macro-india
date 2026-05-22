@@ -1,0 +1,1 @@
+DROP POLICY IF EXISTS "public read cms-media files" ON storage.objects;

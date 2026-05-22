@@ -57,10 +57,10 @@ Deno.serve(async (req) => {
       blob.includes('duplicate');
 
     if (isAlready) {
+      // Return generic success to prevent email enumeration
       return json({
         success: true,
-        alreadySubscribed: true,
-        message: 'User already exists',
+        message: 'We have sent you a mail, please verify.',
       });
     }
 

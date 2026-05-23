@@ -94,7 +94,7 @@ const EconomicIndicatorsDashboard = () => {
                         <TableCell key={d.key} className="text-right">
                           {cell ? (
                             <>
-                              <div className="font-medium">{formatValue(cell.current_value, d.unit)}</div>
+                              <div className="font-medium">{formatValue(cell.current_value, d.unit === "%" ? "%" : null)}</div>
                               <div className={cn("text-xs", diffColorClass(diff, d.higher_is_better))}>
                                 {formatDiff(diff)}
                                 {cell.period_label && (

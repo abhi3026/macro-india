@@ -63,6 +63,9 @@ const EconomicIndicatorsDashboard = () => {
                 {defs.map((d) => (
                   <TableHead key={d.key} className="text-right font-medium whitespace-nowrap">
                     {d.label}
+                    {d.unit && d.unit !== "%" && (
+                      <span className="text-muted-foreground font-normal"> ({d.unit})</span>
+                    )}
                   </TableHead>
                 ))}
               </TableRow>
@@ -91,7 +94,7 @@ const EconomicIndicatorsDashboard = () => {
                         <TableCell key={d.key} className="text-right">
                           {cell ? (
                             <>
-                              <div className="font-medium">{formatValue(cell.current_value, d.unit)}</div>
+                              <div className="font-medium">{formatValue(cell.current_value, d.unit === "%" ? "%" : null)}</div>
                               <div className={cn("text-xs", diffColorClass(diff, d.higher_is_better))}>
                                 {formatDiff(diff)}
                                 {cell.period_label && (

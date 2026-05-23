@@ -116,7 +116,9 @@ export default function EconomicIndicatorsPage() {
                       {defs.map((d) => (
                         <TableHead key={d.key} className="text-right min-w-[140px] whitespace-nowrap">
                           {d.label}
-                          {d.unit && <span className="text-muted-foreground"> ({d.unit})</span>}
+                          {d.unit && d.unit !== "%" && (
+                            <span className="text-muted-foreground font-normal"> ({d.unit})</span>
+                          )}
                         </TableHead>
                       ))}
                     </TableRow>
@@ -152,7 +154,7 @@ export default function EconomicIndicatorsPage() {
                               <TableCell key={d.key} className="text-right">
                                 {cell ? (
                                   <>
-                                    <div className="font-medium">{formatValue(cell.current_value, null)}</div>
+                                    <div className="font-medium">{formatValue(cell.current_value, d.unit === "%" ? "%" : null)}</div>
                                     <div className={cn("text-xs", diffColorClass(diff, d.higher_is_better))}>
                                       {formatDiff(diff)}
                                       {cell.period_label && (

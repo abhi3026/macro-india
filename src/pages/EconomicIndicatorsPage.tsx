@@ -112,9 +112,9 @@ export default function EconomicIndicatorsPage() {
                 <Table className="table-fixed">
                   <TableHeader className="bg-muted/50">
                     <TableRow>
-                      <TableHead className="sticky left-0 bg-muted/50 w-[1%]">Country</TableHead>
+                      <TableHead className="sticky left-0 bg-muted/50 w-[1%] align-bottom break-words">Country</TableHead>
                       {defs.map((d) => (
-                        <TableHead key={d.key} className="text-right w-[1%] whitespace-nowrap">
+                        <TableHead key={d.key} className="text-right w-[1%] align-bottom break-words">
                           {d.label}
                           {d.unit && d.unit !== "%" && (
                             <span className="text-muted-foreground font-normal"> ({d.unit})</span>

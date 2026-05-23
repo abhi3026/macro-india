@@ -56,12 +56,12 @@ const EconomicIndicatorsDashboard = () => {
       </CardHeader>
       <CardContent>
         <div className="overflow-x-auto">
-          <Table>
+          <Table className="table-fixed">
             <TableHeader>
               <TableRow>
-                <TableHead className="font-medium">Country</TableHead>
+                <TableHead className="font-medium w-[1%]">Country</TableHead>
                 {defs.map((d) => (
-                  <TableHead key={d.key} className="text-right font-medium whitespace-nowrap">
+                  <TableHead key={d.key} className="text-right font-medium whitespace-nowrap w-[1%]">
                     {d.label}
                     {d.unit && d.unit !== "%" && (
                       <span className="text-muted-foreground font-normal"> ({d.unit})</span>

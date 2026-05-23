@@ -109,12 +109,12 @@ export default function EconomicIndicatorsPage() {
               </div>
 
               <div className="rounded-md border overflow-x-auto">
-                <Table>
+                <Table className="table-fixed">
                   <TableHeader className="bg-muted/50">
                     <TableRow>
-                      <TableHead className="sticky left-0 bg-muted/50 min-w-[200px]">Country</TableHead>
+                      <TableHead className="sticky left-0 bg-muted/50 w-[1%]">Country</TableHead>
                       {defs.map((d) => (
-                        <TableHead key={d.key} className="text-right min-w-[140px] whitespace-nowrap">
+                        <TableHead key={d.key} className="text-right w-[1%] whitespace-nowrap">
                           {d.label}
                           {d.unit && d.unit !== "%" && (
                             <span className="text-muted-foreground font-normal"> ({d.unit})</span>

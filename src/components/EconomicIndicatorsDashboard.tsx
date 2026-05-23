@@ -63,6 +63,9 @@ const EconomicIndicatorsDashboard = () => {
                 {defs.map((d) => (
                   <TableHead key={d.key} className="text-right font-medium whitespace-nowrap">
                     {d.label}
+                    {d.unit && d.unit !== "%" && (
+                      <span className="text-muted-foreground font-normal"> ({d.unit})</span>
+                    )}
                   </TableHead>
                 ))}
               </TableRow>

@@ -150,7 +150,13 @@ export default function SnapshotCMS() {
               <div><Label>Label</Label><Input value={editing.label ?? ""} onChange={(e) => setEditing({ ...editing, label: e.target.value })} placeholder="Real GDP Growth" /></div>
               <div><Label>Value</Label><Input value={editing.value ?? ""} onChange={(e) => setEditing({ ...editing, value: e.target.value })} placeholder="7.2%" /></div>
               <div><Label>Delta</Label><Input value={editing.delta ?? ""} onChange={(e) => setEditing({ ...editing, delta: e.target.value })} placeholder="+0.3 pp YoY" /></div>
-              <div><Label>Trend</Label>
+              <div><Label>Sentiment (color)</Label>
+                <select className="w-full border rounded-md h-10 px-3 bg-background" value={editing.sentiment ?? "neutral"} onChange={(e) => setEditing({ ...editing, sentiment: e.target.value as Sentiment })}>
+                  <option value="positive">Positive (green)</option>
+                  <option value="negative">Negative (red)</option>
+                  <option value="neutral">Neutral</option>
+                </select>
+              </div>
                 <select className="w-full border rounded-md h-10 px-3 bg-background" value={editing.trend ?? "flat"} onChange={(e) => setEditing({ ...editing, trend: e.target.value as Trend })}>
                   <option value="up">up</option><option value="down">down</option><option value="flat">flat</option>
                 </select>

@@ -185,9 +185,16 @@ export default function InterestRatesCMS() {
                   </TableCell>
                   <TableCell className="text-right">
                     {isEditing ? (
-                      <Input className="h-8 text-right text-xs" inputMode="decimal" value={draft.interest_rate_change} onChange={(e) => upd("interest_rate_change", e.target.value)} />
+                      <div className="space-y-1">
+                        <Input className="h-8 text-right text-xs" inputMode="decimal" value={draft.interest_rate_change} onChange={(e) => upd("interest_rate_change", e.target.value)} />
+                        <select className="h-7 text-[11px] w-full border rounded bg-background px-1" value={draft.interest_rate_sentiment} onChange={(e) => upd("interest_rate_sentiment", e.target.value as Sentiment)}>
+                          <option value="positive">Positive (green)</option>
+                          <option value="negative">Negative (red)</option>
+                          <option value="neutral">Neutral</option>
+                        </select>
+                      </div>
                     ) : (
-                      <span className="tabular-nums text-muted-foreground">{r?.interest_rate_change ?? "—"}</span>
+                      <span className={`tabular-nums ${sentClass((r?.interest_rate_sentiment as Sentiment) ?? "neutral")}`}>{r?.interest_rate_change ?? "—"}</span>
                     )}
                   </TableCell>
                   <TableCell>

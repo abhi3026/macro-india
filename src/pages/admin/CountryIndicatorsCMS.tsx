@@ -20,10 +20,11 @@ import {
   fetchIndicatorsBundle,
   computeDiff,
   formatDiff,
-  diffColorClass,
+  sentimentColorClass,
   type CountryIndicator,
   type IndicatorDef,
   type Country,
+  type Sentiment,
 } from "@/lib/countryIndicators";
 
 // Fixed columns that mirror the homepage Economic Indicators table.
@@ -38,7 +39,7 @@ const HOMEPAGE_KEYS = [
   "consumer_confidence",
 ] as const;
 
-type CellDraft = { current_value: string; previous_value: string };
+type CellDraft = { current_value: string; previous_value: string; sentiment: Sentiment };
 type RowDraftMap = Record<string, CellDraft>; // key = indicator_key
 
 export default function CountryIndicatorsCMS() {

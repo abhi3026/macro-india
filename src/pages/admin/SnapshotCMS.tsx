@@ -10,16 +10,22 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { ArrowUpRight, ArrowDownRight, Minus, Pencil, Plus, Trash2, Save } from "lucide-react";
 
 type Trend = "up" | "down" | "flat";
+type Sentiment = "positive" | "negative" | "neutral";
 type Row = {
   id: string;
   label: string;
   value: string;
   delta: string;
   trend: Trend;
+  sentiment: Sentiment;
   context: string;
   display_order: number;
   status: string;
 };
+
+const sentimentClass = (s: Sentiment) =>
+  s === "positive" ? "text-[hsl(var(--gain))]" : s === "negative" ? "text-[hsl(var(--loss))]" : "text-muted-foreground";
+
 
 const TrendIcon = ({ trend }: { trend: Trend }) => {
   if (trend === "up") return <ArrowUpRight className="h-3.5 w-3.5 text-[hsl(var(--gain))]" />;

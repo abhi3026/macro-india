@@ -7,9 +7,11 @@ export interface InterestRateRow {
   interest_rate: number | null;
   interest_rate_change: number | null;
   interest_rate_updated: string | null;
+  interest_rate_sentiment?: "positive" | "negative" | "neutral" | null;
   bond_yield: number | null;
   bond_yield_change: number | null;
   bond_yield_updated: string | null;
+  bond_yield_sentiment?: "positive" | "negative" | "neutral" | null;
   status: string;
 }
 

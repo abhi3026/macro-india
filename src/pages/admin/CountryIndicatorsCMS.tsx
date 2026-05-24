@@ -333,18 +333,29 @@ function CountryRows({
           return (
             <TableCell key={d.key} className="text-right">
               {editing ? (
-                <Input
-                  className="h-8 text-right text-xs"
-                  inputMode="decimal"
-                  value={drafts[d.key]?.previous_value ?? ""}
-                  onChange={(e) => updateDraft(d.key, "previous_value", e.target.value)}
-                />
+                <div className="space-y-1">
+                  <Input
+                    className="h-8 text-right text-xs"
+                    inputMode="decimal"
+                    value={drafts[d.key]?.previous_value ?? ""}
+                    onChange={(e) => updateDraft(d.key, "previous_value", e.target.value)}
+                  />
+                  <select
+                    className="h-7 text-[11px] w-full border rounded bg-background px-1"
+                    value={drafts[d.key]?.sentiment ?? "neutral"}
+                    onChange={(e) => updateDraft(d.key, "sentiment", e.target.value as Sentiment)}
+                  >
+                    <option value="positive">Positive (green)</option>
+                    <option value="negative">Negative (red)</option>
+                    <option value="neutral">Neutral</option>
+                  </select>
+                </div>
               ) : (
                 <div className="space-y-0.5">
                   <div className="text-muted-foreground tabular-nums">
                     {cell?.previous_value ?? "—"}
                   </div>
-                  <div className={cn("text-[10px] tabular-nums", diffColorClass(diff, d.higher_is_better))}>
+                  <div className={cn("text-[10px] tabular-nums", sentimentColorClass((cell?.sentiment as Sentiment | undefined) ?? "neutral"))}>
                     Δ {formatDiff(diff)}
                   </div>
                 </div>

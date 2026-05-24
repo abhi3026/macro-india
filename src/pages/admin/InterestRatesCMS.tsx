@@ -93,9 +93,11 @@ export default function InterestRatesCMS() {
         interest_rate: toNum(draft.interest_rate),
         interest_rate_change: toNum(draft.interest_rate_change),
         interest_rate_updated: toDate(draft.interest_rate_updated),
+        interest_rate_sentiment: draft.interest_rate_sentiment,
         bond_yield: toNum(draft.bond_yield),
         bond_yield_change: toNum(draft.bond_yield_change),
         bond_yield_updated: toDate(draft.bond_yield_updated),
+        bond_yield_sentiment: draft.bond_yield_sentiment,
         status: "published" as const,
       };
       if (existing) {

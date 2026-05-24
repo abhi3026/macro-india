@@ -28,12 +28,12 @@ const fmtChange = (n: number | null | undefined) => {
   const sign = n > 0 ? "+" : "";
   return `${sign}${n.toFixed(2)}%`;
 };
-const changeColor = (n: number | null | undefined) =>
-  n === null || n === undefined || n === 0
-    ? "text-muted-foreground"
-    : n > 0
-    ? "text-green-600"
-    : "text-red-600";
+const sentimentColor = (s: string | null | undefined) =>
+  s === "positive"
+    ? "text-[hsl(var(--gain))]"
+    : s === "negative"
+    ? "text-[hsl(var(--loss))]"
+    : "text-muted-foreground";
 
 const InterestRatesPage = () => {
   const { data, isLoading } = useQuery({

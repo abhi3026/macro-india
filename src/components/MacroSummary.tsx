@@ -87,13 +87,7 @@ const MacroSummary = () => {
                 <TrendIcon trend={m.trend} />
               </div>
               <p
-                className={`mt-0.5 text-[11px] font-medium tabular-nums ${
-                  m.trend === "up"
-                    ? "text-[hsl(var(--gain))]"
-                    : m.trend === "down"
-                    ? "text-[hsl(var(--loss))]"
-                    : "text-muted-foreground"
-                }`}
+                className={`mt-0.5 text-[11px] font-medium tabular-nums ${sentimentClass(m.sentiment)}`}
               >
                 {m.delta}
               </p>

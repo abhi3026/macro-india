@@ -17,31 +17,38 @@ import { Search, Pencil, Check, X } from "lucide-react";
 import { CountryFlag } from "@/components/ui/country-flag";
 import { fetchInterestRatesBundle, type InterestRateRow } from "@/lib/interestRates";
 
+type Sentiment = "positive" | "negative" | "neutral";
 type Draft = {
   interest_rate: string;
   interest_rate_change: string;
   interest_rate_updated: string;
+  interest_rate_sentiment: Sentiment;
   bond_yield: string;
   bond_yield_change: string;
   bond_yield_updated: string;
+  bond_yield_sentiment: Sentiment;
 };
 
 const emptyDraft = (): Draft => ({
   interest_rate: "",
   interest_rate_change: "",
   interest_rate_updated: "",
+  interest_rate_sentiment: "neutral",
   bond_yield: "",
   bond_yield_change: "",
   bond_yield_updated: "",
+  bond_yield_sentiment: "neutral",
 });
 
 const fromRow = (r?: InterestRateRow): Draft => ({
   interest_rate: r?.interest_rate?.toString() ?? "",
   interest_rate_change: r?.interest_rate_change?.toString() ?? "",
   interest_rate_updated: r?.interest_rate_updated ?? "",
+  interest_rate_sentiment: (r?.interest_rate_sentiment as Sentiment) ?? "neutral",
   bond_yield: r?.bond_yield?.toString() ?? "",
   bond_yield_change: r?.bond_yield_change?.toString() ?? "",
   bond_yield_updated: r?.bond_yield_updated ?? "",
+  bond_yield_sentiment: (r?.bond_yield_sentiment as Sentiment) ?? "neutral",
 });
 
 const toNum = (v: string): number | null => (v === "" ? null : Number(v));

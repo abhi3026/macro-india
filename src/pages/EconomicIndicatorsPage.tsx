@@ -23,7 +23,7 @@ import {
   formatValue,
   computeDiff,
   formatDiff,
-  diffColorClass,
+  sentimentColorClass,
 } from "@/lib/countryIndicators";
 import { CountryFlag } from "@/components/ui/country-flag";
 

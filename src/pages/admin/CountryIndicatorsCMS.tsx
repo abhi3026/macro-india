@@ -106,6 +106,7 @@ export default function CountryIndicatorsCMS() {
           indicator_key: def.key,
           current_value: d.current_value === "" ? null : Number(d.current_value),
           previous_value: d.previous_value === "" ? null : Number(d.previous_value),
+          sentiment: d.sentiment ?? "neutral",
           status: "published" as const,
           last_updated: new Date().toISOString(),
         };

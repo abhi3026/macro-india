@@ -119,7 +119,9 @@ export default function InterestRatesCMS() {
     }
   };
 
-  const upd = (k: keyof Draft, v: string) => setDraft((d) => ({ ...d, [k]: v }));
+  const upd = <K extends keyof Draft>(k: K, v: Draft[K]) => setDraft((d) => ({ ...d, [k]: v }));
+  const sentClass = (s: Sentiment) =>
+    s === "positive" ? "text-[hsl(var(--gain))]" : s === "negative" ? "text-[hsl(var(--loss))]" : "text-muted-foreground";
 
   return (
     <div className="p-6 lg:p-8">

@@ -81,6 +81,7 @@ export default function CountryIndicatorsCMS() {
       next[def.key] = {
         current_value: c?.current_value?.toString() ?? "",
         previous_value: c?.previous_value?.toString() ?? "",
+        sentiment: ((c as CountryIndicator | undefined)?.sentiment as Sentiment | undefined) ?? "neutral",
       };
     }
     setDrafts(next);

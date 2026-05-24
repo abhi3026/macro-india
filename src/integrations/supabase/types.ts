@@ -58,6 +58,7 @@ export type Database = {
           notes: string | null
           period_label: string | null
           previous_value: number | null
+          sentiment: string
           source: string | null
           source_url: string | null
           status: Database["public"]["Enums"]["content_status"]
@@ -73,6 +74,7 @@ export type Database = {
           notes?: string | null
           period_label?: string | null
           previous_value?: number | null
+          sentiment?: string
           source?: string | null
           source_url?: string | null
           status?: Database["public"]["Enums"]["content_status"]
@@ -88,6 +90,7 @@ export type Database = {
           notes?: string | null
           period_label?: string | null
           previous_value?: number | null
+          sentiment?: string
           source?: string | null
           source_url?: string | null
           status?: Database["public"]["Enums"]["content_status"]
@@ -258,12 +261,14 @@ export type Database = {
         Row: {
           bond_yield: number | null
           bond_yield_change: number | null
+          bond_yield_sentiment: string
           bond_yield_updated: string | null
           country_code: string
           created_at: string
           id: string
           interest_rate: number | null
           interest_rate_change: number | null
+          interest_rate_sentiment: string
           interest_rate_updated: string | null
           status: Database["public"]["Enums"]["content_status"]
           updated_at: string
@@ -271,12 +276,14 @@ export type Database = {
         Insert: {
           bond_yield?: number | null
           bond_yield_change?: number | null
+          bond_yield_sentiment?: string
           bond_yield_updated?: string | null
           country_code: string
           created_at?: string
           id?: string
           interest_rate?: number | null
           interest_rate_change?: number | null
+          interest_rate_sentiment?: string
           interest_rate_updated?: string | null
           status?: Database["public"]["Enums"]["content_status"]
           updated_at?: string
@@ -284,12 +291,14 @@ export type Database = {
         Update: {
           bond_yield?: number | null
           bond_yield_change?: number | null
+          bond_yield_sentiment?: string
           bond_yield_updated?: string | null
           country_code?: string
           created_at?: string
           id?: string
           interest_rate?: number | null
           interest_rate_change?: number | null
+          interest_rate_sentiment?: string
           interest_rate_updated?: string | null
           status?: Database["public"]["Enums"]["content_status"]
           updated_at?: string
@@ -331,6 +340,7 @@ export type Database = {
           display_order: number
           id: string
           label: string
+          sentiment: string
           status: Database["public"]["Enums"]["content_status"]
           trend: string
           updated_at: string
@@ -343,6 +353,7 @@ export type Database = {
           display_order?: number
           id?: string
           label: string
+          sentiment?: string
           status?: Database["public"]["Enums"]["content_status"]
           trend?: string
           updated_at?: string
@@ -355,6 +366,7 @@ export type Database = {
           display_order?: number
           id?: string
           label?: string
+          sentiment?: string
           status?: Database["public"]["Enums"]["content_status"]
           trend?: string
           updated_at?: string

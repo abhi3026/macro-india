@@ -10,16 +10,22 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { ArrowUpRight, ArrowDownRight, Minus, Pencil, Plus, Trash2, Save } from "lucide-react";
 
 type Trend = "up" | "down" | "flat";
+type Sentiment = "positive" | "negative" | "neutral";
 type Row = {
   id: string;
   label: string;
   value: string;
   delta: string;
   trend: Trend;
+  sentiment: Sentiment;
   context: string;
   display_order: number;
   status: string;
 };
+
+const sentimentClass = (s: Sentiment) =>
+  s === "positive" ? "text-[hsl(var(--gain))]" : s === "negative" ? "text-[hsl(var(--loss))]" : "text-muted-foreground";
+
 
 const TrendIcon = ({ trend }: { trend: Trend }) => {
   if (trend === "up") return <ArrowUpRight className="h-3.5 w-3.5 text-[hsl(var(--gain))]" />;
@@ -47,7 +53,7 @@ export default function SnapshotCMS() {
 
   const openNew = () =>
     setEditing({
-      label: "", value: "", delta: "", trend: "flat",
+      label: "", value: "", delta: "", trend: "flat", sentiment: "neutral",
       context: "", display_order: (data?.length ?? 0) + 1, status: "published",
     });
 
@@ -60,6 +66,7 @@ export default function SnapshotCMS() {
       value: editing.value ?? "",
       delta: editing.delta ?? "",
       trend: editing.trend ?? "flat",
+      sentiment: editing.sentiment ?? "neutral",
       context: editing.context ?? "",
       display_order: editing.display_order ?? 1000,
       status: editing.status ?? "published",
@@ -112,15 +119,7 @@ export default function SnapshotCMS() {
                 <span className="font-display text-xl font-semibold tabular-nums">{m.value}</span>
                 <TrendIcon trend={m.trend} />
               </div>
-              <p
-                className={`mt-0.5 text-[11px] font-medium tabular-nums ${
-                  m.trend === "up"
-                    ? "text-[hsl(var(--gain))]"
-                    : m.trend === "down"
-                    ? "text-[hsl(var(--loss))]"
-                    : "text-muted-foreground"
-                }`}
-              >
+              <p className={`mt-0.5 text-[11px] font-medium tabular-nums ${sentimentClass(m.sentiment ?? "neutral")}`}>
                 {m.delta}
               </p>
               <p className="mt-1.5 text-[11px] text-muted-foreground leading-snug">{m.context}</p>
@@ -151,7 +150,14 @@ export default function SnapshotCMS() {
               <div><Label>Label</Label><Input value={editing.label ?? ""} onChange={(e) => setEditing({ ...editing, label: e.target.value })} placeholder="Real GDP Growth" /></div>
               <div><Label>Value</Label><Input value={editing.value ?? ""} onChange={(e) => setEditing({ ...editing, value: e.target.value })} placeholder="7.2%" /></div>
               <div><Label>Delta</Label><Input value={editing.delta ?? ""} onChange={(e) => setEditing({ ...editing, delta: e.target.value })} placeholder="+0.3 pp YoY" /></div>
-              <div><Label>Trend</Label>
+              <div><Label>Sentiment (color)</Label>
+                <select className="w-full border rounded-md h-10 px-3 bg-background" value={editing.sentiment ?? "neutral"} onChange={(e) => setEditing({ ...editing, sentiment: e.target.value as Sentiment })}>
+                  <option value="positive">Positive (green)</option>
+                  <option value="negative">Negative (red)</option>
+                  <option value="neutral">Neutral</option>
+                </select>
+              </div>
+              <div><Label>Trend (icon)</Label>
                 <select className="w-full border rounded-md h-10 px-3 bg-background" value={editing.trend ?? "flat"} onChange={(e) => setEditing({ ...editing, trend: e.target.value as Trend })}>
                   <option value="up">up</option><option value="down">down</option><option value="flat">flat</option>
                 </select>

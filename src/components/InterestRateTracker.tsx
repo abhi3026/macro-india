@@ -13,12 +13,12 @@ const fmtChange = (n: number | null | undefined) => {
   const sign = n > 0 ? "+" : "";
   return `${sign}${n.toFixed(2)}%`;
 };
-const changeColor = (n: number | null | undefined) =>
-  n === null || n === undefined || n === 0
-    ? "text-muted-foreground"
-    : n > 0
-    ? "text-green-600"
-    : "text-red-600";
+const sentimentColor = (s: string | null | undefined) =>
+  s === "positive"
+    ? "text-[hsl(var(--gain))]"
+    : s === "negative"
+    ? "text-[hsl(var(--loss))]"
+    : "text-muted-foreground";
 
 const InterestRateTracker = () => {
   const { data, isLoading } = useQuery({
@@ -67,11 +67,11 @@ const InterestRateTracker = () => {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="font-medium">{r?.interest_rate != null ? `${r.interest_rate.toFixed(2)}%` : "—"}</div>
-                      <div className={cn("text-sm", changeColor(r?.interest_rate_change))}>{fmtChange(r?.interest_rate_change)}</div>
+                      <div className={cn("text-sm", sentimentColor(r?.interest_rate_sentiment))}>{fmtChange(r?.interest_rate_change)}</div>
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="font-medium">{r?.bond_yield != null ? `${r.bond_yield.toFixed(2)}%` : "—"}</div>
-                      <div className={cn("text-sm", changeColor(r?.bond_yield_change))}>{fmtChange(r?.bond_yield_change)}</div>
+                      <div className={cn("text-sm", sentimentColor(r?.bond_yield_sentiment))}>{fmtChange(r?.bond_yield_change)}</div>
                     </TableCell>
                     <TableCell className="text-right text-sm text-muted-foreground">
                       {r?.interest_rate_updated ? new Date(r.interest_rate_updated).toLocaleDateString() : "—"}

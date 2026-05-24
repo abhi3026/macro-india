@@ -20,10 +20,11 @@ import {
   fetchIndicatorsBundle,
   computeDiff,
   formatDiff,
-  diffColorClass,
+  sentimentColorClass,
   type CountryIndicator,
   type IndicatorDef,
   type Country,
+  type Sentiment,
 } from "@/lib/countryIndicators";
 
 // Fixed columns that mirror the homepage Economic Indicators table.
@@ -38,7 +39,7 @@ const HOMEPAGE_KEYS = [
   "consumer_confidence",
 ] as const;
 
-type CellDraft = { current_value: string; previous_value: string };
+type CellDraft = { current_value: string; previous_value: string; sentiment: Sentiment };
 type RowDraftMap = Record<string, CellDraft>; // key = indicator_key
 
 export default function CountryIndicatorsCMS() {
@@ -80,6 +81,7 @@ export default function CountryIndicatorsCMS() {
       next[def.key] = {
         current_value: c?.current_value?.toString() ?? "",
         previous_value: c?.previous_value?.toString() ?? "",
+        sentiment: ((c as CountryIndicator | undefined)?.sentiment as Sentiment | undefined) ?? "neutral",
       };
     }
     setDrafts(next);
@@ -104,6 +106,7 @@ export default function CountryIndicatorsCMS() {
           indicator_key: def.key,
           current_value: d.current_value === "" ? null : Number(d.current_value),
           previous_value: d.previous_value === "" ? null : Number(d.previous_value),
+          sentiment: d.sentiment ?? "neutral",
           status: "published" as const,
           last_updated: new Date().toISOString(),
         };
@@ -249,10 +252,13 @@ function CountryRows({
   canManage: boolean;
   saving: boolean;
 }) {
-  const updateDraft = (key: string, field: keyof CellDraft, value: string) => {
+  const updateDraft = <F extends keyof CellDraft>(key: string, field: F, value: CellDraft[F]) => {
     setDrafts((d) => ({
       ...d,
-      [key]: { ...(d[key] ?? { current_value: "", previous_value: "" }), [field]: value },
+      [key]: {
+        ...(d[key] ?? { current_value: "", previous_value: "", sentiment: "neutral" as Sentiment }),
+        [field]: value,
+      },
     }));
   };
 
@@ -328,18 +334,29 @@ function CountryRows({
           return (
             <TableCell key={d.key} className="text-right">
               {editing ? (
-                <Input
-                  className="h-8 text-right text-xs"
-                  inputMode="decimal"
-                  value={drafts[d.key]?.previous_value ?? ""}
-                  onChange={(e) => updateDraft(d.key, "previous_value", e.target.value)}
-                />
+                <div className="space-y-1">
+                  <Input
+                    className="h-8 text-right text-xs"
+                    inputMode="decimal"
+                    value={drafts[d.key]?.previous_value ?? ""}
+                    onChange={(e) => updateDraft(d.key, "previous_value", e.target.value)}
+                  />
+                  <select
+                    className="h-7 text-[11px] w-full border rounded bg-background px-1"
+                    value={drafts[d.key]?.sentiment ?? "neutral"}
+                    onChange={(e) => updateDraft(d.key, "sentiment", e.target.value as Sentiment)}
+                  >
+                    <option value="positive">Positive (green)</option>
+                    <option value="negative">Negative (red)</option>
+                    <option value="neutral">Neutral</option>
+                  </select>
+                </div>
               ) : (
                 <div className="space-y-0.5">
                   <div className="text-muted-foreground tabular-nums">
                     {cell?.previous_value ?? "—"}
                   </div>
-                  <div className={cn("text-[10px] tabular-nums", diffColorClass(diff, d.higher_is_better))}>
+                  <div className={cn("text-[10px] tabular-nums", sentimentColorClass((cell?.sentiment as Sentiment | undefined) ?? "neutral"))}>
                     Δ {formatDiff(diff)}
                   </div>
                 </div>

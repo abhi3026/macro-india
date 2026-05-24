@@ -19,6 +19,8 @@ export interface IndicatorDef {
   display_order: number;
 }
 
+export type Sentiment = "positive" | "negative" | "neutral";
+
 export interface CountryIndicator {
   id: string;
   country_code: string;
@@ -30,6 +32,13 @@ export interface CountryIndicator {
   source_url: string | null;
   status: string;
   last_updated: string;
+  sentiment?: Sentiment | null;
+}
+
+export function sentimentColorClass(s: Sentiment | null | undefined): string {
+  if (s === "positive") return "text-[hsl(var(--gain))]";
+  if (s === "negative") return "text-[hsl(var(--loss))]";
+  return "text-muted-foreground";
 }
 
 export type IndicatorMatrix = Record<string, Record<string, CountryIndicator>>; // [country_code][indicator_key]

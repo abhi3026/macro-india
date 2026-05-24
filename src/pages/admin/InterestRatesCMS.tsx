@@ -17,31 +17,38 @@ import { Search, Pencil, Check, X } from "lucide-react";
 import { CountryFlag } from "@/components/ui/country-flag";
 import { fetchInterestRatesBundle, type InterestRateRow } from "@/lib/interestRates";
 
+type Sentiment = "positive" | "negative" | "neutral";
 type Draft = {
   interest_rate: string;
   interest_rate_change: string;
   interest_rate_updated: string;
+  interest_rate_sentiment: Sentiment;
   bond_yield: string;
   bond_yield_change: string;
   bond_yield_updated: string;
+  bond_yield_sentiment: Sentiment;
 };
 
 const emptyDraft = (): Draft => ({
   interest_rate: "",
   interest_rate_change: "",
   interest_rate_updated: "",
+  interest_rate_sentiment: "neutral",
   bond_yield: "",
   bond_yield_change: "",
   bond_yield_updated: "",
+  bond_yield_sentiment: "neutral",
 });
 
 const fromRow = (r?: InterestRateRow): Draft => ({
   interest_rate: r?.interest_rate?.toString() ?? "",
   interest_rate_change: r?.interest_rate_change?.toString() ?? "",
   interest_rate_updated: r?.interest_rate_updated ?? "",
+  interest_rate_sentiment: (r?.interest_rate_sentiment as Sentiment) ?? "neutral",
   bond_yield: r?.bond_yield?.toString() ?? "",
   bond_yield_change: r?.bond_yield_change?.toString() ?? "",
   bond_yield_updated: r?.bond_yield_updated ?? "",
+  bond_yield_sentiment: (r?.bond_yield_sentiment as Sentiment) ?? "neutral",
 });
 
 const toNum = (v: string): number | null => (v === "" ? null : Number(v));
@@ -86,9 +93,11 @@ export default function InterestRatesCMS() {
         interest_rate: toNum(draft.interest_rate),
         interest_rate_change: toNum(draft.interest_rate_change),
         interest_rate_updated: toDate(draft.interest_rate_updated),
+        interest_rate_sentiment: draft.interest_rate_sentiment,
         bond_yield: toNum(draft.bond_yield),
         bond_yield_change: toNum(draft.bond_yield_change),
         bond_yield_updated: toDate(draft.bond_yield_updated),
+        bond_yield_sentiment: draft.bond_yield_sentiment,
         status: "published" as const,
       };
       if (existing) {
@@ -110,7 +119,9 @@ export default function InterestRatesCMS() {
     }
   };
 
-  const upd = (k: keyof Draft, v: string) => setDraft((d) => ({ ...d, [k]: v }));
+  const upd = <K extends keyof Draft>(k: K, v: Draft[K]) => setDraft((d) => ({ ...d, [k]: v }));
+  const sentClass = (s: Sentiment) =>
+    s === "positive" ? "text-[hsl(var(--gain))]" : s === "negative" ? "text-[hsl(var(--loss))]" : "text-muted-foreground";
 
   return (
     <div className="p-6 lg:p-8">
@@ -174,9 +185,16 @@ export default function InterestRatesCMS() {
                   </TableCell>
                   <TableCell className="text-right">
                     {isEditing ? (
-                      <Input className="h-8 text-right text-xs" inputMode="decimal" value={draft.interest_rate_change} onChange={(e) => upd("interest_rate_change", e.target.value)} />
+                      <div className="space-y-1">
+                        <Input className="h-8 text-right text-xs" inputMode="decimal" value={draft.interest_rate_change} onChange={(e) => upd("interest_rate_change", e.target.value)} />
+                        <select className="h-7 text-[11px] w-full border rounded bg-background px-1" value={draft.interest_rate_sentiment} onChange={(e) => upd("interest_rate_sentiment", e.target.value as Sentiment)}>
+                          <option value="positive">Positive (green)</option>
+                          <option value="negative">Negative (red)</option>
+                          <option value="neutral">Neutral</option>
+                        </select>
+                      </div>
                     ) : (
-                      <span className="tabular-nums text-muted-foreground">{r?.interest_rate_change ?? "—"}</span>
+                      <span className={`tabular-nums ${sentClass((r?.interest_rate_sentiment as Sentiment) ?? "neutral")}`}>{r?.interest_rate_change ?? "—"}</span>
                     )}
                   </TableCell>
                   <TableCell>
@@ -195,9 +213,16 @@ export default function InterestRatesCMS() {
                   </TableCell>
                   <TableCell className="text-right">
                     {isEditing ? (
-                      <Input className="h-8 text-right text-xs" inputMode="decimal" value={draft.bond_yield_change} onChange={(e) => upd("bond_yield_change", e.target.value)} />
+                      <div className="space-y-1">
+                        <Input className="h-8 text-right text-xs" inputMode="decimal" value={draft.bond_yield_change} onChange={(e) => upd("bond_yield_change", e.target.value)} />
+                        <select className="h-7 text-[11px] w-full border rounded bg-background px-1" value={draft.bond_yield_sentiment} onChange={(e) => upd("bond_yield_sentiment", e.target.value as Sentiment)}>
+                          <option value="positive">Positive (green)</option>
+                          <option value="negative">Negative (red)</option>
+                          <option value="neutral">Neutral</option>
+                        </select>
+                      </div>
                     ) : (
-                      <span className="tabular-nums text-muted-foreground">{r?.bond_yield_change ?? "—"}</span>
+                      <span className={`tabular-nums ${sentClass((r?.bond_yield_sentiment as Sentiment) ?? "neutral")}`}>{r?.bond_yield_change ?? "—"}</span>
                     )}
                   </TableCell>
                   <TableCell>

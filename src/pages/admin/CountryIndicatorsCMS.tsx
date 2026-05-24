@@ -251,10 +251,13 @@ function CountryRows({
   canManage: boolean;
   saving: boolean;
 }) {
-  const updateDraft = (key: string, field: keyof CellDraft, value: string) => {
+  const updateDraft = <F extends keyof CellDraft>(key: string, field: F, value: CellDraft[F]) => {
     setDrafts((d) => ({
       ...d,
-      [key]: { ...(d[key] ?? { current_value: "", previous_value: "" }), [field]: value },
+      [key]: {
+        ...(d[key] ?? { current_value: "", previous_value: "", sentiment: "neutral" as Sentiment }),
+        [field]: value,
+      },
     }));
   };
 

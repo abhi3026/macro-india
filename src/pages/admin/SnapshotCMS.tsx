@@ -119,15 +119,7 @@ export default function SnapshotCMS() {
                 <span className="font-display text-xl font-semibold tabular-nums">{m.value}</span>
                 <TrendIcon trend={m.trend} />
               </div>
-              <p
-                className={`mt-0.5 text-[11px] font-medium tabular-nums ${
-                  m.trend === "up"
-                    ? "text-[hsl(var(--gain))]"
-                    : m.trend === "down"
-                    ? "text-[hsl(var(--loss))]"
-                    : "text-muted-foreground"
-                }`}
-              >
+              <p className={`mt-0.5 text-[11px] font-medium tabular-nums ${sentimentClass(m.sentiment ?? "neutral")}`}>
                 {m.delta}
               </p>
               <p className="mt-1.5 text-[11px] text-muted-foreground leading-snug">{m.context}</p>

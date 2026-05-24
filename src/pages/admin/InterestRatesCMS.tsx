@@ -213,9 +213,16 @@ export default function InterestRatesCMS() {
                   </TableCell>
                   <TableCell className="text-right">
                     {isEditing ? (
-                      <Input className="h-8 text-right text-xs" inputMode="decimal" value={draft.bond_yield_change} onChange={(e) => upd("bond_yield_change", e.target.value)} />
+                      <div className="space-y-1">
+                        <Input className="h-8 text-right text-xs" inputMode="decimal" value={draft.bond_yield_change} onChange={(e) => upd("bond_yield_change", e.target.value)} />
+                        <select className="h-7 text-[11px] w-full border rounded bg-background px-1" value={draft.bond_yield_sentiment} onChange={(e) => upd("bond_yield_sentiment", e.target.value as Sentiment)}>
+                          <option value="positive">Positive (green)</option>
+                          <option value="negative">Negative (red)</option>
+                          <option value="neutral">Neutral</option>
+                        </select>
+                      </div>
                     ) : (
-                      <span className="tabular-nums text-muted-foreground">{r?.bond_yield_change ?? "—"}</span>
+                      <span className={`tabular-nums ${sentClass((r?.bond_yield_sentiment as Sentiment) ?? "neutral")}`}>{r?.bond_yield_change ?? "—"}</span>
                     )}
                   </TableCell>
                   <TableCell>

@@ -157,6 +157,7 @@ export default function SnapshotCMS() {
                   <option value="neutral">Neutral</option>
                 </select>
               </div>
+              <div><Label>Trend (icon)</Label>
                 <select className="w-full border rounded-md h-10 px-3 bg-background" value={editing.trend ?? "flat"} onChange={(e) => setEditing({ ...editing, trend: e.target.value as Trend })}>
                   <option value="up">up</option><option value="down">down</option><option value="flat">flat</option>
                 </select>

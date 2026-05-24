@@ -53,7 +53,7 @@ export default function SnapshotCMS() {
 
   const openNew = () =>
     setEditing({
-      label: "", value: "", delta: "", trend: "flat",
+      label: "", value: "", delta: "", trend: "flat", sentiment: "neutral",
       context: "", display_order: (data?.length ?? 0) + 1, status: "published",
     });
 
@@ -66,6 +66,7 @@ export default function SnapshotCMS() {
       value: editing.value ?? "",
       delta: editing.delta ?? "",
       trend: editing.trend ?? "flat",
+      sentiment: editing.sentiment ?? "neutral",
       context: editing.context ?? "",
       display_order: editing.display_order ?? 1000,
       status: editing.status ?? "published",

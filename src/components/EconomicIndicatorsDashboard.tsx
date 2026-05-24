@@ -95,7 +95,7 @@ const EconomicIndicatorsDashboard = () => {
                           {cell ? (
                             <>
                               <div className="font-medium">{formatValue(cell.current_value, d.unit === "%" ? "%" : null)}</div>
-                              <div className={cn("text-xs", diffColorClass(diff, d.higher_is_better))}>
+                              <div className={cn("text-xs", sentimentColorClass(cell.sentiment))}>
                                 {formatDiff(diff)}
                                 {cell.period_label && (
                                   <span className="text-muted-foreground"> · {cell.period_label}</span>

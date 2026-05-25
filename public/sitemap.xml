@@ -54,5 +54,9 @@
     <loc>https://macro-india-insights.lovable.app/terms</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
+  <url>
+    <loc>https://macro-india-insights.lovable.app/search</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
   </url>
 </urlset>

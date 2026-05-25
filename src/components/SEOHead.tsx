@@ -24,6 +24,9 @@ const SEOHead = ({
 }: SEOHeadProps) => {
   const siteUrl = 'https://indianmacro.com';
   const fullCanonicalUrl = canonicalUrl ? `${siteUrl}${canonicalUrl}` : siteUrl;
+  const isAbsoluteImage = /^https?:\/\//i.test(ogImage);
+  const fullOgImage = isAbsoluteImage ? ogImage : `${siteUrl}${ogImage}`;
+  
   
   return (
     <Helmet>
@@ -38,7 +41,7 @@ const SEOHead = ({
       <meta property="og:url" content={fullCanonicalUrl} />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
-      <meta property="og:image" content={`${siteUrl}${ogImage}`} />
+      <meta property="og:image" content={fullOgImage} />
       <meta property="og:site_name" content="IndianMacro" />
       
       {/* Twitter */}
@@ -46,7 +49,7 @@ const SEOHead = ({
       <meta name="twitter:site" content="@indianmacro" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content={`${siteUrl}${ogImage}`} />
+      <meta name="twitter:image" content={fullOgImage} />
     </Helmet>
   );
 };

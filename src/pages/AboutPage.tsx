@@ -20,7 +20,7 @@ const AboutPage = () => {
     <div className="min-h-screen flex flex-col">
       <SEOHead 
         title="About IndianMacro | Our Mission & Team"
-        description="IndianMacro provides data-driven, independent macroeconomic research on India. Learn about our mission to make financial insights accessible to investors and professionals."
+        description="IndianMacro delivers independent, data-driven macroeconomic research on India for investors, professionals and curious readers."
         canonicalUrl="/about"
         keywords="about IndianMacro, Indian economy research team, macroeconomic data platform India"
       />

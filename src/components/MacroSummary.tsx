@@ -2,6 +2,7 @@ import { ArrowUpRight, ArrowDownRight, Minus } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { cn } from "@/lib/utils";
 
 type Trend = "up" | "down" | "flat";
 type Sentiment = "positive" | "negative" | "neutral";
@@ -28,10 +29,16 @@ const FALLBACK: Metric[] = [
 const sentimentClass = (s: Sentiment | null | undefined) =>
   s === "positive" ? "text-[hsl(var(--gain))]" : s === "negative" ? "text-[hsl(var(--loss))]" : "text-muted-foreground";
 
-const TrendIcon = ({ trend }: { trend: Trend }) => {
-  if (trend === "up") return <ArrowUpRight className="h-3.5 w-3.5 text-[hsl(var(--gain))]" />;
-  if (trend === "down") return <ArrowDownRight className="h-3.5 w-3.5 text-[hsl(var(--loss))]" />;
-  return <Minus className="h-3.5 w-3.5 text-muted-foreground" />;
+const TrendIcon = ({ trend, sentiment }: { trend: Trend; sentiment?: Sentiment | null }) => {
+  const color =
+    sentiment === "positive"
+      ? "text-[hsl(var(--gain))]"
+      : sentiment === "negative"
+      ? "text-[hsl(var(--loss))]"
+      : "text-muted-foreground";
+  if (trend === "up") return <ArrowUpRight className={cn("h-3.5 w-3.5", color)} />;
+  if (trend === "down") return <ArrowDownRight className={cn("h-3.5 w-3.5", color)} />;
+  return <Minus className={cn("h-3.5 w-3.5", color)} />;
 };
 
 const MacroSummary = () => {
@@ -84,7 +91,7 @@ const MacroSummary = () => {
               </p>
               <div className="mt-1.5 flex items-baseline gap-1.5">
                 <span className="font-display text-xl font-semibold tabular-nums">{m.value}</span>
-                <TrendIcon trend={m.trend} />
+                <TrendIcon trend={m.trend} sentiment={m.sentiment} />
               </div>
               <p
                 className={`mt-0.5 text-[11px] font-medium tabular-nums ${sentimentClass(m.sentiment)}`}

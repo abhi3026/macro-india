@@ -10,6 +10,7 @@ import Footer from '@/components/Footer';
 import { fetchResearchPosts, ResearchPost } from '@/utils/contentLoader';
 import { updateMetaTags } from '@/utils/metaTags';
 import SEOHead from '@/components/SEOHead';
+import StructuredData from '@/components/StructuredData';
 import { format } from 'date-fns';
 
 // Will be used for rendering markdown content
@@ -104,8 +105,17 @@ const ResearchPostPage = () => {
         ogImage={post.image}
         ogType="article"
       />
+      <StructuredData
+        type="Article"
+        headline={post.title}
+        description={post.description}
+        url={`/research/${post.slug}`}
+        datePublished={post.date}
+        imageUrl={post.image}
+      />
       
       <Navbar />
+      
       
       <div className="flex-grow pt-8 pb-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">

@@ -12,6 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { fetchMarketPost } from "@/utils/contentLoader";
 import { updateMetaTags } from "@/utils/metaTags";
 import SEOHead from "@/components/SEOHead";
+import StructuredData from "@/components/StructuredData";
 
 const EducationalPostPage = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -93,6 +94,15 @@ const EducationalPostPage = () => {
         ogImage={post.image || "/og-image.jpg"}
         ogType="article"
       />
+      <StructuredData
+        type="Article"
+        headline={post.title}
+        description={post.summary || "Learn about financial concepts and economic principles with IndianMacro's educational resources."}
+        url={`/education/${slug}`}
+        datePublished={post.date}
+        imageUrl={post.image}
+      />
+      
       
       <Navbar />
       

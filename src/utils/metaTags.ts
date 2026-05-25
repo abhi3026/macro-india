@@ -21,69 +21,21 @@ const defaultConfig: MetaTagsConfig = {
 };
 
 /**
- * Updates the document's meta tags for SEO
+ * Updates the document's meta tags for SEO.
+ *
+ * NOTE: Per-route meta tags are now managed by <SEOHead /> via react-helmet-async,
+ * which is the single source of truth for <title>, description, canonical and og:*.
+ * This helper is kept as a no-op shim so legacy callers don't break and so we
+ * don't duplicate / conflict with Helmet-managed head tags.
  */
 export const updateMetaTags = (
-  title: string,
-  description: string,
-  path: string,
-  imageUrl?: string,
-  type: 'website' | 'article' = 'website'
+  _title: string,
+  _description: string,
+  _path: string,
+  _imageUrl?: string,
+  _type: 'website' | 'article' = 'website'
 ): void => {
-  const config: MetaTagsConfig = {
-    title: title || defaultConfig.title,
-    description: description || defaultConfig.description,
-    url: `${defaultConfig.url}${path}`,
-    imageUrl: imageUrl || defaultConfig.imageUrl,
-    type: type || defaultConfig.type
-  };
-
-  // Basic meta tags
-  document.title = config.title;
-  
-  // Find and update meta description, or create if it doesn't exist
-  let metaDescription = document.querySelector('meta[name="description"]');
-  if (metaDescription) {
-    metaDescription.setAttribute('content', config.description);
-  } else {
-    metaDescription = document.createElement('meta');
-    metaDescription.setAttribute('name', 'description');
-    metaDescription.setAttribute('content', config.description);
-    document.head.appendChild(metaDescription);
-  }
-
-  // Update OG tags
-  updateOrCreateMeta('property', 'og:title', config.title);
-  updateOrCreateMeta('property', 'og:description', config.description);
-  updateOrCreateMeta('property', 'og:url', config.url);
-  updateOrCreateMeta('property', 'og:image', config.imageUrl);
-  updateOrCreateMeta('property', 'og:type', config.type);
-  
-  // Update Twitter tags
-  updateOrCreateMeta('name', 'twitter:card', 'summary_large_image');
-  updateOrCreateMeta('name', 'twitter:title', config.title);
-  updateOrCreateMeta('name', 'twitter:description', config.description);
-  updateOrCreateMeta('name', 'twitter:image', config.imageUrl);
-};
-
-/**
- * Helper function to update or create meta tags
- */
-const updateOrCreateMeta = (
-  attributeName: string, 
-  attributeValue: string, 
-  content: string
-): void => {
-  let meta = document.querySelector(`meta[${attributeName}="${attributeValue}"]`);
-  
-  if (meta) {
-    meta.setAttribute('content', content);
-  } else {
-    meta = document.createElement('meta');
-    meta.setAttribute(attributeName, attributeValue);
-    meta.setAttribute('content', content);
-    document.head.appendChild(meta);
-  }
+  // Intentionally empty — see note above.
 };
 
 /**

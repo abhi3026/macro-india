@@ -30,6 +30,7 @@ import CountryIndicatorsCMS from "@/pages/admin/CountryIndicatorsCMS";
 import InterestRatesCMS from "@/pages/admin/InterestRatesCMS";
 import WeeklyReadCMS from "@/pages/admin/WeeklyReadCMS";
 import UsersCMS from "@/pages/admin/UsersCMS";
+import AIAgentCMS from "@/pages/admin/AIAgentCMS";
 
 const queryClient = new QueryClient();
 
@@ -59,6 +60,7 @@ function AppContent() {
                 <Route path="/auth" element={<AuthPage />} />
                 <Route path="/admin" element={<ProtectedAdminRoute><AdminLayout /></ProtectedAdminRoute>}>
                   <Route index element={<AdminDashboard />} />
+                  <Route path="ai-agent" element={<AIAgentCMS />} />
                   <Route path="education" element={<EducationCMS />} />
                   <Route path="research" element={<ResearchAdminCMS />} />
                   <Route path="snapshot" element={<SnapshotCMS />} />

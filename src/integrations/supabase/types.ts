@@ -14,6 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_agent_runs: {
+        Row: {
+          details: Json
+          drafts_created: number
+          error: string | null
+          finished_at: string | null
+          id: string
+          model: string | null
+          started_at: string
+          status: string
+          topics_planned: number
+          trigger: string
+        }
+        Insert: {
+          details?: Json
+          drafts_created?: number
+          error?: string | null
+          finished_at?: string | null
+          id?: string
+          model?: string | null
+          started_at?: string
+          status?: string
+          topics_planned?: number
+          trigger?: string
+        }
+        Update: {
+          details?: Json
+          drafts_created?: number
+          error?: string | null
+          finished_at?: string | null
+          id?: string
+          model?: string | null
+          started_at?: string
+          status?: string
+          topics_planned?: number
+          trigger?: string
+        }
+        Relationships: []
+      }
       countries: {
         Row: {
           code: string

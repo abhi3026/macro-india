@@ -1,11 +1,12 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { LayoutDashboard, GraduationCap, FileText, Gauge, Globe2, Percent, Newspaper, Users, LogOut, Lock } from "lucide-react";
+import { LayoutDashboard, GraduationCap, FileText, Gauge, Globe2, Percent, Newspaper, Users, LogOut, Lock, Bot } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const items = [
   { to: "/admin", end: true, icon: LayoutDashboard, label: "Dashboard" },
+  { to: "/admin/ai-agent", icon: Bot, label: "AI Agent" },
   { to: "/admin/education", icon: GraduationCap, label: "Educational" },
   { to: "/admin/research", icon: FileText, label: "Research" },
   { to: "/admin/snapshot", icon: Gauge, label: "India at a glance" },

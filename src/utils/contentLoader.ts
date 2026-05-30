@@ -31,6 +31,12 @@ export interface MarketPost {
   image?: string;
   imageCaption?: string;
   featured?: boolean;
+  seoTitle?: string;
+  seoDescription?: string;
+  ogImage?: string;
+  canonicalUrl?: string;
+  publishedAt?: string;
+  updatedAt?: string;
 }
 
 export interface NewsletterPost {

@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
-import { Sparkles, Loader2, Bot } from "lucide-react";
+import { Sparkles, Loader2, Bot, BookOpen } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export default function AIAgentCMS() {

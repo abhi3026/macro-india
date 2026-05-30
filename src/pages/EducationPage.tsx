@@ -199,7 +199,7 @@ const EducationPage = () => {
                 {filteredPosts
                   .filter(post => !post.featured)
                   .map((post) => (
-                    <Link key={post.id} to={`/education/${post.slug}`}>
+                    <Link key={post.id} to={educationalPostPath(post.category, post.slug)}>
                       <BlogPostCard key={post.id} post={post} />
                     </Link>
                   ))}

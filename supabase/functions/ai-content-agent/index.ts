@@ -192,7 +192,7 @@ Return JSON: { "topics": [ { "table": "...", "category": "...", "title": "...", 
     // 4. Writer — generate each article and insert as draft
     const writerSystem = isSeed ? LONGFORM_WRITER_SYSTEM : SHORTFORM_WRITER_SYSTEM;
 
-    for (const topic of plan.topics) {
+    for (const topic of topics) {
       try {
         const article = await generateJSON({
           system: writerSystem,

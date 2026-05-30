@@ -1,89 +1,89 @@
-# AI Content Agent — Plan
+# Educational hub restructure + foundational content
 
-An autonomous agent that runs daily, picks topics on its own, and saves 5 SEO-ready drafts distributed across **Educational Posts**, **Research Articles**, and **Weekly Reads**. Every generation lands as a `draft` — nothing publishes automatically. Editors review and approve through existing CMS screens.
+## 1. URL structure (both routes work)
 
-## Scope
+- New canonical: `/education/:category/:slug` (e.g. `/education/macroeconomics/gdp`)
+- New index: `/education/:category` (e.g. `/education/macroeconomics`)
+- Old `/education/:slug` keeps working — when hit, looks up post and renders the same page. Canonical tag points to the new category URL so SEO consolidates there.
+- Research stays flat: `/research/:slug` (unchanged).
+- Category slug derived from `category` field, lowercased + hyphenated (e.g. "Monetary Policy" → `monetary-policy`).
+- Sitemap updated to emit new category URLs + new post URLs.
 
-- Topics: Indian + global financial markets, investments, mutual funds, macroeconomics, personal finance, banking, taxation, regulatory updates.
-- Tone: SEO-optimized, educational, neutral, beginner-to-intermediate friendly, India-context aware.
-- Output per draft: title, slug, category, excerpt, full markdown body (~800–1200 words), SEO title, meta description.
-- No cover images (image field left empty for editor to add).
+## 2. Educational post page (long-form template)
 
-## How it works
+Upgrade `EducationalPostPage` to a structured learning template. When a post body uses the standard H2 sections below, they render with anchored TOC, breadcrumbs, and FAQ schema. Sections we standardize on:
 
-```text
-[pg_cron daily 02:30 IST]
-        │
-        ▼
-[Edge Function: ai-content-agent]
-   1. Fetch last 60 days of titles/slugs (edu + research + weekly) → dedupe list
-   2. Ask AI to pick 5 fresh topics across domains, distributed across 3 tables
-   3. For each topic → generate structured SEO content (AI SDK + Output schema)
-   4. Insert as draft into the correct table
-   5. Log run summary into ai_agent_runs
-```
+- What it is (definition)
+- How it is calculated (formula / methodology)
+- Why it matters for investors
+- India context
+- Common misconceptions
+- Key takeaways
+- FAQs
 
-## Backend changes
+Page adds:
+- Breadcrumb: Home › Education › {Category} › {Title} (with `BreadcrumbList` JSON-LD)
+- Sticky in-page TOC (desktop)
+- `Article` + `FAQPage` JSON-LD (FAQ extracted from H2 "FAQs" section)
+- Related posts in same category at the bottom
 
-**New table: `ai_agent_runs`**
-- Tracks each scheduled run: started_at, finished_at, status, drafts_created, errors, model used.
-- RLS: managers read; service role writes.
+## 3. Per-post SEO
 
-**New edge function: `ai-content-agent`** (`verify_jwt = false`, invoked by cron + manual CMS button)
-- Uses Lovable AI Gateway via the standard `createLovableAiGatewayProvider` helper.
-- Model: `google/gemini-3-flash-preview`.
-- Two-step pipeline:
-  1. **Topic planner** — `generateText` with `Output.object` returning `{ topics: [{ table, category, title, angle }] x5 }`. Prompt includes the recent-titles list so the model avoids overlap.
-  2. **Writer** — for each topic, `generateText` with `Output.object` returning `{ title, slug, category, excerpt, body_markdown, seo_title, seo_description }`. Slug auto-fallback to slugified title.
-- Inserts:
-  - `educational_posts` → status `draft`, author_id null.
-  - `research_articles` → status `draft`, publish_date null, tags/references arrays empty.
-  - `weekly_reads` → status `draft`, section = "Insights" (or matching enum), heading + body.
+Each post already has `seo_title`, `seo_description`, `og_image`, `canonical_url` columns. Wire them through:
+- `SEOHead` fed from those fields (fallback to title/excerpt).
+- Canonical = `/education/:category/:slug` (new URL) regardless of which route the user landed on.
+- Open Graph `article:section` = category, `article:published_time` from `published_at`.
 
-**Cron schedule** (via `pg_cron` + `pg_net`, inserted with insert tool, not migration, since it carries the project URL/anon key):
-- Daily at 02:30 IST (21:00 UTC).
-- Calls the edge function with `{ trigger: "cron" }`.
+## 4. Category index page (`/education/:category`)
 
-## CMS changes
+- Auto-lists all published posts in that category.
+- Each category has an editable intro (title override + markdown blurb) stored in a new `education_categories` table. If no row exists, page renders with sensible defaults.
+- New CMS screen `/admin/education-categories` to edit intros + display order.
+- Hero, search-within-category, card grid using existing `BlogPostCard`.
 
-**New page: `/admin/ai-agent`** (`src/pages/admin/AIAgentCMS.tsx`)
-- "Run now" button → invokes the edge function manually (still saves drafts only).
-- Shows last 20 runs from `ai_agent_runs` with status, count, timestamp, errors.
-- Quick links to draft-filtered views of each target CMS.
-- Nav entry added to `AdminLayout`.
+## 5. Card design on `/education`
 
-No changes to existing CMS list screens — generated drafts simply appear in the existing Education / Research / Weekly Reads tables with status `draft`, where editors approve/publish exactly as today.
+Keep the existing grid but:
+- Group by category with section headers linking to `/education/:category`
+- Each card shows category badge, reading time, excerpt — clicks go to new URL.
 
-## SEO quality controls (built into the writer prompt)
+## 6. Seed foundational drafts (~12 topics)
 
-- Single H1 = title; clear H2/H3 structure.
-- 50–60 char SEO title, 140–155 char meta description.
-- Keyword-rich but natural; India context where relevant.
-- Includes a short intro, structured sections, key takeaways, and an FAQ block (3 Q&As) for rich-result eligibility.
-- Excerpt 140–180 chars used as card preview.
+Trigger the AI agent with a curated topic list instead of autonomous selection. One-time CMS button on `/admin/ai-agent` → "Seed foundational basics". Topics:
 
-## Safety & cost
+Macroeconomics: GDP, CPI Inflation, WPI Inflation, Repo Rate, Fiscal Deficit, Current Account Deficit
+Markets: P/E Ratio, Bond Yields, Nifty 50, Index Funds
+Personal finance/MF: Mutual Funds (basics), SIP, NAV, ELSS
 
-- All output goes to `draft` — editor approval gates everything.
-- Duplicate guard: agent receives last 60 days of titles/slugs and is instructed to skip overlapping topics.
-- Rate-limit & credit errors (`429`, `402`) surfaced into `ai_agent_runs.errors`.
-- Volume cap: 5 drafts/day, ~10–15 model calls — modest cost.
+Each generated as a long-form (1200–1800 word) educational draft using the standardized section template above. Saved as `draft` in `educational_posts`. Editor reviews and publishes.
 
-## Files
+## 7. Files
 
 **New**
-- `supabase/migrations/<ts>_ai_agent_runs.sql` — `ai_agent_runs` table + GRANTs + RLS.
-- `supabase/functions/ai-content-agent/index.ts` — agent logic.
-- `supabase/functions/_shared/ai-gateway.ts` — Lovable AI Gateway provider helper (if not present).
-- `src/pages/admin/AIAgentCMS.tsx` — admin UI.
+- `src/pages/EducationCategoryPage.tsx` — category index
+- `src/pages/admin/EducationCategoriesCMS.tsx` — edit intros
+- Migration: `education_categories` table (slug PK, title, intro_markdown, display_order)
 
 **Edited**
-- `src/pages/admin/AdminLayout.tsx` — add "AI Agent" nav link.
-- `src/App.tsx` — register `/admin/ai-agent` route.
+- `src/App.tsx` — add `/education/:category` and `/education/:category/:slug` routes
+- `src/pages/EducationalPostPage.tsx` — long-form template, breadcrumbs, TOC, FAQ schema, SEO from CMS fields, canonical → new URL
+- `src/pages/EducationPage.tsx` — group by category, link to new URLs
+- `src/components/BlogPostCard.tsx` — minor: category-aware link if needed
+- `src/utils/contentLoader.ts` — return seo fields + category slug helper
+- `src/pages/admin/AdminLayout.tsx` — nav entry for category CMS
+- `src/pages/admin/AIAgentCMS.tsx` — "Seed foundational basics" button
+- `supabase/functions/ai-content-agent/index.ts` — accept `{ trigger: "seed_basics", topics: [...] }` and use the long-form prompt template
+- `public/sitemap.xml` — note: dynamic posts not listed yet; add static category URLs
 
-## Out of scope (for this build)
+**Out of scope**
+- Auto-generating sitemap from DB (separate task)
+- Migrating research to category URLs (user opted out)
+- Cover images for seeded drafts (user opted out earlier)
 
-- Cover image generation.
-- Auto-publish flows.
-- Chat-style interaction with the agent.
-- Editing the existing Education/Research/Weekly CMS list views.
+## Order of execution
+
+1. Migration: `education_categories` table
+2. Routes + EducationCategoryPage + updated EducationalPostPage
+3. Category CMS page + nav entry
+4. AI agent: seed-basics mode + button on agent CMS
+5. Trigger seed run (user clicks; produces 12 drafts in review queue)

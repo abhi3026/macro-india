@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { fetchMarketPosts, MarketPost } from "@/utils/contentLoader";
+import { educationalPostPath, educationCategoryPath, categoryToSlug } from "@/utils/categorySlug";
 import { updateMetaTags } from "@/utils/metaTags";
 import SEOHead from "@/components/SEOHead";
 import PageHero from "@/components/ui/page-hero";
@@ -198,7 +199,7 @@ const EducationPage = () => {
                 {filteredPosts
                   .filter(post => !post.featured)
                   .map((post) => (
-                    <Link key={post.id} to={`/education/${post.slug}`}>
+                    <Link key={post.id} to={educationalPostPath(post.category, post.slug)}>
                       <BlogPostCard key={post.id} post={post} />
                     </Link>
                   ))}

@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
-import { Sparkles, Loader2, Bot } from "lucide-react";
+import { Sparkles, Loader2, Bot, BookOpen } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export default function AIAgentCMS() {
@@ -25,15 +25,15 @@ export default function AIAgentCMS() {
     refetchInterval: running ? 3000 : false,
   });
 
-  const runNow = async () => {
+  const invokeAgent = async (trigger: "manual" | "seed_basics", label: string) => {
     setRunning(true);
-    toast.info("AI agent started — this can take 1-2 minutes…");
+    toast.info(`${label} started — this can take 2–5 minutes…`);
     try {
-      const { data, error } = await supabase.functions.invoke("ai-content-agent", {
-        body: { trigger: "manual" },
-      });
+      const { data, error } = await supabase.functions.invoke("ai-content-agent", { body: { trigger } });
       if (error) throw error;
-      toast.success(`Created ${data?.draftsCreated ?? 0} drafts`);
+      const created = data?.draftsCreated ?? 0;
+      if (created === 0 && data?.note) toast.info(data.note);
+      else toast.success(`Created ${created} drafts`);
     } catch (e: any) {
       toast.error(e?.message ?? "Run failed");
     } finally {
@@ -56,10 +56,16 @@ export default function AIAgentCMS() {
             review and publish from the usual CMS sections.
           </p>
         </div>
-        <Button onClick={runNow} disabled={running} size="lg">
-          {running ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
-          {running ? "Generating…" : "Run now"}
-        </Button>
+        <div className="flex flex-col gap-2">
+          <Button onClick={() => invokeAgent("manual", "Daily run")} disabled={running} size="lg">
+            {running ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+            {running ? "Generating…" : "Run now"}
+          </Button>
+          <Button onClick={() => invokeAgent("seed_basics", "Foundational seed run")} disabled={running} size="lg" variant="outline">
+            <BookOpen className="h-4 w-4" />
+            Seed foundational basics
+          </Button>
+        </div>
       </header>
 
       <div className="grid grid-cols-3 gap-3 mb-6">

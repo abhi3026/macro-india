@@ -12,7 +12,10 @@ import HomePage from "@/pages/HomePage";
 import AboutPage from "@/pages/AboutPage";
 import DataDashboardPage from "@/pages/DataDashboardPage";
 import EducationPage from "@/pages/EducationPage";
+import EducationCategoryPage from "@/pages/EducationCategoryPage";
+import EducationalPostPage from "@/pages/EducationalPostPage";
 import ResearchPage from "@/pages/ResearchPage";
+import ResearchPostPage from "@/pages/ResearchPostPage";
 import NewsPage from "@/pages/NewsPage";
 import ContactPage from "@/pages/ContactPage";
 import PrivacyPage from "@/pages/PrivacyPage";
@@ -24,6 +27,7 @@ import AuthPage from "@/pages/AuthPage";
 import AdminLayout from "@/pages/admin/AdminLayout";
 import AdminDashboard from "@/pages/admin/AdminDashboard";
 import EducationCMS from "@/pages/admin/EducationCMS";
+import EducationCategoriesCMS from "@/pages/admin/EducationCategoriesCMS";
 import ResearchAdminCMS from "@/pages/admin/ResearchAdminCMS";
 import SnapshotCMS from "@/pages/admin/SnapshotCMS";
 import CountryIndicatorsCMS from "@/pages/admin/CountryIndicatorsCMS";
@@ -51,7 +55,10 @@ function AppContent() {
                 <Route path="/data-dashboard/economic-indicators" element={<EconomicIndicatorsPage />} />
                 <Route path="/data-dashboard/interest-rates-bonds" element={<InterestRatesPage />} />
                 <Route path="/education" element={<EducationPage />} />
+                <Route path="/education/:category" element={<EducationCategoryPage />} />
+                <Route path="/education/:category/:slug" element={<EducationalPostPage />} />
                 <Route path="/research" element={<ResearchPage />} />
+                <Route path="/research/:slug" element={<ResearchPostPage />} />
                 <Route path="/news" element={<NewsPage />} />
                 <Route path="/contact" element={<ContactPage />} />
                 <Route path="/privacy" element={<PrivacyPage />} />
@@ -62,6 +69,7 @@ function AppContent() {
                   <Route index element={<AdminDashboard />} />
                   <Route path="ai-agent" element={<AIAgentCMS />} />
                   <Route path="education" element={<EducationCMS />} />
+                  <Route path="education-categories" element={<EducationCategoriesCMS />} />
                   <Route path="research" element={<ResearchAdminCMS />} />
                   <Route path="snapshot" element={<SnapshotCMS />} />
                   <Route path="country-indicators" element={<CountryIndicatorsCMS />} />

@@ -31,6 +31,12 @@ export interface MarketPost {
   image?: string;
   imageCaption?: string;
   featured?: boolean;
+  seoTitle?: string;
+  seoDescription?: string;
+  ogImage?: string;
+  canonicalUrl?: string;
+  publishedAt?: string;
+  updatedAt?: string;
 }
 
 export interface NewsletterPost {
@@ -99,14 +105,50 @@ export async function fetchMarketPost(slug: string): Promise<MarketPost | null> 
     .eq("status", "published")
     .maybeSingle();
   if (error || !data) return null;
+  const d: any = data;
   return {
-    id: (data as any).id,
-    title: (data as any).title,
-    slug: (data as any).slug,
-    content: (data as any).body ?? "",
-    summary: (data as any).excerpt ?? "",
-    date: (data as any).published_at ?? (data as any).created_at,
-    category: (data as any).category ?? undefined,
-    image: (data as any).image ?? undefined,
+    id: d.id,
+    title: d.title,
+    slug: d.slug,
+    content: d.body ?? "",
+    summary: d.excerpt ?? "",
+    date: d.published_at ?? d.created_at,
+    category: d.category ?? undefined,
+    image: d.image ?? undefined,
+    seoTitle: d.seo_title ?? undefined,
+    seoDescription: d.seo_description ?? undefined,
+    ogImage: d.og_image ?? undefined,
+    canonicalUrl: d.canonical_url ?? undefined,
+    publishedAt: d.published_at ?? undefined,
+    updatedAt: d.updated_at ?? undefined,
   };
 }
+
+export interface EducationCategory {
+  slug: string;
+  title: string;
+  intro_markdown: string;
+  display_order: number;
+  seo_title?: string | null;
+  seo_description?: string | null;
+}
+
+export async function fetchEducationCategories(): Promise<EducationCategory[]> {
+  const { data, error } = await supabase
+    .from("education_categories")
+    .select("*")
+    .order("display_order", { ascending: true });
+  if (error || !data) return [];
+  return data as any;
+}
+
+export async function fetchEducationCategory(slug: string): Promise<EducationCategory | null> {
+  const { data, error } = await supabase
+    .from("education_categories")
+    .select("*")
+    .eq("slug", slug)
+    .maybeSingle();
+  if (error || !data) return null;
+  return data as any;
+}
+

@@ -31,6 +31,46 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://macro-india-insights.lovable.app/education/macroeconomics</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://macro-india-insights.lovable.app/education/financial-markets</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://macro-india-insights.lovable.app/education/indian-economy</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://macro-india-insights.lovable.app/education/monetary-policy</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://macro-india-insights.lovable.app/education/fiscal-policy</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://macro-india-insights.lovable.app/education/global-trade</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://macro-india-insights.lovable.app/education/development-economics</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://macro-india-insights.lovable.app/education/investing-basics</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://macro-india-insights.lovable.app/news</loc>
     <changefreq>hourly</changefreq>
     <priority>0.8</priority>
@@ -54,6 +94,7 @@
     <loc>https://macro-india-insights.lovable.app/terms</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
+  </url>
   <url>
     <loc>https://macro-india-insights.lovable.app/search</loc>
     <changefreq>monthly</changefreq>

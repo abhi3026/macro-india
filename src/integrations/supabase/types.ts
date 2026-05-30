@@ -200,6 +200,39 @@ export type Database = {
         }
         Relationships: []
       }
+      education_categories: {
+        Row: {
+          created_at: string
+          display_order: number
+          intro_markdown: string
+          seo_description: string | null
+          seo_title: string | null
+          slug: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          intro_markdown?: string
+          seo_description?: string | null
+          seo_title?: string | null
+          slug: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          intro_markdown?: string
+          seo_description?: string | null
+          seo_title?: string | null
+          slug?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       educational_posts: {
         Row: {
           author_id: string | null

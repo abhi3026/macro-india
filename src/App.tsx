@@ -55,7 +55,10 @@ function AppContent() {
                 <Route path="/data-dashboard/economic-indicators" element={<EconomicIndicatorsPage />} />
                 <Route path="/data-dashboard/interest-rates-bonds" element={<InterestRatesPage />} />
                 <Route path="/education" element={<EducationPage />} />
+                <Route path="/education/:category" element={<EducationCategoryPage />} />
+                <Route path="/education/:category/:slug" element={<EducationalPostPage />} />
                 <Route path="/research" element={<ResearchPage />} />
+                <Route path="/research/:slug" element={<ResearchPostPage />} />
                 <Route path="/news" element={<NewsPage />} />
                 <Route path="/contact" element={<ContactPage />} />
                 <Route path="/privacy" element={<PrivacyPage />} />

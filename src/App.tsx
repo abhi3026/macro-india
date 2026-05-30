@@ -69,6 +69,7 @@ function AppContent() {
                   <Route index element={<AdminDashboard />} />
                   <Route path="ai-agent" element={<AIAgentCMS />} />
                   <Route path="education" element={<EducationCMS />} />
+                  <Route path="education-categories" element={<EducationCategoriesCMS />} />
                   <Route path="research" element={<ResearchAdminCMS />} />
                   <Route path="snapshot" element={<SnapshotCMS />} />
                   <Route path="country-indicators" element={<CountryIndicatorsCMS />} />

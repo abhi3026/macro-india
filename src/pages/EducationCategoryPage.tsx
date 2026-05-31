@@ -10,8 +10,8 @@ import StructuredData from "@/components/StructuredData";
 import PageHero from "@/components/ui/page-hero";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
-import { fetchEducationCategory, fetchMarketPosts } from "@/utils/contentLoader";
 import { categoryToSlug, educationalPostPath } from "@/utils/categorySlug";
+import { postImage } from "@/utils/postImage";
 
 const EducationCategoryPage = () => {
   const { category: categorySlug = "" } = useParams<{ category: string }>();
@@ -79,7 +79,7 @@ const EducationCategoryPage = () => {
             <p>No published articles in this category yet. Check back soon.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
             {filtered.map((post) => {
               const blogPost = {
                 id: post.id,
@@ -89,12 +89,12 @@ const EducationCategoryPage = () => {
                   year: "numeric", month: "long", day: "numeric",
                 }),
                 readTime: `${Math.max(3, Math.ceil((post.content?.split(/\s+/).length ?? 200) / 200))} min read`,
-                author: { name: "IndianMacro Team" },
+                author: { name: post.authorName || "Abhishek Gourav" },
                 category: post.category ?? title,
-                imageUrl: post.image,
+                imageUrl: postImage(post.image, post.slug || post.id),
               };
               return (
-                <Link key={post.id} to={educationalPostPath(post.category, post.slug)}>
+                <Link key={post.id} to={educationalPostPath(post.category, post.slug)} className="h-full block">
                   <BlogPostCard post={blogPost} />
                 </Link>
               );

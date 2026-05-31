@@ -74,7 +74,7 @@ export default function ResearchCMS() {
     qc.invalidateQueries({ queryKey: ["research-list"] });
   };
 
-  const openNew = () => { setEditing({ title: "", slug: "", category: "", excerpt: "", body: "", featured_image: "", tags: [], references_list: [], publish_date: "", status: "draft", featured: false, seo_title: "", seo_description: "", og_image: "", canonical_url: "" }); setOpen(true); };
+  const openNew = () => { setEditing({ title: "", slug: "", category: "", excerpt: "", body: "", featured_image: "", tags: [], references_list: [], publish_date: "", status: "draft", featured: false, show_on_homepage: false, author_name: "Abhishek Gourav", seo_title: "", seo_description: "", og_image: "", canonical_url: "" }); setOpen(true); };
   const openEdit = (r: Row) => { setEditing(r); setOpen(true); };
 
   const save = async () => {
@@ -93,6 +93,8 @@ export default function ResearchCMS() {
       publish_date: editing.publish_date || null,
       status: editing.status,
       featured: !!editing.featured,
+      show_on_homepage: !!editing.show_on_homepage,
+      author_name: editing.author_name?.trim() || "Abhishek Gourav",
       seo_title: editing.seo_title || null,
       seo_description: editing.seo_description || null,
       og_image: editing.og_image || null,
@@ -206,9 +208,11 @@ export default function ResearchCMS() {
                   <div><Label>Category</Label><Input value={editing.category ?? ""} onChange={(e) => setEditing({ ...editing, category: e.target.value })} /></div>
                   <div><Label>Publish date</Label><Input type="date" value={editing.publish_date ?? ""} onChange={(e) => setEditing({ ...editing, publish_date: e.target.value })} /></div>
                 </div>
+                <div><Label>Author name</Label><Input value={editing.author_name ?? ""} onChange={(e) => setEditing({ ...editing, author_name: e.target.value })} placeholder="Abhishek Gourav" /></div>
                 <div><Label>Tags (comma separated)</Label><Input value={Array.isArray(editing.tags) ? editing.tags.join(", ") : editing.tags ?? ""} onChange={(e) => setEditing({ ...editing, tags: e.target.value })} /></div>
                 <div><Label>References (one per line)</Label><Textarea rows={4} value={Array.isArray(editing.references_list) ? editing.references_list.join("\n") : editing.references_list ?? ""} onChange={(e) => setEditing({ ...editing, references_list: e.target.value })} /></div>
-                <div className="flex items-center gap-3"><Switch checked={!!editing.featured} onCheckedChange={(v) => setEditing({ ...editing, featured: v })} /><Label className="!mt-0">Featured on homepage</Label></div>
+                <div className="flex items-center gap-3"><Switch checked={!!editing.featured} onCheckedChange={(v) => setEditing({ ...editing, featured: v })} /><Label className="!mt-0">Featured (editor's pick on Research page)</Label></div>
+                <div className="flex items-center gap-3"><Switch checked={!!editing.show_on_homepage} onCheckedChange={(v) => setEditing({ ...editing, show_on_homepage: v })} /><Label className="!mt-0">Show on homepage</Label></div>
                 <div><Label>Status</Label>
                   <select className="w-full border rounded-md h-10 px-3 bg-background" value={editing.status} onChange={(e) => setEditing({ ...editing, status: e.target.value })}>
                     {["draft", "pending", "approved", "published", "declined"].map(s => <option key={s} value={s}>{s}</option>)}

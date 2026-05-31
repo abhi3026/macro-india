@@ -12,8 +12,10 @@ const FALLBACK = [
 const FeaturedResearch = ({ vertical = false }: { vertical?: boolean }) => {
   const { data } = useQuery({ queryKey: ["public-research"], queryFn: fetchResearchPosts });
 
-  const items = (data && data.length > 0)
-    ? data.slice(0, 3).map((p) => ({
+  // Prefer items explicitly toggled "show on homepage"; fall back to most recent published.
+  const ranked = (data ?? []).slice().sort((a, b) => Number(!!b.showOnHomepage) - Number(!!a.showOnHomepage));
+  const items = ranked.length > 0
+    ? ranked.slice(0, 3).map((p) => ({
         tag: p.category,
         title: p.title,
         desc: p.description,

@@ -149,8 +149,20 @@ export default function WeeklyReadCMS() {
                   {SECTIONS.map(s => <option key={s} value={s}>{s}</option>)}
                 </select>
               </div>
-              <div><Label>Heading</Label><Input value={editing.heading} onChange={(e) => setEditing({ ...editing, heading: e.target.value })} /></div>
-              <div><Label>Body</Label><Textarea rows={8} value={editing.body ?? ""} onChange={(e) => setEditing({ ...editing, body: e.target.value })} /></div>
+              <div><Label>Heading</Label><Input maxLength={90} value={editing.heading} onChange={(e) => setEditing({ ...editing, heading: e.target.value })} /></div>
+              <div>
+                <div className="flex items-center justify-between">
+                  <Label>Body</Label>
+                  <span className="text-xs text-muted-foreground">{(editing.body ?? "").length} / 280</span>
+                </div>
+                <Textarea
+                  rows={5}
+                  maxLength={280}
+                  value={editing.body ?? ""}
+                  onChange={(e) => setEditing({ ...editing, body: e.target.value })}
+                  placeholder="Keep it tight — 2–3 sentences, like the existing entries on the homepage."
+                />
+              </div>
               <ImageUpload value={editing.image} onChange={(url) => setEditing({ ...editing, image: url })} label="Image / chart (optional)" />
               <div><Label>External link (optional)</Label><Input value={editing.link_url ?? ""} onChange={(e) => setEditing({ ...editing, link_url: e.target.value })} placeholder="https://…" /></div>
               <div><Label>Status</Label>

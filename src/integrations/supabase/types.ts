@@ -236,6 +236,7 @@ export type Database = {
       educational_posts: {
         Row: {
           author_id: string | null
+          author_name: string | null
           body: string | null
           canonical_url: string | null
           category: string | null
@@ -248,6 +249,7 @@ export type Database = {
           seo_description: string | null
           seo_title: string | null
           serial: number
+          show_on_homepage: boolean
           slug: string
           status: Database["public"]["Enums"]["content_status"]
           title: string
@@ -255,6 +257,7 @@ export type Database = {
         }
         Insert: {
           author_id?: string | null
+          author_name?: string | null
           body?: string | null
           canonical_url?: string | null
           category?: string | null
@@ -267,6 +270,7 @@ export type Database = {
           seo_description?: string | null
           seo_title?: string | null
           serial?: number
+          show_on_homepage?: boolean
           slug: string
           status?: Database["public"]["Enums"]["content_status"]
           title: string
@@ -274,6 +278,7 @@ export type Database = {
         }
         Update: {
           author_id?: string | null
+          author_name?: string | null
           body?: string | null
           canonical_url?: string | null
           category?: string | null
@@ -286,6 +291,7 @@ export type Database = {
           seo_description?: string | null
           seo_title?: string | null
           serial?: number
+          show_on_homepage?: boolean
           slug?: string
           status?: Database["public"]["Enums"]["content_status"]
           title?: string
@@ -470,6 +476,7 @@ export type Database = {
       research_articles: {
         Row: {
           author_id: string | null
+          author_name: string | null
           body: string | null
           canonical_url: string | null
           category: string | null
@@ -485,6 +492,7 @@ export type Database = {
           seo_description: string | null
           seo_title: string | null
           serial: number
+          show_on_homepage: boolean
           slug: string
           status: Database["public"]["Enums"]["content_status"]
           tags: string[]
@@ -493,6 +501,7 @@ export type Database = {
         }
         Insert: {
           author_id?: string | null
+          author_name?: string | null
           body?: string | null
           canonical_url?: string | null
           category?: string | null
@@ -508,6 +517,7 @@ export type Database = {
           seo_description?: string | null
           seo_title?: string | null
           serial?: number
+          show_on_homepage?: boolean
           slug: string
           status?: Database["public"]["Enums"]["content_status"]
           tags?: string[]
@@ -516,6 +526,7 @@ export type Database = {
         }
         Update: {
           author_id?: string | null
+          author_name?: string | null
           body?: string | null
           canonical_url?: string | null
           category?: string | null
@@ -531,6 +542,7 @@ export type Database = {
           seo_description?: string | null
           seo_title?: string | null
           serial?: number
+          show_on_homepage?: boolean
           slug?: string
           status?: Database["public"]["Enums"]["content_status"]
           tags?: string[]

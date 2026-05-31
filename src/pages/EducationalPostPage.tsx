@@ -13,6 +13,7 @@ import { fetchMarketPost, fetchMarketPosts } from "@/utils/contentLoader";
 import SEOHead from "@/components/SEOHead";
 import StructuredData from "@/components/StructuredData";
 import { categoryToSlug, educationalPostPath, educationCategoryPath } from "@/utils/categorySlug";
+import { postImage } from "@/utils/postImage";
 
 // Slugify header text for in-page anchors
 const anchorize = (s: string) =>
@@ -194,27 +195,29 @@ const EducationalPostPage = () => {
 
               <h1 className="text-3xl md:text-4xl font-bold mb-6">{post.title}</h1>
 
-              <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-8">
-                <div className="flex items-center"><Calendar className="h-4 w-4 mr-1" />
+              <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-muted-foreground mb-8 pb-6 border-b">
+                <div className="flex items-center"><Calendar className="h-4 w-4 mr-1.5" />
                   {new Date(post.date).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
                 </div>
-                <div className="flex items-center"><Clock className="h-4 w-4 mr-1" />{readingTime}</div>
-                <div className="flex items-center"><User className="h-4 w-4 mr-1" />IndianMacro Team</div>
+                <div className="flex items-center"><Clock className="h-4 w-4 mr-1.5" />{readingTime}</div>
+                <div className="flex items-center"><User className="h-4 w-4 mr-1.5" />{post.authorName || "Abhishek Gourav"}</div>
                 {post.category && (
                   <Link to={educationCategoryPath(post.category)} className="flex items-center hover:text-foreground">
-                    <Tag className="h-4 w-4 mr-1" />{post.category}
+                    <Tag className="h-4 w-4 mr-1.5" />{post.category}
                   </Link>
                 )}
               </div>
 
-              {post.image && (
-                <div className="mb-8">
-                  <img src={post.image} alt={post.title} className="w-full h-auto rounded-lg object-cover" />
-                  {post.imageCaption && (
-                    <p className="text-sm text-muted-foreground mt-2 text-center italic">{post.imageCaption}</p>
-                  )}
-                </div>
-              )}
+              <div className="mb-10 rounded-xl overflow-hidden border bg-muted">
+                <img
+                  src={postImage(post.image, post.slug)}
+                  alt={post.title}
+                  className="w-full h-auto max-h-[480px] object-cover"
+                />
+                {post.imageCaption && (
+                  <p className="text-sm text-muted-foreground mt-2 text-center italic px-4 pb-3">{post.imageCaption}</p>
+                )}
+              </div>
 
               <div className="prose prose-lg dark:prose-invert max-w-none">
                 <ReactMarkdown
@@ -247,9 +250,9 @@ const EducationalPostPage = () => {
               {related.length > 0 && (
                 <section className="mt-16 pt-10 border-t">
                   <h2 className="text-2xl font-bold mb-6">More from {categoryLabel}</h2>
-                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
                     {related.map((r) => (
-                      <Link key={r.id} to={educationalPostPath(r.category, r.slug)}>
+                      <Link key={r.id} to={educationalPostPath(r.category, r.slug)} className="h-full block">
                         <BlogPostCard
                           post={{
                             id: r.id,
@@ -257,9 +260,9 @@ const EducationalPostPage = () => {
                             excerpt: r.summary,
                             date: new Date(r.date).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }),
                             readTime: `${Math.max(3, Math.ceil((r.content?.split(/\s+/).length ?? 200) / 200))} min read`,
-                            author: { name: "IndianMacro Team" },
+                            author: { name: r.authorName || "Abhishek Gourav" },
                             category: r.category ?? categoryLabel,
-                            imageUrl: r.image,
+                            imageUrl: postImage(r.image, r.slug || r.id),
                           }}
                         />
                       </Link>

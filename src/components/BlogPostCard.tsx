@@ -1,4 +1,3 @@
-
 import { CalendarIcon, Clock, User } from "lucide-react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -27,28 +26,31 @@ interface BlogPostCardProps {
 
 const BlogPostCard = ({ post, variant = "default" }: BlogPostCardProps) => {
   const isFeatured = variant === "featured" || post.featured;
-  
+
   return (
-    <Card className={cn(
-      "overflow-hidden transition-all hover:shadow-md",
-      isFeatured && "border-accent1 border-2"
-    )}>
-      {post.imageUrl && (
-        <div className="relative h-48 w-full overflow-hidden">
-          <img 
-            src={post.imageUrl} 
-            alt={post.title} 
-            className="h-full w-full object-cover" 
-          />
-          {isFeatured && (
-            <div className="absolute top-2 right-2">
-              <Badge className="bg-accent1 hover:bg-accent1">Featured</Badge>
-            </div>
-          )}
-        </div>
+    <Card
+      className={cn(
+        "overflow-hidden transition-all hover:shadow-md hover:-translate-y-0.5 h-full flex flex-col",
+        isFeatured && "border-accent1 border-2"
       )}
-      
-      <CardHeader>
+    >
+      <div className="relative h-48 w-full overflow-hidden bg-muted shrink-0">
+        {post.imageUrl && (
+          <img
+            src={post.imageUrl}
+            alt={post.title}
+            loading="lazy"
+            className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+          />
+        )}
+        {isFeatured && (
+          <div className="absolute top-2 right-2">
+            <Badge className="bg-accent1 hover:bg-accent1">Featured</Badge>
+          </div>
+        )}
+      </div>
+
+      <CardHeader className="pb-3">
         <div className="flex flex-wrap items-center gap-2 mb-2">
           <Badge variant="outline" className="text-xs">
             {post.category}
@@ -62,28 +64,20 @@ const BlogPostCard = ({ post, variant = "default" }: BlogPostCardProps) => {
             <span>{post.readTime}</span>
           </div>
         </div>
-        <CardTitle className="text-xl">{post.title}</CardTitle>
-        <CardDescription className="line-clamp-2">
+        <CardTitle className="text-lg leading-snug line-clamp-2 min-h-[3.5rem]">
+          {post.title}
+        </CardTitle>
+        <CardDescription className="line-clamp-3 min-h-[4.5rem]">
           {post.excerpt}
         </CardDescription>
       </CardHeader>
-      
-      <CardFooter className="flex justify-between">
+
+      <CardFooter className="flex justify-between mt-auto pt-3 border-t">
         <div className="flex items-center gap-2">
-          {post.author.avatarUrl ? (
-            <img
-              src={post.author.avatarUrl}
-              alt={post.author.name}
-              className="h-6 w-6 rounded-full"
-            />
-          ) : (
-            <User className="h-5 w-5 text-muted-foreground" />
-          )}
-          <span className="text-sm text-gray-600">{post.author.name}</span>
+          <User className="h-4 w-4 text-muted-foreground" />
+          <span className="text-sm text-muted-foreground">{post.author.name}</span>
         </div>
-        <Button variant="ghost" size="sm">
-          Read more
-        </Button>
+        <Button variant="ghost" size="sm">Read more</Button>
       </CardFooter>
     </Card>
   );

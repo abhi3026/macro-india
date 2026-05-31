@@ -1,6 +1,5 @@
 /**
  * Content loader — backed by Lovable Cloud (Supabase).
- * Public consumers: ResearchPage, EducationPage, FeaturedResearch, etc.
  */
 import { supabase } from "@/integrations/supabase/client";
 
@@ -16,6 +15,8 @@ export interface ResearchPost {
   file?: string;
   premium: boolean;
   featured: boolean;
+  showOnHomepage?: boolean;
+  authorName?: string;
   content: string;
   slug: string;
 }
@@ -31,6 +32,8 @@ export interface MarketPost {
   image?: string;
   imageCaption?: string;
   featured?: boolean;
+  showOnHomepage?: boolean;
+  authorName?: string;
   seoTitle?: string;
   seoDescription?: string;
   ogImage?: string;
@@ -67,13 +70,14 @@ export async function fetchResearchPosts(): Promise<ResearchPost[]> {
     file: undefined,
     premium: false,
     featured: !!r.featured,
+    showOnHomepage: !!r.show_on_homepage,
+    authorName: r.author_name ?? undefined,
     content: r.body ?? "",
     slug: r.slug,
   }));
 }
 
 export async function fetchMarketPosts(): Promise<MarketPost[]> {
-  // Educational posts power the public Education page (kept under MarketPost shape for compatibility)
   const { data, error } = await supabase
     .from("educational_posts")
     .select("*")
@@ -89,6 +93,8 @@ export async function fetchMarketPosts(): Promise<MarketPost[]> {
     date: r.published_at ?? r.created_at,
     category: r.category ?? undefined,
     image: r.image ?? undefined,
+    showOnHomepage: !!r.show_on_homepage,
+    authorName: r.author_name ?? undefined,
     featured: false,
   }));
 }
@@ -115,6 +121,8 @@ export async function fetchMarketPost(slug: string): Promise<MarketPost | null> 
     date: d.published_at ?? d.created_at,
     category: d.category ?? undefined,
     image: d.image ?? undefined,
+    showOnHomepage: !!d.show_on_homepage,
+    authorName: d.author_name ?? undefined,
     seoTitle: d.seo_title ?? undefined,
     seoDescription: d.seo_description ?? undefined,
     ogImage: d.og_image ?? undefined,
@@ -151,4 +159,3 @@ export async function fetchEducationCategory(slug: string): Promise<EducationCat
   if (error || !data) return null;
   return data as any;
 }
-

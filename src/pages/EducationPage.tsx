@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { fetchMarketPosts, MarketPost } from "@/utils/contentLoader";
 import { educationalPostPath, educationCategoryPath, categoryToSlug } from "@/utils/categorySlug";
+import { postImage } from "@/utils/postImage";
 import { updateMetaTags } from "@/utils/metaTags";
 import SEOHead from "@/components/SEOHead";
 import PageHero from "@/components/ui/page-hero";
@@ -60,15 +61,12 @@ const EducationPage = () => {
         month: 'long',
         day: 'numeric'
       }),
-      readTime: `${Math.ceil(post.summary.length / 600)} min read`,
-      author: {
-        name: "Indian Macro Team",
-        avatarUrl: "https://randomuser.me/api/portraits/men/32.jpg"
-      },
+      readTime: `${Math.max(3, Math.ceil((post.content?.split(/\s+/).length ?? 200) / 200))} min read`,
+      author: { name: post.authorName || "Abhishek Gourav" },
       category: post.category || "Macroeconomics",
-      imageUrl: post.image || "https://images.unsplash.com/photo-1642543492481-44e81e3914a7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80",
+      imageUrl: postImage(post.image, post.slug || post.id),
       featured: post.featured,
-      slug: post.slug
+      slug: post.slug,
     };
   };
   

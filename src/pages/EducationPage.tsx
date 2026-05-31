@@ -154,27 +154,21 @@ const EducationPage = () => {
             {/* Category Sections */}
             <div className="mb-10">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                {categories.slice(1).map((category) => (
-                  <Button
-                    key={category}
-                    variant={selectedCategories.includes(category) ? "default" : "outline"}
-                    className={`h-auto py-6 justify-start flex-col items-start ${
-                      selectedCategories.includes(category) ? "bg-accent1 hover:bg-accent1/90" : ""
-                    }`}
-                    onClick={() => {
-                      setSelectedCategories(
-                        selectedCategories.includes(category)
-                          ? selectedCategories.filter((c) => c !== category)
-                          : [...selectedCategories, category]
-                      );
-                    }}
-                  >
-                    <span className="text-lg font-medium">{category}</span>
-                    <span className="text-sm mt-1 text-left">
-                      {educationalPosts.filter(p => p.category === category).length} articles
-                    </span>
-                  </Button>
-                ))}
+                {categories.slice(1).map((category) => {
+                  const count = educationalPosts.filter(p => p.category === category).length;
+                  return (
+                    <Link
+                      key={category}
+                      to={educationCategoryPath(category)}
+                      className="block h-full rounded-md border bg-card p-6 hover:border-accent1 hover:shadow-md transition-all"
+                    >
+                      <span className="block text-lg font-medium">{category}</span>
+                      <span className="block text-sm mt-1 text-muted-foreground">
+                        {count} article{count === 1 ? "" : "s"}
+                      </span>
+                    </Link>
+                  );
+                })}
               </div>
             </div>
             
@@ -193,12 +187,12 @@ const EducationPage = () => {
                 ))}
               </div>
             ) : filteredPosts.filter(post => !post.featured).length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
                 {filteredPosts
                   .filter(post => !post.featured)
                   .map((post) => (
-                    <Link key={post.id} to={educationalPostPath(post.category, post.slug)}>
-                      <BlogPostCard key={post.id} post={post} />
+                    <Link key={post.id} to={educationalPostPath(post.category, post.slug)} className="h-full block">
+                      <BlogPostCard post={post} />
                     </Link>
                   ))}
               </div>

@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Switch } from "@/components/ui/switch";
 import { Check, X, Trash2 } from "lucide-react";
 import StatusBadge from "@/components/admin/StatusBadge";
 import CMSToolbar from "@/components/admin/CMSToolbar";
@@ -76,7 +77,7 @@ export default function EducationCMS() {
     qc.invalidateQueries({ queryKey: ["edu-list"] });
   };
 
-  const openNew = () => { setEditing({ title: "", slug: "", category: "", excerpt: "", body: "", image: "", status: "draft", seo_title: "", seo_description: "", og_image: "", canonical_url: "" }); setOpen(true); };
+  const openNew = () => { setEditing({ title: "", slug: "", category: "", excerpt: "", body: "", image: "", status: "draft", author_name: "Abhishek Gourav", show_on_homepage: false, seo_title: "", seo_description: "", og_image: "", canonical_url: "" }); setOpen(true); };
   const openEdit = (r: Row) => { setEditing(r); setOpen(true); };
 
   const save = async () => {
@@ -89,6 +90,8 @@ export default function EducationCMS() {
       body: editing.body || null,
       image: editing.image || null,
       status: editing.status,
+      author_name: editing.author_name?.trim() || "Abhishek Gourav",
+      show_on_homepage: !!editing.show_on_homepage,
       seo_title: editing.seo_title || null,
       seo_description: editing.seo_description || null,
       og_image: editing.og_image || null,
@@ -183,10 +186,14 @@ export default function EducationCMS() {
               <TabsContent value="content" className="space-y-4 mt-4">
                 <div><Label>Title</Label><Input value={editing.title} onChange={(e) => setEditing({ ...editing, title: e.target.value })} /></div>
                 <div><Label>Slug</Label><Input value={editing.slug} onChange={(e) => setEditing({ ...editing, slug: e.target.value })} placeholder="auto from title" /></div>
-                <div><Label>Category</Label><Input value={editing.category ?? ""} onChange={(e) => setEditing({ ...editing, category: e.target.value })} /></div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div><Label>Category</Label><Input value={editing.category ?? ""} onChange={(e) => setEditing({ ...editing, category: e.target.value })} /></div>
+                  <div><Label>Author name</Label><Input value={editing.author_name ?? ""} onChange={(e) => setEditing({ ...editing, author_name: e.target.value })} placeholder="Abhishek Gourav" /></div>
+                </div>
                 <div><Label>Excerpt</Label><Textarea rows={2} value={editing.excerpt ?? ""} onChange={(e) => setEditing({ ...editing, excerpt: e.target.value })} /></div>
                 <div><Label>Body (Markdown)</Label><Textarea rows={14} className="font-mono text-sm" value={editing.body ?? ""} onChange={(e) => setEditing({ ...editing, body: e.target.value })} /></div>
                 <ImageUpload value={editing.image} onChange={(url) => setEditing({ ...editing, image: url })} label="Header image" />
+                <div className="flex items-center gap-3"><Switch checked={!!editing.show_on_homepage} onCheckedChange={(v) => setEditing({ ...editing, show_on_homepage: v })} /><Label className="!mt-0">Show on homepage</Label></div>
                 <div><Label>Status</Label>
                   <select className="w-full border rounded-md h-10 px-3 bg-background" value={editing.status} onChange={(e) => setEditing({ ...editing, status: e.target.value })}>
                     {["draft", "pending", "approved", "published", "declined"].map(s => <option key={s} value={s}>{s}</option>)}

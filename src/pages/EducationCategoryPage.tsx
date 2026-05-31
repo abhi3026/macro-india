@@ -10,6 +10,7 @@ import StructuredData from "@/components/StructuredData";
 import PageHero from "@/components/ui/page-hero";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
+import { fetchEducationCategory, fetchMarketPosts } from "@/utils/contentLoader";
 import { categoryToSlug, educationalPostPath } from "@/utils/categorySlug";
 import { postImage } from "@/utils/postImage";
 

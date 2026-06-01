@@ -2,6 +2,7 @@
  * Content loader — backed by Lovable Cloud (Supabase).
  */
 import { supabase } from "@/integrations/supabase/client";
+import { postImage } from "@/utils/postImage";
 
 export type ContentType = 'research' | 'market' | 'newsletter';
 
@@ -66,7 +67,7 @@ export async function fetchResearchPosts(): Promise<ResearchPost[]> {
     date: r.publish_date ?? r.published_at ?? r.created_at,
     description: r.excerpt ?? "",
     category: r.category ?? "Research",
-    image: r.featured_image ?? "",
+    image: postImage(r.featured_image, r.slug || r.id),
     file: undefined,
     premium: false,
     featured: !!r.featured,
@@ -92,7 +93,7 @@ export async function fetchMarketPosts(): Promise<MarketPost[]> {
     summary: r.excerpt ?? "",
     date: r.published_at ?? r.created_at,
     category: r.category ?? undefined,
-    image: r.image ?? undefined,
+    image: postImage(r.image, r.slug || r.id),
     showOnHomepage: !!r.show_on_homepage,
     authorName: r.author_name ?? undefined,
     featured: false,
@@ -120,7 +121,7 @@ export async function fetchMarketPost(slug: string): Promise<MarketPost | null> 
     summary: d.excerpt ?? "",
     date: d.published_at ?? d.created_at,
     category: d.category ?? undefined,
-    image: d.image ?? undefined,
+    image: postImage(d.image, d.slug || d.id),
     showOnHomepage: !!d.show_on_homepage,
     authorName: d.author_name ?? undefined,
     seoTitle: d.seo_title ?? undefined,

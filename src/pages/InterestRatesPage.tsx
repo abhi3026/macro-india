@@ -91,7 +91,7 @@ const InterestRatesPage = () => {
       <main className="flex-1 py-8">
         <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
           <section className="mb-8">
-            <h1 className="text-4xl font-bold mb-4">Interest Rates & Bond Market Data</h1>
+            <h2 className="text-4xl font-bold mb-4">Interest Rates & Bond Market Data</h2>
             <p className="text-muted-foreground">
               Monitor central bank policy rates and 10-year government bond yields across major global economies.
             </p>

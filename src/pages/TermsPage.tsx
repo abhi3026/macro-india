@@ -1,8 +1,8 @@
 import { useEffect } from "react";
-import { Helmet } from "react-helmet-async";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/ui/page-hero";
+import SEOHead from "@/components/SEOHead";
 
 const TermsPage = () => {
   useEffect(() => {
@@ -11,6 +11,11 @@ const TermsPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <SEOHead
+        title="Terms of Service | IndianMacro"
+        description="Review the IndianMacro Terms of Service covering acceptable use, intellectual property, disclaimers, and your rights when accessing our macro research."
+        canonicalUrl="/terms"
+      />
       <header className="sticky top-0 z-50">
         <Navbar />
       </header>
@@ -21,16 +26,8 @@ const TermsPage = () => {
       />
       
       <main className="flex-1 container mx-auto px-4 py-8">
-        <Helmet>
-          <title>Terms of Service | Macro India</title>
-          <meta
-            name="description"
-            content="Our terms of service and usage guidelines."
-          />
-        </Helmet>
-        
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold mb-8">Terms of Service</h1>
+          <h2 className="text-3xl font-bold mb-8">Terms of Service</h2>
           
           <div className="prose prose-slate max-w-none">
             <p className="text-muted-foreground">Last updated: April 18, 2024</p>

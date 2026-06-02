@@ -152,7 +152,8 @@ const EducationPage = () => {
             </div>
             
             {/* Category Sections */}
-            <div className="mb-10">
+            <section className="mb-10" aria-labelledby="education-categories-heading">
+              <h2 id="education-categories-heading" className="text-2xl font-semibold mb-4">Browse by Category</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {categories.slice(1).map((category) => {
                   const count = educationalPosts.filter(p => p.category === category).length;
@@ -170,9 +171,11 @@ const EducationPage = () => {
                   );
                 })}
               </div>
-            </div>
+            </section>
             
             {/* Educational Posts Grid */}
+            <section aria-labelledby="education-articles-heading">
+              <h2 id="education-articles-heading" className="text-2xl font-semibold mb-4">Latest Articles</h2>
             {isLoading ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {Array(6).fill(0).map((_, i) => (
@@ -210,6 +213,7 @@ const EducationPage = () => {
                 </Button>
               </div>
             )}
+            </section>
           </div>
         </div>
       </main>

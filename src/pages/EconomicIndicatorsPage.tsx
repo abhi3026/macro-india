@@ -88,7 +88,7 @@ export default function EconomicIndicatorsPage() {
       <main className="flex-1 py-8">
         <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
           <section className="mb-8">
-            <h1 className="text-4xl font-bold mb-4">Global Economic Indicators</h1>
+            <h2 className="text-4xl font-bold mb-4">Global Economic Indicators</h2>
             <p className="text-muted-foreground">
               Track and compare GDP growth, inflation, unemployment, PMI, and trade data across the world's economies.
             </p>

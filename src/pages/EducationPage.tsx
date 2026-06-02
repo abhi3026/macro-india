@@ -213,6 +213,7 @@ const EducationPage = () => {
                 </Button>
               </div>
             )}
+            </section>
           </div>
         </div>
       </main>

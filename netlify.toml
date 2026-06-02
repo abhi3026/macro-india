@@ -15,6 +15,7 @@
   to = "/index.html"
   status = 200
 
+# Security headers (sitewide)
 [[headers]]
   for = "/*"
     [headers.values]
@@ -22,3 +23,74 @@
     X-XSS-Protection = "1; mode=block"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
+
+# Long cache for hashed build assets (Vite emits content-hashed filenames)
+[[headers]]
+  for = "/assets/*"
+    [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Cache images for 30 days
+[[headers]]
+  for = "*.jpg"
+    [headers.values]
+    Cache-Control = "public, max-age=2592000"
+[[headers]]
+  for = "*.jpeg"
+    [headers.values]
+    Cache-Control = "public, max-age=2592000"
+[[headers]]
+  for = "*.png"
+    [headers.values]
+    Cache-Control = "public, max-age=2592000"
+[[headers]]
+  for = "*.svg"
+    [headers.values]
+    Cache-Control = "public, max-age=2592000"
+[[headers]]
+  for = "*.webp"
+    [headers.values]
+    Cache-Control = "public, max-age=2592000"
+[[headers]]
+  for = "*.ico"
+    [headers.values]
+    Cache-Control = "public, max-age=2592000"
+
+# Cache fonts for 1 year
+[[headers]]
+  for = "*.woff2"
+    [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+[[headers]]
+  for = "*.woff"
+    [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# CSS/JS outside /assets (rare)
+[[headers]]
+  for = "*.css"
+    [headers.values]
+    Cache-Control = "public, max-age=604800"
+[[headers]]
+  for = "*.js"
+    [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+# Always revalidate HTML so deploys go live immediately
+[[headers]]
+  for = "/*.html"
+    [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# sitemap & robots
+[[headers]]
+  for = "/sitemap.xml"
+    [headers.values]
+    Cache-Control = "public, max-age=3600"
+    Content-Type = "application/xml; charset=utf-8"
+[[headers]]
+  for = "/robots.txt"
+    [headers.values]
+    Cache-Control = "public, max-age=3600"

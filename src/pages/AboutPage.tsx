@@ -46,7 +46,7 @@ const AboutPage = () => {
         <div className="bg-white dark:bg-indianmacro-900 py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-3xl mx-auto mb-12">
-              <h1 className="text-3xl font-bold text-indianmacro-900 dark:text-white mb-6">About IndianMacro</h1>
+              <h2 className="text-3xl font-bold text-indianmacro-900 dark:text-white mb-6">About IndianMacro</h2>
               <p className="text-lg text-indianmacro-600 dark:text-indianmacro-300">
                 At Indian Macro, we are passionate about decoding the complex world of finance, investments, and macroeconomics, with a special focus on India.
                 Our mission is simple: make high-quality financial research accessible and actionable for investors, students, and professionals alike.

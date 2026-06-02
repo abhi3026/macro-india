@@ -1,10 +1,16 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/ui/page-hero";
+import SEOHead from "@/components/SEOHead";
 
 const PrivacyPage = () => {
   return (
     <div className="min-h-screen flex flex-col">
+      <SEOHead
+        title="Privacy Policy | IndianMacro"
+        description="Read the IndianMacro Privacy Policy: how we collect, use, store, and protect your personal data when you use our macro research and market data platform."
+        canonicalUrl="/privacy"
+      />
       <header className="sticky top-0 z-50">
         <Navbar />
       </header>

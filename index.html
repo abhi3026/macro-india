@@ -1,35 +1,69 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>IndianMacro - Financial Research & Economic Data</title>
-    <meta name="description" content="Research, data and insights on India's economy, markets and financial trends — economic indicators, reports and live market data." />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#000041" />
+    <title>IndianMacro | Indian Economy, Markets & Macro Research</title>
+    <meta name="description" content="IndianMacro delivers research, data and insights on India's economy and markets — GDP, inflation, RBI policy, interest rates, sectors and live market data." />
     <meta name="author" content="IndianMacro" />
-    <meta name="keywords" content="Indian economy, economic research, market data, financial analysis, economic indicators, GDP, inflation, monetary policy, market trends, Nifty, Sensex" />
+    <meta name="keywords" content="Indian economy, Indian macro, economic research India, GDP India, inflation India, RBI monetary policy, repo rate, Nifty, Sensex, financial research, economic indicators, interest rates India" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="googlebot" content="index, follow" />
     <meta name="google-site-verification" content="BVTxHxLmwjxwho6jKgJEOaQfUAc5ntuTrjuIqf9HtVE" />
+    <link rel="canonical" href="https://www.indianmacro.com/" />
 
-    <!-- Favicon -->
-    <link rel="icon" href="/logo.svg" type="image/svg+xml">
+    <!-- Favicon (consistent across all pages) -->
+    <link rel="icon" href="/logo.svg" type="image/svg+xml" />
+    <link rel="shortcut icon" href="/logo.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/logo.svg" />
+    <link rel="mask-icon" href="/logo.svg" color="#000041" />
 
-    <!-- Open Graph / Facebook (sitewide fallback for non-JS social crawlers; per-route Helmet overrides) -->
+    <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://indianmacro.com/" />
-    <meta property="og:title" content="IndianMacro - Financial Research & Economic Data" />
-    <meta property="og:description" content="Research, data and insights on India's economy, markets and financial trends." />
-    <meta property="og:image" content="https://indianmacro.com/og-image.jpg" />
+    <meta property="og:url" content="https://www.indianmacro.com/" />
+    <meta property="og:title" content="IndianMacro | Indian Economy, Markets & Macro Research" />
+    <meta property="og:description" content="Research, data and insights on India's economy and markets — GDP, inflation, RBI policy, interest rates and live market data." />
+    <meta property="og:image" content="https://www.indianmacro.com/og-image.jpg" />
+    <meta property="og:site_name" content="IndianMacro" />
+    <meta property="og:locale" content="en_IN" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@indianmacro" />
-    <meta name="twitter:title" content="IndianMacro - Financial Research & Economic Data" />
-    <meta name="twitter:description" content="Research, data and insights on India's economy, markets and financial trends." />
-    <meta name="twitter:image" content="https://indianmacro.com/og-image.jpg" />
-    
+    <meta name="twitter:title" content="IndianMacro | Indian Economy, Markets & Macro Research" />
+    <meta name="twitter:description" content="Research, data and insights on India's economy and markets." />
+    <meta name="twitter:image" content="https://www.indianmacro.com/og-image.jpg" />
+
     <!-- Preconnect to font CDNs for faster LCP -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Sitewide JSON-LD: Organization + WebSite (visible to non-JS crawlers) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "IndianMacro",
+      "url": "https://www.indianmacro.com",
+      "logo": "https://www.indianmacro.com/logo.svg",
+      "sameAs": ["https://twitter.com/indianmacro"],
+      "description": "Research, data and insights on India's economy and markets."
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "IndianMacro",
+      "url": "https://www.indianmacro.com",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://www.indianmacro.com/search?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
 
     <!-- Google Analytics placeholder (deferred) -->
     <script defer src="https://www.googletagmanager.com/gtag/js?id=MEASUREMENT_ID"></script>
@@ -43,6 +77,37 @@
 
   <body>
     <div id="root"></div>
+
+    <!-- Static SEO fallback for non-JS crawlers (H1, intro, internal links) -->
+    <noscript>
+      <header>
+        <h1>IndianMacro — Indian Economy, Markets & Macro Research</h1>
+        <h2>Data, research and insights on India's economy</h2>
+        <p>
+          IndianMacro tracks India's GDP, inflation, RBI monetary policy, interest rates,
+          bond yields, and equity markets. Explore in-depth research articles, foundational
+          educational guides, and live macroeconomic data.
+        </p>
+        <nav aria-label="Primary">
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/research">Research</a></li>
+            <li><a href="/education">Education</a></li>
+            <li><a href="/data-dashboard">Data Dashboard</a></li>
+            <li><a href="/data-dashboard/economic-indicators">Economic Indicators</a></li>
+            <li><a href="/data-dashboard/interest-rates-bonds">Interest Rates & Bonds</a></li>
+            <li><a href="/news">News</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/contact">Contact</a></li>
+          </ul>
+        </nav>
+        <p>
+          This site requires JavaScript for the full interactive experience. Please enable
+          JavaScript, or browse our <a href="/sitemap.xml">sitemap</a> for a full list of pages.
+        </p>
+      </header>
+    </noscript>
+
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
     <script type="module" src="/src/main.tsx"></script>

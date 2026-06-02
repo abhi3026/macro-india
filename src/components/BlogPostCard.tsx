@@ -77,7 +77,9 @@ const BlogPostCard = ({ post, variant = "default" }: BlogPostCardProps) => {
           <User className="h-4 w-4 text-muted-foreground" />
           <span className="text-sm text-muted-foreground">{post.author.name}</span>
         </div>
-        <Button variant="ghost" size="sm">Read more</Button>
+        <Button variant="ghost" size="sm" aria-label={`Read full article: ${post.title}`}>
+          Read full article
+        </Button>
       </CardFooter>
     </Card>
   );

@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { Pencil, Plus, Trash2, Save, TrendingUp, Lightbulb, AlertCircle, type LucideIcon } from "lucide-react";
+import { Pencil, Plus, Trash2, Save, Check, X, TrendingUp, Lightbulb, AlertCircle, type LucideIcon } from "lucide-react";
 import ImageUpload from "@/components/admin/ImageUpload";
 import StatusBadge from "@/components/admin/StatusBadge";
 

@@ -80,6 +80,35 @@ export default function WeeklyReadCMS() {
     qc.invalidateQueries({ queryKey: ["weekly-reads-home"] });
   };
 
+  const PUBLISH_LIMIT = 3;
+  const publishedCount = (data ?? []).filter((r: any) => r.status === "published").length;
+
+  const setPublished = async (r: any, publish: boolean) => {
+    if (publish) {
+      if (r.status === "published") return;
+      if (publishedCount >= PUBLISH_LIMIT) {
+        return toast.error(`Only ${PUBLISH_LIMIT} posts can be published at a time. Unpublish one first.`);
+      }
+      const { error } = await supabase
+        .from("weekly_reads")
+        .update({ status: "published", published_at: new Date().toISOString() })
+        .eq("id", r.id);
+      if (error) return toast.error(error.message);
+      toast.success("Published");
+    } else {
+      if (r.status !== "published") return;
+      const { error } = await supabase
+        .from("weekly_reads")
+        .update({ status: "draft" })
+        .eq("id", r.id);
+      if (error) return toast.error(error.message);
+      toast.success("Unpublished");
+    }
+    qc.invalidateQueries({ queryKey: ["weekly-list"] });
+    qc.invalidateQueries({ queryKey: ["weekly-reads-home"] });
+  };
+
+
   const rows = data ?? [];
 
   return (

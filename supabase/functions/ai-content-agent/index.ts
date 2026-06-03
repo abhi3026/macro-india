@@ -135,18 +135,19 @@ Deno.serve(async (req) => {
   const details: any[] = [];
 
   try {
-    // 2. Fetch recent titles for dedupe (last 60 days)
-    const sinceISO = new Date(Date.now() - 60 * 86400 * 1000).toISOString();
+    // 2. Fetch ALL existing titles/slugs for hard dedupe (no time limit)
     const [edu, res, wk] = await Promise.all([
-      supabase.from("educational_posts").select("title,slug").gte("created_at", sinceISO).limit(500),
-      supabase.from("research_articles").select("title,slug").gte("created_at", sinceISO).limit(500),
-      supabase.from("weekly_reads").select("heading").gte("created_at", sinceISO).limit(500),
+      supabase.from("educational_posts").select("title,slug").limit(2000),
+      supabase.from("research_articles").select("title,slug").limit(2000),
+      supabase.from("weekly_reads").select("heading").limit(2000),
     ]);
+    const normalize = (s: string) => (s ?? "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
     const existingTitles = [
       ...(edu.data ?? []).map((r: any) => r.title),
       ...(res.data ?? []).map((r: any) => r.title),
       ...(wk.data ?? []).map((r: any) => r.heading),
     ];
+    const existingTitleSet = new Set(existingTitles.map(normalize));
     const existingSlugs = new Set([
       ...(edu.data ?? []).map((r: any) => r.slug),
       ...(res.data ?? []).map((r: any) => r.slug),

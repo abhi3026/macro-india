@@ -135,18 +135,19 @@ Deno.serve(async (req) => {
   const details: any[] = [];
 
   try {
-    // 2. Fetch recent titles for dedupe (last 60 days)
-    const sinceISO = new Date(Date.now() - 60 * 86400 * 1000).toISOString();
+    // 2. Fetch ALL existing titles/slugs for hard dedupe (no time limit)
     const [edu, res, wk] = await Promise.all([
-      supabase.from("educational_posts").select("title,slug").gte("created_at", sinceISO).limit(500),
-      supabase.from("research_articles").select("title,slug").gte("created_at", sinceISO).limit(500),
-      supabase.from("weekly_reads").select("heading").gte("created_at", sinceISO).limit(500),
+      supabase.from("educational_posts").select("title,slug").limit(2000),
+      supabase.from("research_articles").select("title,slug").limit(2000),
+      supabase.from("weekly_reads").select("heading").limit(2000),
     ]);
+    const normalize = (s: string) => (s ?? "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
     const existingTitles = [
       ...(edu.data ?? []).map((r: any) => r.title),
       ...(res.data ?? []).map((r: any) => r.title),
       ...(wk.data ?? []).map((r: any) => r.heading),
     ];
+    const existingTitleSet = new Set(existingTitles.map(normalize));
     const existingSlugs = new Set([
       ...(edu.data ?? []).map((r: any) => r.slug),
       ...(res.data ?? []).map((r: any) => r.slug),
@@ -157,7 +158,7 @@ Deno.serve(async (req) => {
 
     if (isSeed) {
       topics = FOUNDATIONAL_TOPICS
-        .filter((t) => !existingTitles.some((et) => et?.toLowerCase().trim() === t.title.toLowerCase().trim()))
+        .filter((t) => !existingTitleSet.has(normalize(t.title)))
         .map((t) => ({ table: "educational_posts", category: t.category, title: t.title, angle: t.angle }));
     } else {
       const planSystem = `You are an editorial planner for IndianMacro, a financial education site focused on Indian and global markets, investments, mutual funds, macroeconomics, banking, taxation, and regulation. Plan SEO-optimised educational content.`;
@@ -202,6 +203,11 @@ Rules:
 
     for (const topic of topics) {
       try {
+        // Hard skip if planner/topic title duplicates an existing one
+        if (existingTitleSet.has(normalize(topic.title))) {
+          details.push({ topic: topic.title, skipped: "duplicate title" });
+          continue;
+        }
         const isWeekly = topic.table === "weekly_reads";
         const writerSystem = isWeekly ? WEEKLY_WRITER_SYSTEM : defaultWriterSystem;
         const article = await generateJSON({
@@ -221,6 +227,13 @@ Return JSON: { "title", "slug", "category", "excerpt", "body_markdown", "seo_tit
           const words = article.body_markdown.trim().split(/\s+/);
           if (words.length > 30) article.body_markdown = words.slice(0, 30).join(" ").replace(/[,;:]?$/, "") + ".";
         }
+
+        // Re-check after model generation in case the writer rephrased into an existing title
+        if (existingTitleSet.has(normalize(article.title))) {
+          details.push({ topic: topic.title, skipped: "duplicate generated title" });
+          continue;
+        }
+        existingTitleSet.add(normalize(article.title));
 
         // Ensure unique slug
         let slug = slugify(article.slug || article.title);

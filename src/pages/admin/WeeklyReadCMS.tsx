@@ -150,18 +150,36 @@ export default function WeeklyReadCMS() {
                 <p className="text-sm text-muted-foreground leading-relaxed flex-1">{r.body}</p>
 
                 {canManage && (
-                  <div className="mt-5 pt-4 border-t flex gap-2">
+                  <div className="mt-5 pt-4 border-t flex items-center gap-2">
                     <Button size="sm" variant="outline" className="h-8" onClick={() => openEdit(r)}>
                       <Pencil className="h-3.5 w-3.5" /> Edit
                     </Button>
-                    <Button size="sm" variant="default" className="h-8" onClick={() => openEdit(r)}>
-                      <Save className="h-3.5 w-3.5" /> Update
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="h-8 w-8 p-0 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950 disabled:opacity-40"
+                      title={r.status === "published" ? "Already published" : (publishedCount >= PUBLISH_LIMIT ? `Limit ${PUBLISH_LIMIT} reached` : "Publish")}
+                      disabled={r.status === "published" || publishedCount >= PUBLISH_LIMIT}
+                      onClick={() => setPublished(r, true)}
+                    >
+                      <Check className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="h-8 w-8 p-0 text-rose-600 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950 disabled:opacity-40"
+                      title={r.status === "published" ? "Unpublish" : "Not published"}
+                      disabled={r.status !== "published"}
+                      onClick={() => setPublished(r, false)}
+                    >
+                      <X className="h-4 w-4" />
                     </Button>
                     <Button size="sm" variant="ghost" className="h-8 ml-auto" onClick={() => remove(r.id)}>
                       <Trash2 className="h-3.5 w-3.5" />
                     </Button>
                   </div>
                 )}
+
               </article>
             );
           })}

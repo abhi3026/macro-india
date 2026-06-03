@@ -79,7 +79,7 @@ const MacroSummary = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 border rounded-lg overflow-hidden bg-card divide-x divide-y sm:divide-y-0 [&>*:nth-child(-n+3)]:sm:border-b lg:[&>*]:!border-b-0">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 border rounded-lg overflow-hidden bg-card divide-x divide-y sm:divide-y-0 [&>*:nth-child(-n+3)]:sm:border-b lg:[&>*]:!border-b-0">
           {metrics.map((m) => (
             <Link
               key={m.id ?? m.label}

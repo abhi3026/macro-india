@@ -54,8 +54,15 @@ export default function WeeklyReadCMS() {
       link_url: editing.link_url || null,
       status: editing.status,
     };
+    const wasPublished = editing.id ? (data ?? []).find((x: any) => x.id === editing.id)?.status === "published" : false;
+    if (payload.status === "published" && !wasPublished) {
+      const currentPublished = (data ?? []).filter((x: any) => x.status === "published" && x.id !== editing.id).length;
+      if (currentPublished >= 3) {
+        return toast.error("Only 3 posts can be published at a time. Unpublish one first.");
+      }
+    }
     if (editing.id) {
-      if (payload.status === "published" && editing.status !== "published") {
+      if (payload.status === "published" && !wasPublished) {
         payload.published_at = new Date().toISOString();
       }
       const { error } = await supabase.from("weekly_reads").update(payload).eq("id", editing.id);
@@ -66,6 +73,7 @@ export default function WeeklyReadCMS() {
       const { error } = await supabase.from("weekly_reads").insert(payload);
       if (error) return toast.error(error.message);
     }
+
     toast.success("Saved");
     setOpen(false); setEditing(null);
     qc.invalidateQueries({ queryKey: ["weekly-list"] });

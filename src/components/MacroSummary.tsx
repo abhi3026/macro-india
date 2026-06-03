@@ -22,7 +22,7 @@ const FALLBACK: Metric[] = [
   { label: "CPI Inflation", value: "4.5%", delta: "-0.2 pp MoM", trend: "down", context: "Within RBI band", sentiment: "positive" },
   { label: "Repo Rate", value: "6.50%", delta: "Unchanged", trend: "flat", context: "On hold since Feb '23", sentiment: "neutral" },
   { label: "10Y G-Sec", value: "7.14%", delta: "-4 bps WoW", trend: "down", context: "Curve steepening", sentiment: "positive" },
-  { label: "USD/INR", value: "83.02", delta: "-0.24%", trend: "down", context: "RBI defending 83.5", sentiment: "positive" },
+  
   { label: "Forex Reserves", value: "$642B", delta: "+$2.1B", trend: "up", context: "Near record high", sentiment: "positive" },
 ];
 

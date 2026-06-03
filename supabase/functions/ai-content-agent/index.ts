@@ -158,7 +158,7 @@ Deno.serve(async (req) => {
 
     if (isSeed) {
       topics = FOUNDATIONAL_TOPICS
-        .filter((t) => !existingTitles.some((et) => et?.toLowerCase().trim() === t.title.toLowerCase().trim()))
+        .filter((t) => !existingTitleSet.has(normalize(t.title)))
         .map((t) => ({ table: "educational_posts", category: t.category, title: t.title, angle: t.angle }));
     } else {
       const planSystem = `You are an editorial planner for IndianMacro, a financial education site focused on Indian and global markets, investments, mutual funds, macroeconomics, banking, taxation, and regulation. Plan SEO-optimised educational content.`;

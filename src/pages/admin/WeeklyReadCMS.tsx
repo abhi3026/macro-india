@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { Pencil, Plus, Trash2, Save, TrendingUp, Lightbulb, AlertCircle, type LucideIcon } from "lucide-react";
+import { Pencil, Plus, Trash2, Save, Check, X, TrendingUp, Lightbulb, AlertCircle, type LucideIcon } from "lucide-react";
 import ImageUpload from "@/components/admin/ImageUpload";
 import StatusBadge from "@/components/admin/StatusBadge";
 
@@ -54,8 +54,15 @@ export default function WeeklyReadCMS() {
       link_url: editing.link_url || null,
       status: editing.status,
     };
+    const wasPublished = editing.id ? (data ?? []).find((x: any) => x.id === editing.id)?.status === "published" : false;
+    if (payload.status === "published" && !wasPublished) {
+      const currentPublished = (data ?? []).filter((x: any) => x.status === "published" && x.id !== editing.id).length;
+      if (currentPublished >= 3) {
+        return toast.error("Only 3 posts can be published at a time. Unpublish one first.");
+      }
+    }
     if (editing.id) {
-      if (payload.status === "published" && editing.status !== "published") {
+      if (payload.status === "published" && !wasPublished) {
         payload.published_at = new Date().toISOString();
       }
       const { error } = await supabase.from("weekly_reads").update(payload).eq("id", editing.id);
@@ -66,6 +73,7 @@ export default function WeeklyReadCMS() {
       const { error } = await supabase.from("weekly_reads").insert(payload);
       if (error) return toast.error(error.message);
     }
+
     toast.success("Saved");
     setOpen(false); setEditing(null);
     qc.invalidateQueries({ queryKey: ["weekly-list"] });
@@ -79,6 +87,35 @@ export default function WeeklyReadCMS() {
     qc.invalidateQueries({ queryKey: ["weekly-list"] });
     qc.invalidateQueries({ queryKey: ["weekly-reads-home"] });
   };
+
+  const PUBLISH_LIMIT = 3;
+  const publishedCount = (data ?? []).filter((r: any) => r.status === "published").length;
+
+  const setPublished = async (r: any, publish: boolean) => {
+    if (publish) {
+      if (r.status === "published") return;
+      if (publishedCount >= PUBLISH_LIMIT) {
+        return toast.error(`Only ${PUBLISH_LIMIT} posts can be published at a time. Unpublish one first.`);
+      }
+      const { error } = await supabase
+        .from("weekly_reads")
+        .update({ status: "published", published_at: new Date().toISOString() })
+        .eq("id", r.id);
+      if (error) return toast.error(error.message);
+      toast.success("Published");
+    } else {
+      if (r.status !== "published") return;
+      const { error } = await supabase
+        .from("weekly_reads")
+        .update({ status: "draft" })
+        .eq("id", r.id);
+      if (error) return toast.error(error.message);
+      toast.success("Unpublished");
+    }
+    qc.invalidateQueries({ queryKey: ["weekly-list"] });
+    qc.invalidateQueries({ queryKey: ["weekly-reads-home"] });
+  };
+
 
   const rows = data ?? [];
 
@@ -121,18 +158,36 @@ export default function WeeklyReadCMS() {
                 <p className="text-sm text-muted-foreground leading-relaxed flex-1">{r.body}</p>
 
                 {canManage && (
-                  <div className="mt-5 pt-4 border-t flex gap-2">
+                  <div className="mt-5 pt-4 border-t flex items-center gap-2">
                     <Button size="sm" variant="outline" className="h-8" onClick={() => openEdit(r)}>
                       <Pencil className="h-3.5 w-3.5" /> Edit
                     </Button>
-                    <Button size="sm" variant="default" className="h-8" onClick={() => openEdit(r)}>
-                      <Save className="h-3.5 w-3.5" /> Update
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="h-8 w-8 p-0 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950 disabled:opacity-40"
+                      title={r.status === "published" ? "Already published" : (publishedCount >= PUBLISH_LIMIT ? `Limit ${PUBLISH_LIMIT} reached` : "Publish")}
+                      disabled={r.status === "published" || publishedCount >= PUBLISH_LIMIT}
+                      onClick={() => setPublished(r, true)}
+                    >
+                      <Check className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="h-8 w-8 p-0 text-rose-600 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950 disabled:opacity-40"
+                      title={r.status === "published" ? "Unpublish" : "Not published"}
+                      disabled={r.status !== "published"}
+                      onClick={() => setPublished(r, false)}
+                    >
+                      <X className="h-4 w-4" />
                     </Button>
                     <Button size="sm" variant="ghost" className="h-8 ml-auto" onClick={() => remove(r.id)}>
                       <Trash2 className="h-3.5 w-3.5" />
                     </Button>
                   </div>
                 )}
+
               </article>
             );
           })}

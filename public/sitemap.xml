@@ -116,6 +116,18 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://www.indianmacro.com/education/mutual-funds/flexi-cap-vs-multi-cap-funds-comparison</loc>
+    <lastmod>2026-06-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.indianmacro.com/education/taxation/taxation-of-sovereign-gold-bonds-sgb-india</loc>
+    <lastmod>2026-06-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://www.indianmacro.com/education/macroeconomics/understanding-cpi-inflation-india-guide</loc>
     <lastmod>2026-05-31</lastmod>
     <changefreq>monthly</changefreq>
@@ -136,6 +148,12 @@
   <url>
     <loc>https://www.indianmacro.com/education/investing-basics/mutual-funds-basics-structure-types-taxation</loc>
     <lastmod>2026-06-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.indianmacro.com/education/fixed-income/how-to-invest-in-t-bills-g-secs-rbi-retail-direct</loc>
+    <lastmod>2026-06-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -352,6 +370,30 @@
   <url>
     <loc>https://www.indianmacro.com/research/pe-backed-ipos-india-performance-analysis</loc>
     <lastmod>2026-06-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.indianmacro.com/research/yield-curve-inversion-myth-india-sovereign-curve</loc>
+    <lastmod>2026-06-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.indianmacro.com/research/india-household-savings-financialization-shift</loc>
+    <lastmod>2026-06-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.indianmacro.com/research/formalisation-of-india-economy-gst-impact</loc>
+    <lastmod>2026-06-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.indianmacro.com/research/sector-rotation-it-pharma-defensive-hedges-2024</loc>
+    <lastmod>2026-06-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>

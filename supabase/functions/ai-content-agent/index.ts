@@ -203,6 +203,11 @@ Rules:
 
     for (const topic of topics) {
       try {
+        // Hard skip if planner/topic title duplicates an existing one
+        if (existingTitleSet.has(normalize(topic.title))) {
+          details.push({ topic: topic.title, skipped: "duplicate title" });
+          continue;
+        }
         const isWeekly = topic.table === "weekly_reads";
         const writerSystem = isWeekly ? WEEKLY_WRITER_SYSTEM : defaultWriterSystem;
         const article = await generateJSON({

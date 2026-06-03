@@ -190,13 +190,23 @@ Return JSON: { "topics": [ { "table": "...", "category": "...", "title": "...", 
     }
 
     // 4. Writer — generate each article and insert as draft
-    const writerSystem = isSeed ? LONGFORM_WRITER_SYSTEM : SHORTFORM_WRITER_SYSTEM;
+    const defaultWriterSystem = isSeed ? LONGFORM_WRITER_SYSTEM : SHORTFORM_WRITER_SYSTEM;
+    const WEEKLY_WRITER_SYSTEM = `You are an editor for IndianMacro's "This Week's Reads". Write a single ultra-concise insight in neutral British/Indian English.
+
+Rules:
+- body_markdown: MAX 30 words, 1–2 sentences, plain prose, no markdown, no headings, no bullets.
+- title: short, punchy (max 12 words), no trailing punctuation.
+- excerpt: same as body, max 30 words.
+- seo_title: 50–60 chars. seo_description: 140–155 chars.
+- Be factual; avoid investment advice.`;
 
     for (const topic of topics) {
       try {
+        const isWeekly = topic.table === "weekly_reads";
+        const writerSystem = isWeekly ? WEEKLY_WRITER_SYSTEM : defaultWriterSystem;
         const article = await generateJSON({
           system: writerSystem,
-          prompt: `Write a full article.
+          prompt: `Write ${isWeekly ? "a 30-word weekly insight" : "a full article"}.
 Topic: ${topic.title}
 Angle: ${topic.angle}
 Category: ${topic.category}
@@ -205,6 +215,12 @@ Target table: ${topic.table}
 Return JSON: { "title", "slug", "category", "excerpt", "body_markdown", "seo_title", "seo_description" }`,
           schema: ArticleSchema,
         });
+
+        if (isWeekly) {
+          // Hard cap to 30 words in case the model overshoots
+          const words = article.body_markdown.trim().split(/\s+/);
+          if (words.length > 30) article.body_markdown = words.slice(0, 30).join(" ").replace(/[,;:]?$/, "") + ".";
+        }
 
         // Ensure unique slug
         let slug = slugify(article.slug || article.title);

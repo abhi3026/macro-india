@@ -228,6 +228,13 @@ Return JSON: { "title", "slug", "category", "excerpt", "body_markdown", "seo_tit
           if (words.length > 30) article.body_markdown = words.slice(0, 30).join(" ").replace(/[,;:]?$/, "") + ".";
         }
 
+        // Re-check after model generation in case the writer rephrased into an existing title
+        if (existingTitleSet.has(normalize(article.title))) {
+          details.push({ topic: topic.title, skipped: "duplicate generated title" });
+          continue;
+        }
+        existingTitleSet.add(normalize(article.title));
+
         // Ensure unique slug
         let slug = slugify(article.slug || article.title);
         if (existingSlugs.has(slug)) slug = `${slug}-${Date.now().toString(36).slice(-4)}`;

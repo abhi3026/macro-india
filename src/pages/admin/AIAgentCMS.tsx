@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 export default function AIAgentCMS() {
   const qc = useQueryClient();
   const [running, setRunning] = useState(false);
+  const [runningMacro, setRunningMacro] = useState(false);
 
   const { data: runs, isLoading } = useQuery({
     queryKey: ["ai-agent-runs"],

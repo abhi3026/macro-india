@@ -4,12 +4,13 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
-import { Sparkles, Loader2, Bot, BookOpen } from "lucide-react";
+import { Sparkles, Loader2, Bot, BookOpen, LineChart } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export default function AIAgentCMS() {
   const qc = useQueryClient();
   const [running, setRunning] = useState(false);
+  const [runningMacro, setRunningMacro] = useState(false);
 
   const { data: runs, isLoading } = useQuery({
     queryKey: ["ai-agent-runs"],
@@ -42,6 +43,20 @@ export default function AIAgentCMS() {
     }
   };
 
+  const invokeMacro = async () => {
+    setRunningMacro(true);
+    toast.info("Refreshing macro data — usually 1–2 minutes…");
+    try {
+      const { data, error } = await supabase.functions.invoke("macro-data-agent", { body: { trigger: "manual" } });
+      if (error) throw error;
+      toast.success(`Macro refresh: ${data?.rows_updated ?? 0} rows updated`);
+    } catch (e: any) {
+      toast.error(e?.message ?? "Macro refresh failed");
+    } finally {
+      setRunningMacro(false);
+    }
+  };
+
   return (
     <div className="p-8">
       <header className="mb-6 flex items-start justify-between gap-4">
@@ -64,6 +79,10 @@ export default function AIAgentCMS() {
           <Button onClick={() => invokeAgent("seed_basics", "Foundational seed run")} disabled={running} size="lg" variant="outline">
             <BookOpen className="h-4 w-4" />
             Seed foundational basics
+          </Button>
+          <Button onClick={invokeMacro} disabled={runningMacro} size="lg" variant="secondary">
+            {runningMacro ? <Loader2 className="h-4 w-4 animate-spin" /> : <LineChart className="h-4 w-4" />}
+            {runningMacro ? "Refreshing…" : "Refresh macro data"}
           </Button>
         </div>
       </header>

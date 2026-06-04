@@ -23,18 +23,30 @@ export default function AIAgentCMS() {
       if (error) throw error;
       return data as any[];
     },
-    refetchInterval: running ? 3000 : false,
+    refetchInterval: 5000,
+  });
+
+  const { data: macroRuns } = useQuery({
+    queryKey: ["macro-agent-runs"],
+    queryFn: async () => {
+      const { data, error } = await (supabase as any)
+        .from("macro_agent_runs")
+        .select("*")
+        .order("started_at", { ascending: false })
+        .limit(10);
+      if (error) throw error;
+      return data as any[];
+    },
+    refetchInterval: 5000,
   });
 
   const invokeAgent = async (trigger: "manual" | "seed_basics", label: string) => {
     setRunning(true);
-    toast.info(`${label} started — this can take 2–5 minutes…`);
+    toast.info(`${label} queued — drafts will appear in Recent runs as they finish.`);
     try {
       const { data, error } = await supabase.functions.invoke("ai-content-agent", { body: { trigger } });
       if (error) throw error;
-      const created = data?.draftsCreated ?? 0;
-      if (created === 0 && data?.note) toast.info(data.note);
-      else toast.success(`Created ${created} drafts`);
+      toast.success(data?.note ?? "Run started");
     } catch (e: any) {
       toast.error(e?.message ?? "Run failed");
     } finally {
@@ -45,15 +57,16 @@ export default function AIAgentCMS() {
 
   const invokeMacro = async () => {
     setRunningMacro(true);
-    toast.info("Refreshing macro data — usually 1–2 minutes…");
+    toast.info("Macro refresh queued — usually 3–8 minutes. Watch Recent macro runs.");
     try {
       const { data, error } = await supabase.functions.invoke("macro-data-agent", { body: { trigger: "manual" } });
       if (error) throw error;
-      toast.success(`Macro refresh: ${data?.rows_updated ?? 0} rows updated`);
+      toast.success(data?.note ?? "Macro refresh started");
     } catch (e: any) {
       toast.error(e?.message ?? "Macro refresh failed");
     } finally {
       setRunningMacro(false);
+      qc.invalidateQueries({ queryKey: ["macro-agent-runs"] });
     }
   };
 

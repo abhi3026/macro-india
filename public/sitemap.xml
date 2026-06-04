@@ -111,6 +111,11 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://www.indianmacro.com/education/personal-finance</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://www.indianmacro.com/education/equity-markets</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -118,6 +123,12 @@
   <url>
     <loc>https://www.indianmacro.com/education/mutual-funds/flexi-cap-vs-multi-cap-funds-comparison</loc>
     <lastmod>2026-06-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.indianmacro.com/education/mutual-funds/quant-vs-value-investing-mutual-funds-india</loc>
+    <lastmod>2026-06-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -146,6 +157,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://www.indianmacro.com/education/taxation/how-to-file-itr-for-futures-and-options-trading</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://www.indianmacro.com/education/investing-basics/mutual-funds-basics-structure-types-taxation</loc>
     <lastmod>2026-06-01</lastmod>
     <changefreq>monthly</changefreq>
@@ -154,6 +171,12 @@
   <url>
     <loc>https://www.indianmacro.com/education/fixed-income/how-to-invest-in-t-bills-g-secs-rbi-retail-direct</loc>
     <lastmod>2026-06-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.indianmacro.com/education/personal-finance/senior-citizen-savings-scheme-scss-guide</loc>
+    <lastmod>2026-06-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -170,20 +193,14 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://www.indianmacro.com/education/financial-markets/understanding-bond-yields-india</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://www.indianmacro.com/education/mutual-funds/index-funds-vs-etfs-india-tax-liquidity</loc>
     <lastmod>2026-06-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.indianmacro.com/education/macroeconomics/understanding-wpi-inflation-guide-india</loc>
-    <lastmod>2026-05-31</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.indianmacro.com/education/investing-basics/sip-systematic-investment-plan-guide</loc>
-    <lastmod>2026-05-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -326,6 +343,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://www.indianmacro.com/education/taxation/taxation-foreign-equities-india-lrs-tcs</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://www.indianmacro.com/research/india-gsec-global-bond-indices-impact</loc>
     <lastmod>2026-06-01</lastmod>
     <changefreq>monthly</changefreq>
@@ -394,6 +417,30 @@
   <url>
     <loc>https://www.indianmacro.com/research/sector-rotation-it-pharma-defensive-hedges-2024</loc>
     <lastmod>2026-06-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.indianmacro.com/research/dii-dominance-sip-flows-insulating-indian-markets</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.indianmacro.com/research/india-capex-supercycle-government-vs-private-investment</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.indianmacro.com/research/premiumization-trend-india-fmcg-auto-impact</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.indianmacro.com/research/commercial-paper-nbfc-liquidity-shadow-banking</loc>
+    <lastmod>2026-06-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>

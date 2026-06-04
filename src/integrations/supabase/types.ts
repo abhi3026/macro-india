@@ -88,6 +88,7 @@ export type Database = {
       }
       country_indicators: {
         Row: {
+          change_value: number | null
           country_code: string
           created_at: string
           current_value: number | null
@@ -101,9 +102,11 @@ export type Database = {
           source: string | null
           source_url: string | null
           status: Database["public"]["Enums"]["content_status"]
+          trend: string | null
           updated_at: string
         }
         Insert: {
+          change_value?: number | null
           country_code: string
           created_at?: string
           current_value?: number | null
@@ -117,9 +120,11 @@ export type Database = {
           source?: string | null
           source_url?: string | null
           status?: Database["public"]["Enums"]["content_status"]
+          trend?: string | null
           updated_at?: string
         }
         Update: {
+          change_value?: number | null
           country_code?: string
           created_at?: string
           current_value?: number | null
@@ -133,6 +138,7 @@ export type Database = {
           source?: string | null
           source_url?: string | null
           status?: Database["public"]["Enums"]["content_status"]
+          trend?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -340,6 +346,7 @@ export type Database = {
           bond_yield: number | null
           bond_yield_change: number | null
           bond_yield_sentiment: string
+          bond_yield_trend: string | null
           bond_yield_updated: string | null
           country_code: string
           created_at: string
@@ -347,6 +354,7 @@ export type Database = {
           interest_rate: number | null
           interest_rate_change: number | null
           interest_rate_sentiment: string
+          interest_rate_trend: string | null
           interest_rate_updated: string | null
           status: Database["public"]["Enums"]["content_status"]
           updated_at: string
@@ -355,6 +363,7 @@ export type Database = {
           bond_yield?: number | null
           bond_yield_change?: number | null
           bond_yield_sentiment?: string
+          bond_yield_trend?: string | null
           bond_yield_updated?: string | null
           country_code: string
           created_at?: string
@@ -362,6 +371,7 @@ export type Database = {
           interest_rate?: number | null
           interest_rate_change?: number | null
           interest_rate_sentiment?: string
+          interest_rate_trend?: string | null
           interest_rate_updated?: string | null
           status?: Database["public"]["Enums"]["content_status"]
           updated_at?: string
@@ -370,6 +380,7 @@ export type Database = {
           bond_yield?: number | null
           bond_yield_change?: number | null
           bond_yield_sentiment?: string
+          bond_yield_trend?: string | null
           bond_yield_updated?: string | null
           country_code?: string
           created_at?: string
@@ -377,6 +388,7 @@ export type Database = {
           interest_rate?: number | null
           interest_rate_change?: number | null
           interest_rate_sentiment?: string
+          interest_rate_trend?: string | null
           interest_rate_updated?: string | null
           status?: Database["public"]["Enums"]["content_status"]
           updated_at?: string

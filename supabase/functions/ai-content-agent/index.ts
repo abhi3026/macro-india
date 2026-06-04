@@ -165,9 +165,7 @@ Return JSON: { "topics": [ { "table": "...", "category": "...", "title": "...", 
         details: [{ note: "All foundational topics already exist" }],
         finished_at: new Date().toISOString(),
       }).eq("id", runId);
-      return new Response(JSON.stringify({ runId, draftsCreated: 0, details: [], note: "All foundational topics already exist" }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return;
     }
 
     // 4. Writer — generate each article and insert as draft

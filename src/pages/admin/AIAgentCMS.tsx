@@ -153,6 +153,44 @@ export default function AIAgentCMS() {
           </TableBody>
         </Table>
       </div>
+
+      <h2 className="font-display text-lg font-semibold mb-3 mt-8">Recent macro runs</h2>
+      <div className="border rounded-md bg-card overflow-x-auto">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Started</TableHead>
+              <TableHead>Trigger</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead className="text-right">Rows</TableHead>
+              <TableHead>Notes</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {(macroRuns ?? []).length === 0 && (
+              <TableRow><TableCell colSpan={5} className="text-center text-muted-foreground py-8">No macro runs yet.</TableCell></TableRow>
+            )}
+            {(macroRuns ?? []).map((r: any) => (
+              <TableRow key={r.id}>
+                <TableCell className="font-mono text-xs">{new Date(r.started_at).toLocaleString()}</TableCell>
+                <TableCell className="text-sm capitalize">{r.trigger}</TableCell>
+                <TableCell>
+                  <span className={
+                    r.status === "succeeded" ? "text-emerald-600" :
+                    r.status === "failed" ? "text-rose-600" :
+                    "text-muted-foreground"
+                  }>{r.status}</span>
+                </TableCell>
+                <TableCell className="text-right font-mono">{r.rows_updated ?? 0}</TableCell>
+                <TableCell className="text-xs text-muted-foreground max-w-md truncate">
+                  {r.error ? <span className="text-rose-600">{r.error}</span> :
+                    (r.details?.breakdown ? `snapshot ${r.details.breakdown.macro_snapshot} · indicators ${r.details.breakdown.country_indicators} · rates ${r.details.breakdown.interest_rates}` : "—")}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 }

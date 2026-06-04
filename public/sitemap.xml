@@ -205,6 +205,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://www.indianmacro.com/education/mutual-funds/business-cycle-funds-vs-thematic-funds-strategies</loc>
+    <lastmod>2026-06-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://www.indianmacro.com/education/investing-basics/guide-to-index-funds-india</loc>
     <lastmod>2026-06-01</lastmod>
     <changefreq>monthly</changefreq>
@@ -441,6 +447,30 @@
   <url>
     <loc>https://www.indianmacro.com/research/commercial-paper-nbfc-liquidity-shadow-banking</loc>
     <lastmod>2026-06-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.indianmacro.com/research/reits-invits-yield-spreads-vs-sovereign-bonds</loc>
+    <lastmod>2026-06-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.indianmacro.com/research/india-banking-credit-to-deposit-ratio-crisis-2024</loc>
+    <lastmod>2026-06-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.indianmacro.com/research/india-remittance-surplus-trade-deficit-buffer</loc>
+    <lastmod>2026-06-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.indianmacro.com/research/understanding-reer-indian-rupee-overvaluation</loc>
+    <lastmod>2026-06-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>

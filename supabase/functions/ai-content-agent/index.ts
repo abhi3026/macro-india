@@ -111,29 +111,9 @@ Rules:
 - Slug: lowercase, hyphenated, ASCII only, max 80 chars.
 - Be factual; avoid investment advice; use general examples.`;
 
-Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
-
-  const body = await req.json().catch(() => ({}));
-  const trigger = (body as any)?.trigger ?? "manual";
-  const isSeed = trigger === "seed_basics";
-
+async function runAgentJob(runId: string, trigger: string, isSeed: boolean) {
   const supabase = createClient(SUPABASE_URL, SERVICE_ROLE);
-
-  // 1. Start run record
-  const { data: runRow, error: runErr } = await supabase
-    .from("ai_agent_runs")
-    .insert({ trigger, status: "running", model: MODEL })
-    .select()
-    .single();
-  if (runErr) {
-    return new Response(JSON.stringify({ error: runErr.message }), {
-      status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
-  }
-  const runId = runRow.id;
   const details: any[] = [];
-
   try {
     // 2. Fetch ALL existing titles/slugs for hard dedupe (no time limit)
     const [edu, res, wk] = await Promise.all([
@@ -185,9 +165,7 @@ Return JSON: { "topics": [ { "table": "...", "category": "...", "title": "...", 
         details: [{ note: "All foundational topics already exist" }],
         finished_at: new Date().toISOString(),
       }).eq("id", runId);
-      return new Response(JSON.stringify({ runId, draftsCreated: 0, details: [], note: "All foundational topics already exist" }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return;
     }
 
     // 4. Writer — generate each article and insert as draft
@@ -284,17 +262,38 @@ Return JSON: { "title", "slug", "category", "excerpt", "body_markdown", "seo_tit
       drafts_created: draftsCreated,
       details, finished_at: new Date().toISOString(),
     }).eq("id", runId);
-
-    return new Response(JSON.stringify({ runId, draftsCreated, details }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
   } catch (e: any) {
     await supabase.from("ai_agent_runs").update({
       status: "failed", error: e?.message ?? String(e),
       details, finished_at: new Date().toISOString(),
     }).eq("id", runId);
-    return new Response(JSON.stringify({ error: e?.message ?? String(e), runId }), {
+  }
+}
+
+Deno.serve(async (req) => {
+  if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
+
+  const body = await req.json().catch(() => ({}));
+  const trigger = (body as any)?.trigger ?? "manual";
+  const isSeed = trigger === "seed_basics";
+  const supabase = createClient(SUPABASE_URL, SERVICE_ROLE);
+
+  const { data: runRow, error: runErr } = await supabase
+    .from("ai_agent_runs")
+    .insert({ trigger, status: "running", model: MODEL })
+    .select()
+    .single();
+  if (runErr || !runRow) {
+    return new Response(JSON.stringify({ error: runErr?.message ?? "insert failed" }), {
       status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
+
+  // @ts-ignore EdgeRuntime is provided by the Supabase edge runtime
+  EdgeRuntime.waitUntil(runAgentJob(runRow.id, trigger, isSeed));
+
+  return new Response(JSON.stringify({
+    runId: runRow.id, status: "running",
+    note: "Generation started in background. Watch Recent runs for progress.",
+  }), { status: 202, headers: { ...corsHeaders, "Content-Type": "application/json" } });
 });

@@ -1,0 +1,1 @@
+ALTER TABLE public.country_indicators ADD COLUMN IF NOT EXISTS change_value numeric; ALTER TABLE public.country_indicators ADD COLUMN IF NOT EXISTS trend text; ALTER TABLE public.interest_rates ADD COLUMN IF NOT EXISTS interest_rate_trend text; ALTER TABLE public.interest_rates ADD COLUMN IF NOT EXISTS bond_yield_trend text;

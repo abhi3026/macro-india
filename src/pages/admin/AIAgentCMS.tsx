@@ -23,18 +23,30 @@ export default function AIAgentCMS() {
       if (error) throw error;
       return data as any[];
     },
-    refetchInterval: running ? 3000 : false,
+    refetchInterval: 5000,
+  });
+
+  const { data: macroRuns } = useQuery({
+    queryKey: ["macro-agent-runs"],
+    queryFn: async () => {
+      const { data, error } = await (supabase as any)
+        .from("macro_agent_runs")
+        .select("*")
+        .order("started_at", { ascending: false })
+        .limit(10);
+      if (error) throw error;
+      return data as any[];
+    },
+    refetchInterval: 5000,
   });
 
   const invokeAgent = async (trigger: "manual" | "seed_basics", label: string) => {
     setRunning(true);
-    toast.info(`${label} started — this can take 2–5 minutes…`);
+    toast.info(`${label} queued — drafts will appear in Recent runs as they finish.`);
     try {
       const { data, error } = await supabase.functions.invoke("ai-content-agent", { body: { trigger } });
       if (error) throw error;
-      const created = data?.draftsCreated ?? 0;
-      if (created === 0 && data?.note) toast.info(data.note);
-      else toast.success(`Created ${created} drafts`);
+      toast.success(data?.note ?? "Run started");
     } catch (e: any) {
       toast.error(e?.message ?? "Run failed");
     } finally {
@@ -45,15 +57,16 @@ export default function AIAgentCMS() {
 
   const invokeMacro = async () => {
     setRunningMacro(true);
-    toast.info("Refreshing macro data — usually 1–2 minutes…");
+    toast.info("Macro refresh queued — usually 3–8 minutes. Watch Recent macro runs.");
     try {
       const { data, error } = await supabase.functions.invoke("macro-data-agent", { body: { trigger: "manual" } });
       if (error) throw error;
-      toast.success(`Macro refresh: ${data?.rows_updated ?? 0} rows updated`);
+      toast.success(data?.note ?? "Macro refresh started");
     } catch (e: any) {
       toast.error(e?.message ?? "Macro refresh failed");
     } finally {
       setRunningMacro(false);
+      qc.invalidateQueries({ queryKey: ["macro-agent-runs"] });
     }
   };
 
@@ -134,6 +147,44 @@ export default function AIAgentCMS() {
                 <TableCell className="text-xs text-muted-foreground max-w-md truncate">
                   {r.error ? <span className="text-rose-600">{r.error}</span> :
                     (Array.isArray(r.details) ? r.details.map((d: any) => d.title).filter(Boolean).join(" · ") : "—")}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
+      <h2 className="font-display text-lg font-semibold mb-3 mt-8">Recent macro runs</h2>
+      <div className="border rounded-md bg-card overflow-x-auto">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Started</TableHead>
+              <TableHead>Trigger</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead className="text-right">Rows</TableHead>
+              <TableHead>Notes</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {(macroRuns ?? []).length === 0 && (
+              <TableRow><TableCell colSpan={5} className="text-center text-muted-foreground py-8">No macro runs yet.</TableCell></TableRow>
+            )}
+            {(macroRuns ?? []).map((r: any) => (
+              <TableRow key={r.id}>
+                <TableCell className="font-mono text-xs">{new Date(r.started_at).toLocaleString()}</TableCell>
+                <TableCell className="text-sm capitalize">{r.trigger}</TableCell>
+                <TableCell>
+                  <span className={
+                    r.status === "succeeded" ? "text-emerald-600" :
+                    r.status === "failed" ? "text-rose-600" :
+                    "text-muted-foreground"
+                  }>{r.status}</span>
+                </TableCell>
+                <TableCell className="text-right font-mono">{r.rows_updated ?? 0}</TableCell>
+                <TableCell className="text-xs text-muted-foreground max-w-md truncate">
+                  {r.error ? <span className="text-rose-600">{r.error}</span> :
+                    (r.details?.breakdown ? `snapshot ${r.details.breakdown.macro_snapshot} · indicators ${r.details.breakdown.country_indicators} · rates ${r.details.breakdown.interest_rates}` : "—")}
                 </TableCell>
               </TableRow>
             ))}

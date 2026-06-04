@@ -111,29 +111,9 @@ Rules:
 - Slug: lowercase, hyphenated, ASCII only, max 80 chars.
 - Be factual; avoid investment advice; use general examples.`;
 
-Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
-
-  const body = await req.json().catch(() => ({}));
-  const trigger = (body as any)?.trigger ?? "manual";
-  const isSeed = trigger === "seed_basics";
-
+async function runAgentJob(runId: string, trigger: string, isSeed: boolean) {
   const supabase = createClient(SUPABASE_URL, SERVICE_ROLE);
-
-  // 1. Start run record
-  const { data: runRow, error: runErr } = await supabase
-    .from("ai_agent_runs")
-    .insert({ trigger, status: "running", model: MODEL })
-    .select()
-    .single();
-  if (runErr) {
-    return new Response(JSON.stringify({ error: runErr.message }), {
-      status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
-  }
-  const runId = runRow.id;
   const details: any[] = [];
-
   try {
     // 2. Fetch ALL existing titles/slugs for hard dedupe (no time limit)
     const [edu, res, wk] = await Promise.all([

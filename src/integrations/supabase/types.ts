@@ -410,6 +410,42 @@ export type Database = {
         }
         Relationships: []
       }
+      macro_agent_runs: {
+        Row: {
+          created_at: string
+          details: Json | null
+          error: string | null
+          finished_at: string | null
+          id: string
+          rows_updated: number
+          started_at: string
+          status: string
+          trigger: string
+        }
+        Insert: {
+          created_at?: string
+          details?: Json | null
+          error?: string | null
+          finished_at?: string | null
+          id?: string
+          rows_updated?: number
+          started_at?: string
+          status?: string
+          trigger?: string
+        }
+        Update: {
+          created_at?: string
+          details?: Json | null
+          error?: string | null
+          finished_at?: string | null
+          id?: string
+          rows_updated?: number
+          started_at?: string
+          status?: string
+          trigger?: string
+        }
+        Relationships: []
+      }
       macro_snapshot: {
         Row: {
           context: string

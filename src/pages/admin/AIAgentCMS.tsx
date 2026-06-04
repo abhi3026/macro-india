@@ -43,6 +43,20 @@ export default function AIAgentCMS() {
     }
   };
 
+  const invokeMacro = async () => {
+    setRunningMacro(true);
+    toast.info("Refreshing macro data — usually 1–2 minutes…");
+    try {
+      const { data, error } = await supabase.functions.invoke("macro-data-agent", { body: { trigger: "manual" } });
+      if (error) throw error;
+      toast.success(`Macro refresh: ${data?.rows_updated ?? 0} rows updated`);
+    } catch (e: any) {
+      toast.error(e?.message ?? "Macro refresh failed");
+    } finally {
+      setRunningMacro(false);
+    }
+  };
+
   return (
     <div className="p-8">
       <header className="mb-6 flex items-start justify-between gap-4">

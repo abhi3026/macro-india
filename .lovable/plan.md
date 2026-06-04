@@ -1,89 +1,53 @@
-# Educational hub restructure + foundational content
 
-## 1. URL structure (both routes work)
+## What I'll build
 
-- New canonical: `/education/:category/:slug` (e.g. `/education/macroeconomics/gdp`)
-- New index: `/education/:category` (e.g. `/education/macroeconomics`)
-- Old `/education/:slug` keeps working — when hit, looks up post and renders the same page. Canonical tag points to the new category URL so SEO consolidates there.
-- Research stays flat: `/research/:slug` (unchanged).
-- Category slug derived from `category` field, lowercased + hyphenated (e.g. "Monetary Policy" → `monetary-policy`).
-- Sitemap updated to emit new category URLs + new post URLs.
+A new edge function `macro-data-agent` that uses Lovable AI (Gemini, with Google Search grounding) to fetch the latest values for:
 
-## 2. Educational post page (long-form template)
+1. **India at a glance** (`macro_snapshot` table) — GDP growth, CPI, repo rate, 10Y G-Sec, forex reserves, etc.
+2. **Economic Indicators** (`country_indicators` table) — every country × indicator pair currently defined in `countries` × `indicator_definitions`.
+3. **Interest Rates & Bonds** (`interest_rates` table) — policy rate + 10Y bond yield per country.
 
-Upgrade `EducationalPostPage` to a structured learning template. When a post body uses the standard H2 sections below, they render with anchored TOC, breadcrumbs, and FAQ schema. Sections we standardize on:
+It runs **once daily at 03:00 IST** via pg_cron and auto-publishes results.
 
-- What it is (definition)
-- How it is calculated (formula / methodology)
-- Why it matters for investors
-- India context
-- Common misconceptions
-- Key takeaways
-- FAQs
+## No API key needed
 
-Page adds:
-- Breadcrumb: Home › Education › {Category} › {Title} (with `BreadcrumbList` JSON-LD)
-- Sticky in-page TOC (desktop)
-- `Article` + `FAQPage` JSON-LD (FAQ extracted from H2 "FAQs" section)
-- Related posts in same category at the bottom
+You asked which free key — **none**. We'll use the **Lovable AI Gateway** (already provisioned: `LOVABLE_API_KEY`) with `google/gemini-2.5-flash` and Google Search grounding. This avoids signups, rate-limit headaches, and per-country API juggling.
 
-## 3. Per-post SEO
+> If, after a week, accuracy isn't good enough, I can layer in **FRED** (free key, US data), **World Bank** (no key), and **RBI** scraping as deterministic fallbacks. Starting AI-only per your choice.
 
-Each post already has `seo_title`, `seo_description`, `og_image`, `canonical_url` columns. Wire them through:
-- `SEOHead` fed from those fields (fallback to title/excerpt).
-- Canonical = `/education/:category/:slug` (new URL) regardless of which route the user landed on.
-- Open Graph `article:section` = category, `article:published_time` from `published_at`.
+## How it works
 
-## 4. Category index page (`/education/:category`)
+```text
+pg_cron (03:00 IST daily)
+        │
+        ▼
+edge fn: macro-data-agent
+   1. Load schemas: macro_snapshot rows, countries, indicator_definitions, interest_rates rows
+   2. For each group, ask Gemini (with Google Search) for latest values
+      → returns structured JSON (value, previous, period, source URL)
+   3. Compute delta, trend, sentiment server-side (not from the model)
+   4. UPSERT into the 3 tables, status = 'published'
+   5. Log run + per-row outcome into a new `macro_agent_runs` table
+        │
+        ▼
+Frontend (already live) re-reads → values update automatically
+```
 
-- Auto-lists all published posts in that category.
-- Each category has an editable intro (title override + markdown blurb) stored in a new `education_categories` table. If no row exists, page renders with sensible defaults.
-- New CMS screen `/admin/education-categories` to edit intros + display order.
-- Hero, search-within-category, card grid using existing `BlogPostCard`.
+## Key implementation details
 
-## 5. Card design on `/education`
+- **Sentiment / trend** computed in code from `current vs previous` and each indicator's `higher_is_better` flag — the model only supplies raw numbers + source.
+- **Source URL stored** on every row (`source`, `source_url`) so you can audit.
+- **Confidence guard**: if the model returns null / cannot find a value, the existing row is left untouched (no overwrite with blanks).
+- **Manual "Run now"** button added to the existing AI Agent admin page, alongside a small "Recent macro runs" table.
+- **Auto-publish** as requested — values go live immediately.
 
-Keep the existing grid but:
-- Group by category with section headers linking to `/education/:category`
-- Each card shows category badge, reading time, excerpt — clicks go to new URL.
+## Files
 
-## 6. Seed foundational drafts (~12 topics)
+- `supabase/migrations/...` — new `macro_agent_runs` table + pg_cron schedule.
+- `supabase/functions/macro-data-agent/index.ts` — new edge function.
+- `src/pages/admin/AIAgentCMS.tsx` — add a "Run macro data refresh" button + runs table.
 
-Trigger the AI agent with a curated topic list instead of autonomous selection. One-time CMS button on `/admin/ai-agent` → "Seed foundational basics". Topics:
+## Risks / things to know
 
-Macroeconomics: GDP, CPI Inflation, WPI Inflation, Repo Rate, Fiscal Deficit, Current Account Deficit
-Markets: P/E Ratio, Bond Yields, Nifty 50, Index Funds
-Personal finance/MF: Mutual Funds (basics), SIP, NAV, ELSS
-
-Each generated as a long-form (1200–1800 word) educational draft using the standardized section template above. Saved as `draft` in `educational_posts`. Editor reviews and publishes.
-
-## 7. Files
-
-**New**
-- `src/pages/EducationCategoryPage.tsx` — category index
-- `src/pages/admin/EducationCategoriesCMS.tsx` — edit intros
-- Migration: `education_categories` table (slug PK, title, intro_markdown, display_order)
-
-**Edited**
-- `src/App.tsx` — add `/education/:category` and `/education/:category/:slug` routes
-- `src/pages/EducationalPostPage.tsx` — long-form template, breadcrumbs, TOC, FAQ schema, SEO from CMS fields, canonical → new URL
-- `src/pages/EducationPage.tsx` — group by category, link to new URLs
-- `src/components/BlogPostCard.tsx` — minor: category-aware link if needed
-- `src/utils/contentLoader.ts` — return seo fields + category slug helper
-- `src/pages/admin/AdminLayout.tsx` — nav entry for category CMS
-- `src/pages/admin/AIAgentCMS.tsx` — "Seed foundational basics" button
-- `supabase/functions/ai-content-agent/index.ts` — accept `{ trigger: "seed_basics", topics: [...] }` and use the long-form prompt template
-- `public/sitemap.xml` — note: dynamic posts not listed yet; add static category URLs
-
-**Out of scope**
-- Auto-generating sitemap from DB (separate task)
-- Migrating research to category URLs (user opted out)
-- Cover images for seeded drafts (user opted out earlier)
-
-## Order of execution
-
-1. Migration: `education_categories` table
-2. Routes + EducationCategoryPage + updated EducationalPostPage
-3. Category CMS page + nav entry
-4. AI agent: seed-basics mode + button on agent CMS
-5. Trigger seed run (user clicks; produces 12 drafts in review queue)
+- LLM-fetched economic data can occasionally be stale or wrong. Auto-publish means errors go straight to the site. If you want a safety net later, I can add a "deviation > X%" rule that drops to draft for review.
+- Lovable AI usage is billed from your workspace credits (~30-50 model calls/day for this agent).

@@ -80,6 +80,10 @@ export default function AIAgentCMS() {
             <BookOpen className="h-4 w-4" />
             Seed foundational basics
           </Button>
+          <Button onClick={invokeMacro} disabled={runningMacro} size="lg" variant="secondary">
+            {runningMacro ? <Loader2 className="h-4 w-4 animate-spin" /> : <LineChart className="h-4 w-4" />}
+            {runningMacro ? "Refreshing…" : "Refresh macro data"}
+          </Button>
         </div>
       </header>
 

@@ -80,34 +80,28 @@ const NAME_ALIASES: Record<string, string> = {
   "palestine": "palestine",
 };
 
+function extractJsonBlock(text: string): any {
+  if (!text) return null;
+  const fenced = text.match(/```(?:json)?\s*([\s\S]*?)```/);
+  const candidate = (fenced ? fenced[1] : text).trim();
+  try { return JSON.parse(candidate); } catch {}
+  const start = candidate.indexOf("{");
+  const end = candidate.lastIndexOf("}");
+  if (start >= 0 && end > start) {
+    try { return JSON.parse(candidate.slice(start, end + 1)); } catch {}
+  }
+  return null;
+}
+
 async function tinyfishScrape(slug: string): Promise<ScrapedRow[]> {
   const url = `https://tradingeconomics.com/country-list/${slug}`;
-  // Run synchronously — tradingeconomics country-list pages render quickly.
   const res = await fetch("https://agent.tinyfish.ai/v1/automation/run", {
     method: "POST",
     headers: { "Content-Type": "application/json", "X-API-Key": TINYFISH_API_KEY },
     body: JSON.stringify({
       url,
-      goal: "Extract every data row from the main country indicator table on this Trading Economics country-list page. For each row return: country (the country or region name shown in the first column, exactly as displayed), value (the most recent / 'Last' value as a plain number — no units, no commas, no percent sign), previous (the previous-period value as a plain number, or null if not shown). Ignore any header, footer, ad or summary rows.",
+      goal: "Extract every data row from the main country indicator table on this Trading Economics country-list page. Return ONLY a JSON object of the form: {\"rows\":[{\"country\":string,\"value\":number,\"previous\":number}]}. value is the 'Last' column as a plain number (no units, commas or % sign). previous is the 'Previous' column as a plain number. Skip header/footer/ad rows.",
       browser_profile: "lite",
-      output_schema: {
-        type: "object",
-        properties: {
-          rows: {
-            type: "array",
-            items: {
-              type: "object",
-              properties: {
-                country: { type: "string" },
-                value: { type: "number" },
-                previous: { type: "number" },
-              },
-              required: ["country", "value"],
-            },
-          },
-        },
-        required: ["rows"],
-      },
     }),
   });
   if (!res.ok) {
@@ -116,11 +110,28 @@ async function tinyfishScrape(slug: string): Promise<ScrapedRow[]> {
   }
   const data = await res.json();
   if (data.status !== "COMPLETED") {
-    throw new Error(`TinyFish ${slug} status=${data.status}: ${JSON.stringify(data.error).slice(0, 300)}`);
+    throw new Error(`TinyFish ${slug} status=${data.status}: ${JSON.stringify(data.error ?? {}).slice(0, 300)}`);
   }
-  const rows = data?.result?.rows;
+  // result can be either: { result: { rows: [...] } }, or { result: { result: "```json...```" } }
+  let rows: any = data?.result?.rows;
+  if (!Array.isArray(rows)) {
+    const inner = data?.result?.result;
+    if (typeof inner === "string") {
+      const parsed = extractJsonBlock(inner);
+      rows = parsed?.rows;
+    } else if (inner && Array.isArray(inner.rows)) {
+      rows = inner.rows;
+    }
+  }
   if (!Array.isArray(rows)) return [];
-  return rows.filter((r: any) => r && r.country && typeof r.value === "number");
+  return rows
+    .filter((r: any) => r && r.country && (typeof r.value === "number" || typeof r.value === "string"))
+    .map((r: any) => ({
+      country: String(r.country),
+      value: typeof r.value === "number" ? r.value : Number(String(r.value).replace(/[^\d.\-]/g, "")),
+      previous: r.previous == null ? null : (typeof r.previous === "number" ? r.previous : Number(String(r.previous).replace(/[^\d.\-]/g, ""))),
+    }))
+    .filter((r) => Number.isFinite(r.value));
 }
 
 function buildLookup(rows: ScrapedRow[]): Map<string, ScrapedRow> {

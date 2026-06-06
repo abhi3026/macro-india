@@ -6,7 +6,7 @@ import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY")!;
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-const MODEL = "gemini-2.5-flash";
+const MODELS = ["gemini-2.5-flash", "gemini-flash-latest", "gemini-2.0-flash"] as const;
 
 const slugify = (s: string) =>
   s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 80);
@@ -22,8 +22,10 @@ function extractJson(text: string): string {
   return text.trim();
 }
 
-async function callGemini(system: string, prompt: string): Promise<string> {
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${GEMINI_API_KEY}`;
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+async function callGeminiOnce(model: string, system: string, prompt: string): Promise<string> {
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
   const res = await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -35,11 +37,31 @@ async function callGemini(system: string, prompt: string): Promise<string> {
   });
   if (!res.ok) {
     const t = await res.text();
-    throw new Error(`Gemini ${res.status}: ${t.slice(0, 400)}`);
+    const err: any = new Error(`Gemini ${model} ${res.status}: ${t.slice(0, 400)}`);
+    err.status = res.status;
+    throw err;
   }
   const data = await res.json();
   const text = data?.candidates?.[0]?.content?.parts?.map((p: any) => p.text).join("") ?? "";
   return text;
+}
+
+async function callGemini(system: string, prompt: string): Promise<string> {
+  let lastErr: any;
+  for (const model of MODELS) {
+    for (let attempt = 0; attempt < 4; attempt++) {
+      try {
+        return await callGeminiOnce(model, system, prompt);
+      } catch (e: any) {
+        lastErr = e;
+        const status = e?.status ?? 0;
+        const retriable = status === 429 || status === 500 || status === 502 || status === 503 || status === 504;
+        if (!retriable) break; // try next model
+        await sleep(800 * Math.pow(2, attempt)); // 0.8s, 1.6s, 3.2s, 6.4s
+      }
+    }
+  }
+  throw lastErr ?? new Error("Gemini call failed");
 }
 
 async function generateJSON<T>(opts: { system: string; prompt: string }): Promise<T> {
@@ -259,7 +281,7 @@ Deno.serve(async (req) => {
 
   const { data: runRow, error: runErr } = await supabase
     .from("ai_agent_runs")
-    .insert({ trigger, status: "running", model: `google/${MODEL}` })
+    .insert({ trigger, status: "running", model: `google/${MODELS[0]}` })
     .select()
     .single();
   if (runErr || !runRow) {

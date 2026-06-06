@@ -179,16 +179,25 @@ async function runJob(runId: string, _trigger: string) {
       if (s) neededSlugs.add(s);
     }
 
-    // Scrape each slug (sequential to be polite + stay within edge memory)
+    // Scrape all slugs in parallel — each TinyFish call takes ~60s and edge
+    // functions cap at ~400s, so sequential would always time out.
     const scraped: Record<string, Map<string, ScrapedRow>> = {};
-    for (const slug of neededSlugs) {
+    const slugList = Array.from(neededSlugs);
+    const results = await Promise.all(slugList.map(async (slug) => {
       try {
         const rows = await tinyfishScrape(slug);
-        scraped[slug] = buildLookup(rows);
-        details.push({ scrape: slug, ok: true, rows: rows.length });
+        return { slug, ok: true as const, rows };
       } catch (e: any) {
-        scraped[slug] = new Map();
-        details.push({ scrape: slug, ok: false, error: String(e?.message ?? e).slice(0, 300) });
+        return { slug, ok: false as const, error: String(e?.message ?? e).slice(0, 300) };
+      }
+    }));
+    for (const r of results) {
+      if (r.ok) {
+        scraped[r.slug] = buildLookup(r.rows);
+        details.push({ scrape: r.slug, ok: true, rows: r.rows.length });
+      } else {
+        scraped[r.slug] = new Map();
+        details.push({ scrape: r.slug, ok: false, error: r.error });
       }
     }
 

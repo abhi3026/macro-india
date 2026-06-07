@@ -5,3 +5,5 @@ project_id = "nhnazpsymubixvdymitu"
     verify_jwt = false
   [functions.process-email-queue]
     verify_jwt = true
+  [functions.market-data]
+    verify_jwt = false

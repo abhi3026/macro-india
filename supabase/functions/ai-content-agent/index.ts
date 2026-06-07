@@ -1,7 +1,11 @@
 // AI Content Agent — uses Google Gemini direct API (user-provided key) for
 // educational posts (term explainers), research articles, and weekly reads.
 import { createClient } from "npm:@supabase/supabase-js@2";
-import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+};
 
 const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY")!;
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;

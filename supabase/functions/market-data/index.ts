@@ -1,5 +1,8 @@
 // Proxies Alpha Vantage Global Quote requests so the API key stays server-side.
-import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+};
 
 const ALLOWED_SYMBOLS = new Set(["NIFTY", "SENSEX", "BANKNIFTY"]);
 

@@ -106,6 +106,11 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://www.indianmacro.com/education/single-term-explainers</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://www.indianmacro.com/education/fixed-income</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -129,6 +134,12 @@
   <url>
     <loc>https://www.indianmacro.com/education/mutual-funds/quant-vs-value-investing-mutual-funds-india</loc>
     <lastmod>2026-06-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.indianmacro.com/education/financial-markets/bonds-understanding-basics-indian-investors</loc>
+    <lastmod>2026-06-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -159,6 +170,12 @@
   <url>
     <loc>https://www.indianmacro.com/education/taxation/how-to-file-itr-for-futures-and-options-trading</loc>
     <lastmod>2026-06-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.indianmacro.com/education/single-term-explainers/understanding-debentures-debt-instrument-indian-investors</loc>
+    <lastmod>2026-06-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -207,6 +224,12 @@
   <url>
     <loc>https://www.indianmacro.com/education/mutual-funds/business-cycle-funds-vs-thematic-funds-strategies</loc>
     <lastmod>2026-06-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.indianmacro.com/education/monetary-policy/understanding-cash-reserve-ratio-crr-india-rbi-liquidity</loc>
+    <lastmod>2026-06-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -295,6 +318,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://www.indianmacro.com/education/fiscal-policy/understanding-indias-fiscal-deficit-what-it-means-for-you</loc>
+    <lastmod>2026-06-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://www.indianmacro.com/education/financial-markets/understanding-bond-yields-india-guide</loc>
     <lastmod>2026-06-01</lastmod>
     <changefreq>monthly</changefreq>
@@ -351,6 +380,12 @@
   <url>
     <loc>https://www.indianmacro.com/education/taxation/taxation-foreign-equities-india-lrs-tcs</loc>
     <lastmod>2026-06-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.indianmacro.com/education/macroeconomics/understanding-india-current-account-deficit-cad</loc>
+    <lastmod>2026-06-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -471,6 +506,18 @@
   <url>
     <loc>https://www.indianmacro.com/research/understanding-reer-indian-rupee-overvaluation</loc>
     <lastmod>2026-06-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.indianmacro.com/research/geopolitical-realignment-india-trade-supply-chains-impact</loc>
+    <lastmod>2026-06-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.indianmacro.com/research/green-bonds-india-growth-challenges-market-potential</loc>
+    <lastmod>2026-06-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>

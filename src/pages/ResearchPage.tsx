@@ -58,7 +58,7 @@ const ResearchPage = () => {
         breadcrumbs={[{ name: "Home", href: "/" }, { name: "Research" }]}
         aside={
           <div className="rounded-xl border border-white/15 bg-white/5 backdrop-blur p-6">
-            <p className="text-[11px] tracking-wider uppercase text-white/60">Coverage</p>
+            <p className="text-[11px] tracking-wider uppercase text-white/80">Coverage</p>
             <h3 className="font-display text-lg font-semibold mt-1 text-white">What we research</h3>
             <ul className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-sm text-white/80">
               {["GDP & growth", "Inflation & RBI policy", "Banking & credit", "Equity & debt markets", "FX & external sector", "Sector deep-dives"].map((x) => (
@@ -134,7 +134,7 @@ const ResearchPage = () => {
 
             <aside className="lg:col-span-4 flex flex-col gap-6">
               <div className="surface p-6 bg-[hsl(240_100%_13%)] text-white border-transparent flex-1">
-                <p className="text-[11px] tracking-[0.14em] uppercase text-white/60">Newsletter</p>
+                <p className="text-[11px] tracking-[0.14em] uppercase text-white/80">Newsletter</p>
                 <h3 className="font-display text-xl font-semibold mt-1">The Weekly Brief</h3>
                 <p className="text-sm text-white/70 mt-2">India's macro & markets, distilled into one email every Monday.</p>
                 <Button onClick={() => setSubscribeOpen(true)} className="mt-4 w-full bg-white text-[hsl(240_100%_13%)] hover:bg-white/90">

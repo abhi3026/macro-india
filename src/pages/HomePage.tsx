@@ -58,6 +58,7 @@ const HomePage = () => {
         description="Track Indian economic indicators, GDP, inflation, interest rates, and financial research. Your comprehensive source for India's macroeconomic insights."
         canonicalUrl="/"
         keywords="Indian economy, GDP India, inflation India, RBI policy, economic indicators, financial research India"
+        ogImage="/og-image.jpg"
       />
       <StructuredData type="Organization" />
       <StructuredData type="BreadcrumbList" items={[{ name: 'Home', url: '/' }]} />

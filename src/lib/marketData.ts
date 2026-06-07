@@ -4,6 +4,7 @@
  */
 
 import { toast } from "@/components/ui/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 // Define types for our market data
 export type MarketSymbol = {
@@ -145,37 +146,35 @@ export const fetchMarketData = async (): Promise<MarketData[]> => {
         
         const symbolToFetch = marketSymbols.find(s => s.id === symbolId);
         if (symbolToFetch && !processedSymbols.has(symbolToFetch.symbol)) {
-          const alphaSymbol = symbolToFetch.id === "nifty50" ? "NIFTY" : 
-                         symbolToFetch.id === "sensex" ? "SENSEX" : 
+          const alphaSymbol = symbolToFetch.id === "nifty50" ? "NIFTY" :
+                         symbolToFetch.id === "sensex" ? "SENSEX" :
                          "BANKNIFTY";
-          
-          const ALPHA_VANTAGE_API_KEY = "B7NMRFKLCBHPB70K";
-          const alphaUrl = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${alphaSymbol}&apikey=${ALPHA_VANTAGE_API_KEY}`;
-          
+
           try {
-            const response = await fetch(alphaUrl);
-            
-            if (response.ok) {
-              const data = await response.json();
-              
-              if (data["Global Quote"] && Object.keys(data["Global Quote"]).length > 0) {
-                const quote = data["Global Quote"];
-                const price = parseFloat(quote["05. price"] || "0");
-                const change = parseFloat(quote["09. change"] || "0");
-                const changePercent = parseFloat((quote["10. change percent"] || "0%").replace('%', ''));
-                
-                if (!isNaN(price)) {
-                  resultData.push({
-                    symbol: symbolToFetch.symbol,
-                    name: symbolToFetch.displayName || symbolToFetch.name,
-                    price,
-                    change,
-                    changePercent,
-                    lastUpdated: new Date(),
-                    currency: symbolToFetch.currency,
-                  });
-                  fetchedAny = true;
-                }
+            // API key lives server-side in the market-data edge function.
+            const { data, error } = await supabase.functions.invoke("market-data", {
+              method: "GET",
+              // @ts-expect-error - query supported by supabase-js v2 invoke
+              query: { symbol: alphaSymbol },
+            });
+
+            if (!error && data && data["Global Quote"] && Object.keys(data["Global Quote"]).length > 0) {
+              const quote = data["Global Quote"];
+              const price = parseFloat(quote["05. price"] || "0");
+              const change = parseFloat(quote["09. change"] || "0");
+              const changePercent = parseFloat((quote["10. change percent"] || "0%").replace('%', ''));
+
+              if (!isNaN(price)) {
+                resultData.push({
+                  symbol: symbolToFetch.symbol,
+                  name: symbolToFetch.displayName || symbolToFetch.name,
+                  price,
+                  change,
+                  changePercent,
+                  lastUpdated: new Date(),
+                  currency: symbolToFetch.currency,
+                });
+                fetchedAny = true;
               }
             }
           } catch (e) {
@@ -184,7 +183,7 @@ export const fetchMarketData = async (): Promise<MarketData[]> => {
         }
       }
     } catch (alphaError) {
-      console.error("Error with Alpha Vantage API:", alphaError);
+      console.error("Error with market-data proxy:", alphaError);
     }
     
     // Fill in fallback data for any missing symbols

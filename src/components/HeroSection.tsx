@@ -67,10 +67,10 @@ const HeroSection = () => {
           </div>
 
           <div className="mt-6">
-            <p className="text-[10px] tracking-[0.18em] uppercase text-white/70 mb-2">Trusted data sources</p>
+            <p className="text-[10px] tracking-[0.18em] uppercase text-white/85 mb-2">Trusted data sources</p>
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
               {sources.map((s) => (
-                <span key={s} className="text-sm font-medium text-white/55 tracking-wide">{s}</span>
+                <span key={s} className="text-sm font-medium text-white/85 tracking-wide">{s}</span>
               ))}
             </div>
           </div>

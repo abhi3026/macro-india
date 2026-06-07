@@ -67,7 +67,7 @@ const ContactPage = () => {
       <section className="bg-[hsl(240_100%_13%)] text-white border-b border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 text-[11px] font-medium tracking-[0.2em] uppercase text-white/60 mb-6">
+            <div className="inline-flex items-center gap-2 text-[11px] font-medium tracking-[0.2em] uppercase text-white/80 mb-6">
               <span className="h-px w-8 bg-white/30" />
               Contact
             </div>

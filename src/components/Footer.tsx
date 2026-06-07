@@ -56,7 +56,7 @@ const Footer = () => {
               <img src="/logo.svg" alt="" className="h-8 w-auto" />
               <span className="ml-2 text-xl font-display font-semibold text-white tracking-tight">IndianMacro</span>
             </Link>
-            <p className="mt-4 text-sm leading-relaxed text-white/60 max-w-sm">
+            <p className="mt-4 text-sm leading-relaxed text-white/80 max-w-sm">
               India's premium macroeconomic intelligence platform. Research, data and signal for investors, analysts and finance professionals.
             </p>
             <div className="mt-6 flex items-center gap-2">
@@ -92,7 +92,7 @@ const Footer = () => {
           {/* Newsletter */}
           <div className="md:col-span-2">
             <h3 className="text-xs font-semibold tracking-widest uppercase text-white/70 mb-4">Newsletter</h3>
-            <p className="text-sm text-white/60 mb-3">Weekly macro brief. No spam.</p>
+            <p className="text-sm text-white/80 mb-3">Weekly macro brief. No spam.</p>
             <form onSubmit={handleSubscribe} className="space-y-2">
               <Input type="email" placeholder="you@firm.com"
                 className="bg-white/5 border-white/10 text-white placeholder:text-white/70 h-9"
@@ -120,7 +120,7 @@ const Footer = () => {
         {/* Sources strip */}
         <div className="mt-12 pt-8 border-t border-white/10 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div className="text-xs text-white/70 tracking-widest uppercase">Data Sources</div>
-          <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs text-white/60">
+          <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs text-white/80">
             {[
               { l: "RBI", h: "https://www.rbi.org.in/" },
               { l: "MOSPI", h: "https://www.mospi.gov.in/" },

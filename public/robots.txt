@@ -5,7 +5,7 @@ Disallow: /admin/*
 Disallow: /auth
 Disallow: /search
 
-Sitemap: https://www.indianmacro.com/sitemap.xml
+Sitemap: https://macro-india-insights.lovable.app/sitemap.xml
 
 User-agent: Googlebot
 Allow: /

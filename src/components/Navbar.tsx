@@ -197,6 +197,7 @@ const Navbar = () => {
                     <Input
                       type="search"
                       placeholder="Search markets, research…"
+                      aria-label="Search markets and research"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       className="pl-9"

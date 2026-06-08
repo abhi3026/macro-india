@@ -35,6 +35,7 @@ const DataDashboardPage = () => {
 
       <main className="flex-1">
         <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <h2 className="text-2xl font-semibold mb-6">Explore data categories</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Link to="/data-dashboard/economic-indicators">
               <Card className="h-full hover:shadow-lg transition-shadow">

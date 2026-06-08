@@ -114,6 +114,7 @@ const EducationPage = () => {
                 <Input
                   type="text"
                   placeholder="Search educational resources..."
+                  aria-label="Search educational resources"
                   className="pl-10"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}

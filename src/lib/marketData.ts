@@ -4,7 +4,6 @@
  */
 
 import { toast } from "@/components/ui/use-toast";
-import { supabase } from "@/integrations/supabase/client";
 
 // Define types for our market data
 export type MarketSymbol = {
@@ -130,60 +129,6 @@ export const fetchMarketData = async (): Promise<MarketData[]> => {
       }
     } catch (cryptoError) {
       console.error("Error fetching crypto data:", cryptoError);
-    }
-    
-    // Try Alpha Vantage as a backup for Indian indices
-    try {
-      // Get processed symbols to avoid duplication
-      const processedSymbols = new Set(resultData.map(d => d.symbol));
-      
-      // Choose one index to fetch (to stay within API limits)
-      const symbolsToTry = ["nifty50", "sensex", "banknifty"];
-      let fetchedAny = false;
-      
-      for (const symbolId of symbolsToTry) {
-        if (fetchedAny) break; // Only fetch one to avoid API rate limits
-        
-        const symbolToFetch = marketSymbols.find(s => s.id === symbolId);
-        if (symbolToFetch && !processedSymbols.has(symbolToFetch.symbol)) {
-          const alphaSymbol = symbolToFetch.id === "nifty50" ? "NIFTY" :
-                         symbolToFetch.id === "sensex" ? "SENSEX" :
-                         "BANKNIFTY";
-
-          try {
-            // API key lives server-side in the market-data edge function.
-            const { data, error } = await supabase.functions.invoke("market-data", {
-              method: "GET",
-              // @ts-expect-error - query supported by supabase-js v2 invoke
-              query: { symbol: alphaSymbol },
-            });
-
-            if (!error && data && data["Global Quote"] && Object.keys(data["Global Quote"]).length > 0) {
-              const quote = data["Global Quote"];
-              const price = parseFloat(quote["05. price"] || "0");
-              const change = parseFloat(quote["09. change"] || "0");
-              const changePercent = parseFloat((quote["10. change percent"] || "0%").replace('%', ''));
-
-              if (!isNaN(price)) {
-                resultData.push({
-                  symbol: symbolToFetch.symbol,
-                  name: symbolToFetch.displayName || symbolToFetch.name,
-                  price,
-                  change,
-                  changePercent,
-                  lastUpdated: new Date(),
-                  currency: symbolToFetch.currency,
-                });
-                fetchedAny = true;
-              }
-            }
-          } catch (e) {
-            console.error(`Error fetching ${alphaSymbol} data:`, e);
-          }
-        }
-      }
-    } catch (alphaError) {
-      console.error("Error with market-data proxy:", alphaError);
     }
     
     // Fill in fallback data for any missing symbols

@@ -22,7 +22,7 @@ const EducationalResources = () => {
             </p>
             <Button asChild variant="outline" size="sm" className="w-full justify-between">
               <Link to="/education/indian-economy-basics" onClick={() => window.scrollTo(0, 0)}>
-                <span>Learn More</span>
+                <span>Read the Indian economy guide</span>
                 <ArrowRight className="h-4 w-4 ml-2" />
               </Link>
             </Button>
@@ -38,7 +38,7 @@ const EducationalResources = () => {
             </p>
             <Button asChild variant="outline" size="sm" className="w-full justify-between">
               <Link to="/education/financial-markets" onClick={() => window.scrollTo(0, 0)}>
-                <span>Learn More</span>
+                <span>Explore financial market basics</span>
                 <ArrowRight className="h-4 w-4 ml-2" />
               </Link>
             </Button>
@@ -54,7 +54,7 @@ const EducationalResources = () => {
             </p>
             <Button asChild variant="outline" size="sm" className="w-full justify-between">
               <Link to="/education/economic-indicators" onClick={() => window.scrollTo(0, 0)}>
-                <span>Learn More</span>
+                <span>Understand economic indicators</span>
                 <ArrowRight className="h-4 w-4 ml-2" />
               </Link>
             </Button>

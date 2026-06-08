@@ -22,7 +22,7 @@ const SEOHead = ({
   keywords,
   noindex = false,
 }: SEOHeadProps) => {
-  const siteUrl = 'https://indianmacro.com';
+  const siteUrl = 'https://macro-india-insights.lovable.app';
   const fullCanonicalUrl = canonicalUrl ? `${siteUrl}${canonicalUrl}` : siteUrl;
   const isAbsoluteImage = /^https?:\/\//i.test(ogImage);
   const fullOgImage = isAbsoluteImage ? ogImage : `${siteUrl}${ogImage}`;

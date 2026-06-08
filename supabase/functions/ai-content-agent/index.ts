@@ -7,10 +7,12 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY")!;
+const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const MODELS = ["gemini-2.5-flash", "gemini-flash-latest", "gemini-2.0-flash"] as const;
+const LOVABLE_MODELS = ["google/gemini-2.5-flash", "google/gemini-2.0-flash", "google/gemini-flash-latest"] as const;
 
 const slugify = (s: string) =>
   s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 80);
@@ -29,6 +31,7 @@ function extractJson(text: string): string {
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 async function callGeminiOnce(model: string, system: string, prompt: string): Promise<string> {
+  if (!GEMINI_API_KEY) throw new Error("Gemini API key not configured");
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
   const res = await fetch(url, {
     method: "POST",
@@ -50,6 +53,52 @@ async function callGeminiOnce(model: string, system: string, prompt: string): Pr
   return text;
 }
 
+async function callLovableOnce(model: string, system: string, prompt: string): Promise<string> {
+  if (!LOVABLE_API_KEY) throw new Error("Lovable AI is not configured");
+  const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${LOVABLE_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      model,
+      messages: [
+        { role: "system", content: `${system}\n\nRespond with ONLY valid JSON matching the requested schema. No prose, no markdown fences.` },
+        { role: "user", content: prompt },
+      ],
+      response_format: { type: "json_object" },
+      temperature: 0.7,
+    }),
+  });
+  if (!res.ok) {
+    const t = await res.text();
+    const err: any = new Error(`Lovable AI ${model} ${res.status}: ${t.slice(0, 400)}`);
+    err.status = res.status;
+    throw err;
+  }
+  const data = await res.json();
+  return data?.choices?.[0]?.message?.content ?? "";
+}
+
+async function callLovable(system: string, prompt: string): Promise<string> {
+  let lastErr: any;
+  for (const model of LOVABLE_MODELS) {
+    for (let attempt = 0; attempt < 3; attempt++) {
+      try {
+        return await callLovableOnce(model, system, prompt);
+      } catch (e: any) {
+        lastErr = e;
+        const status = e?.status ?? 0;
+        const retriable = status === 429 || status === 500 || status === 502 || status === 503 || status === 504;
+        if (!retriable) break;
+        await sleep(600 * Math.pow(2, attempt));
+      }
+    }
+  }
+  throw lastErr ?? new Error("Lovable AI call failed");
+}
+
 async function callGemini(system: string, prompt: string): Promise<string> {
   let lastErr: any;
   for (const model of MODELS) {
@@ -68,9 +117,34 @@ async function callGemini(system: string, prompt: string): Promise<string> {
   throw lastErr ?? new Error("Gemini call failed");
 }
 
+async function callAI(system: string, prompt: string): Promise<string> {
+  if (LOVABLE_API_KEY) {
+    try {
+      return await callLovable(system, prompt);
+    } catch (e) {
+      if (!GEMINI_API_KEY) throw e;
+      console.warn("Lovable AI failed; falling back to Gemini", e);
+    }
+  }
+  return await callGemini(system, prompt);
+}
+
 async function generateJSON<T>(opts: { system: string; prompt: string }): Promise<T> {
-  const text = await callGemini(opts.system, opts.prompt);
-  return JSON.parse(extractJson(text)) as T;
+  const text = await callAI(opts.system, opts.prompt);
+  const json = extractJson(text);
+  try {
+    return JSON.parse(json) as T;
+  } catch (e: any) {
+    const repaired = await callAI(
+      "You repair malformed JSON. Return only valid JSON with no markdown.",
+      `Repair this malformed JSON so JSON.parse succeeds. Preserve all fields and content.\n\n${json.slice(0, 60000)}`,
+    );
+    try {
+      return JSON.parse(extractJson(repaired)) as T;
+    } catch {
+      throw new Error(`AI returned invalid JSON: ${e?.message ?? String(e)}`);
+    }
+  }
 }
 
 // Curated foundational finance terms — educational posts focus on explaining
@@ -309,7 +383,7 @@ Deno.serve(async (req) => {
 
   const { data: runRow, error: runErr } = await supabase
     .from("ai_agent_runs")
-    .insert({ trigger, status: "running", model: `google/${MODELS[0]}` })
+    .insert({ trigger, status: "running", model: LOVABLE_API_KEY ? LOVABLE_MODELS[0] : `google/${MODELS[0]}` })
     .select()
     .single();
   if (runErr || !runRow) {

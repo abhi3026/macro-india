@@ -5,7 +5,7 @@ import { writeFileSync } from "fs";
 import { resolve } from "path";
 import { createClient } from "@supabase/supabase-js";
 
-const BASE_URL = "https://www.indianmacro.com";
+const BASE_URL = "https://macro-india-insights.lovable.app";
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL || "https://nhnazpsymubixvdymitu.supabase.co";
 const SUPABASE_KEY =
   process.env.VITE_SUPABASE_PUBLISHABLE_KEY ||

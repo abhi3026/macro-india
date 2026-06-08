@@ -1,8 +1,7 @@
-// Macro Data Agent — scrapes Trading Economics country-list pages via the
-// TinyFish Agent API and refreshes macro_snapshot, country_indicators, and
-// interest_rates. Returns immediately with a runId; work continues in the
-// background via EdgeRuntime.waitUntil.
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+// Macro Data Agent — refreshes macro_snapshot, country_indicators, and
+// interest_rates from public Trading Economics country-list tables. Returns
+// immediately with a runId; work continues in the background.
+import { createClient } from "npm:@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -11,7 +10,6 @@ const corsHeaders = {
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-const TINYFISH_API_KEY = Deno.env.get("TINYFISH_API_KEY")!;
 
 const supabase = createClient(SUPABASE_URL, SERVICE_KEY);
 
@@ -80,58 +78,52 @@ const NAME_ALIASES: Record<string, string> = {
   "palestine": "palestine",
 };
 
-function extractJsonBlock(text: string): any {
-  if (!text) return null;
-  const fenced = text.match(/```(?:json)?\s*([\s\S]*?)```/);
-  const candidate = (fenced ? fenced[1] : text).trim();
-  try { return JSON.parse(candidate); } catch {}
-  const start = candidate.indexOf("{");
-  const end = candidate.lastIndexOf("}");
-  if (start >= 0 && end > start) {
-    try { return JSON.parse(candidate.slice(start, end + 1)); } catch {}
-  }
-  return null;
+function decodeHtml(value: string): string {
+  return value
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
-async function tinyfishScrape(slug: string): Promise<ScrapedRow[]> {
+function cellText(html: string): string {
+  return decodeHtml(html.replace(/<script[\s\S]*?<\/script>/gi, "").replace(/<style[\s\S]*?<\/style>/gi, "").replace(/<[^>]+>/g, " "));
+}
+
+function parseNumber(value: string): number | null {
+  const cleaned = value.replace(/,/g, "").match(/-?\d+(?:\.\d+)?/g)?.[0];
+  if (!cleaned) return null;
+  const parsed = Number(cleaned);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+function parseCountryTable(html: string): ScrapedRow[] {
+  const table = html.match(/<table\b[\s\S]*?<\/table>/i)?.[0];
+  if (!table) return [];
+  const rows: ScrapedRow[] = [];
+  const trMatches = table.match(/<tr\b[\s\S]*?<\/tr>/gi) ?? [];
+  for (const tr of trMatches) {
+    const cells = [...tr.matchAll(/<t[dh]\b[^>]*>([\s\S]*?)<\/t[dh]>/gi)].map((m) => cellText(m[1]));
+    if (cells.length < 3 || /^country$/i.test(cells[0])) continue;
+    const value = parseNumber(cells[1]);
+    if (value == null) continue;
+    rows.push({ country: cells[0], value, previous: parseNumber(cells[2]) });
+  }
+  return rows;
+}
+
+async function scrapeCountryList(slug: string): Promise<ScrapedRow[]> {
   const url = `https://tradingeconomics.com/country-list/${slug}`;
-  const res = await fetch("https://agent.tinyfish.ai/v1/automation/run", {
-    method: "POST",
-    headers: { "Content-Type": "application/json", "X-API-Key": TINYFISH_API_KEY },
-    body: JSON.stringify({
-      url,
-      goal: "Extract every data row from the main country indicator table on this Trading Economics country-list page. Return ONLY a JSON object of the form: {\"rows\":[{\"country\":string,\"value\":number,\"previous\":number}]}. value is the 'Last' column as a plain number (no units, commas or % sign). previous is the 'Previous' column as a plain number. Skip header/footer/ad rows.",
-      browser_profile: "lite",
-    }),
-  });
+  const res = await fetch(url, { headers: { "User-Agent": "Mozilla/5.0 IndianMacroBot/1.0" } });
   if (!res.ok) {
     const t = await res.text();
-    throw new Error(`TinyFish ${slug} ${res.status}: ${t.slice(0, 300)}`);
+    throw new Error(`Trading Economics ${slug} ${res.status}: ${t.slice(0, 300)}`);
   }
-  const data = await res.json();
-  if (data.status !== "COMPLETED") {
-    throw new Error(`TinyFish ${slug} status=${data.status}: ${JSON.stringify(data.error ?? {}).slice(0, 300)}`);
-  }
-  // result can be either: { result: { rows: [...] } }, or { result: { result: "```json...```" } }
-  let rows: any = data?.result?.rows;
-  if (!Array.isArray(rows)) {
-    const inner = data?.result?.result;
-    if (typeof inner === "string") {
-      const parsed = extractJsonBlock(inner);
-      rows = parsed?.rows;
-    } else if (inner && Array.isArray(inner.rows)) {
-      rows = inner.rows;
-    }
-  }
-  if (!Array.isArray(rows)) return [];
-  return rows
-    .filter((r: any) => r && r.country && (typeof r.value === "number" || typeof r.value === "string"))
-    .map((r: any) => ({
-      country: String(r.country),
-      value: typeof r.value === "number" ? r.value : Number(String(r.value).replace(/[^\d.\-]/g, "")),
-      previous: r.previous == null ? null : (typeof r.previous === "number" ? r.previous : Number(String(r.previous).replace(/[^\d.\-]/g, ""))),
-    }))
-    .filter((r) => Number.isFinite(r.value));
+  return parseCountryTable(await res.text());
 }
 
 function buildLookup(rows: ScrapedRow[]): Map<string, ScrapedRow> {
@@ -179,13 +171,12 @@ async function runJob(runId: string, _trigger: string) {
       if (s) neededSlugs.add(s);
     }
 
-    // Scrape all slugs in parallel — each TinyFish call takes ~60s and edge
-    // functions cap at ~400s, so sequential would always time out.
+    // Scrape all public country-list pages in parallel to avoid edge timeouts.
     const scraped: Record<string, Map<string, ScrapedRow>> = {};
     const slugList = Array.from(neededSlugs);
     const results = await Promise.all(slugList.map(async (slug) => {
       try {
-        const rows = await tinyfishScrape(slug);
+        const rows = await scrapeCountryList(slug);
         return { slug, ok: true as const, rows };
       } catch (e: any) {
         return { slug, ok: false as const, error: String(e?.message ?? e).slice(0, 300) };
@@ -296,7 +287,8 @@ async function runJob(runId: string, _trigger: string) {
     }
 
     await supabase.from("macro_agent_runs").update({
-      status: "succeeded", rows_updated: total, finished_at: new Date().toISOString(),
+      status: total > 0 ? "succeeded" : "failed", rows_updated: total, finished_at: new Date().toISOString(),
+      error: total > 0 ? null : "No rows were updated from the data source",
       details: { breakdown, items: details.slice(0, 500) },
     }).eq("id", runId);
   } catch (e: any) {
@@ -348,7 +340,7 @@ Deno.serve(async (req) => {
   // @ts-ignore EdgeRuntime is provided by the Supabase edge runtime
   EdgeRuntime.waitUntil(runJob(run.id, trigger));
 
-  return new Response(JSON.stringify({ ok: true, runId: run.id, status: "running", note: "Scraping Trading Economics via TinyFish in the background. Watch Recent macro runs." }), {
+  return new Response(JSON.stringify({ ok: true, runId: run.id, status: "running", note: "Macro refresh started in the background. Watch Recent macro runs." }), {
     status: 202, headers: { ...corsHeaders, "Content-Type": "application/json" },
   });
 });

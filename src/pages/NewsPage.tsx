@@ -14,7 +14,7 @@ export default function NewsPage() {
     <>
       <SEOHead
         title="Market News & Timeline | IndianMacro"
-        description="Stay updated with real-time market news, financial headlines, and economic developments impacting Indian and global markets. Live market timeline powered by TradingView."
+        description="Real-time market news, financial headlines and economic developments shaping Indian and global markets."
         canonicalUrl="/news"
         keywords="market news India, financial news, stock market updates, economic news India, Nifty news, Sensex updates"
       />

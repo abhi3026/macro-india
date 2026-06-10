@@ -38,7 +38,7 @@ const BlogPostCard = ({ post, variant = "default" }: BlogPostCardProps) => {
         {post.imageUrl && (
           <img
             src={post.imageUrl}
-            alt={post.title}
+            alt={`Cover image for blog post: ${post.title}`}
             loading="lazy"
             className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
           />

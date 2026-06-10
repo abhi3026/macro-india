@@ -10,7 +10,7 @@ const HeroSection = () => {
   });
 
   return (
-    <section aria-labelledby="hero-heading" className="relative overflow-hidden hero-bg text-primary-foreground">
+    <section aria-labelledby="hero-heading" className="relative overflow-hidden hero-bg text-white">
       <div
         className="absolute inset-0 opacity-[0.06] pointer-events-none"
         style={{
@@ -33,14 +33,14 @@ const HeroSection = () => {
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 lg:py-12">
         <div className="max-w-4xl">
-          <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[11px] font-medium tracking-[0.14em] uppercase backdrop-blur">
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[11px] font-medium tracking-[0.14em] uppercase backdrop-blur text-white">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
             India · Macro Intelligence · {today}
           </span>
 
           <h1
             id="hero-heading"
-            className="mt-5 font-display text-4xl sm:text-5xl lg:text-[64px] font-semibold leading-[1.05] tracking-tight"
+            className="mt-5 font-display text-4xl sm:text-5xl lg:text-[64px] font-semibold leading-[1.05] tracking-tight text-white"
           >
             Institutional-grade insights on{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-300 to-indigo-300">
@@ -49,7 +49,7 @@ const HeroSection = () => {
             .
           </h1>
 
-          <p className="mt-5 max-w-2xl text-base sm:text-lg text-primary-foreground/90 leading-relaxed">
+          <p className="mt-5 max-w-2xl text-base sm:text-lg text-white/90 leading-relaxed">
             Track GDP, inflation, RBI policy, interest rates and capital markets in one
             place. Built for investors, analysts and finance professionals who need
             signal — not noise.
@@ -61,16 +61,16 @@ const HeroSection = () => {
                 Explore the dashboard <ArrowRight className="ml-1 h-4 w-4" />
               </Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="border-primary-foreground/35 bg-transparent text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground">
+            <Button asChild size="lg" variant="outline" className="border-white/35 bg-transparent text-white hover:bg-white/10 hover:text-white">
               <Link to="/research">Read research</Link>
             </Button>
           </div>
 
           <div className="mt-6">
-            <p className="text-[10px] tracking-[0.18em] uppercase text-primary-foreground/95 mb-2">Trusted data sources</p>
+            <p className="text-[10px] tracking-[0.18em] uppercase text-white/95 mb-2">Trusted data sources</p>
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
               {sources.map((s) => (
-                <span key={s} className="text-sm font-medium text-primary-foreground/95 tracking-wide">{s}</span>
+                <span key={s} className="text-sm font-medium text-white/95 tracking-wide">{s}</span>
               ))}
             </div>
           </div>

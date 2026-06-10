@@ -30,8 +30,8 @@ export default function ImageUpload({ value, onChange, label = "Featured image" 
       <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{label}</label>
       {value ? (
         <div className="relative w-full aspect-video bg-muted rounded-md overflow-hidden border">
-          <img src={value} alt="" className="w-full h-full object-cover" />
-          <Button size="icon" variant="secondary" className="absolute top-2 right-2 h-7 w-7" onClick={() => onChange("")}>
+          <img src={value} alt="Uploaded preview" className="w-full h-full object-cover" />
+          <Button size="icon" variant="secondary" className="absolute top-2 right-2 h-7 w-7" onClick={() => onChange("")} aria-label="Remove uploaded image">
             <X className="h-3.5 w-3.5" />
           </Button>
         </div>

@@ -34,7 +34,8 @@ const ResearchCard = ({ research, variant = "default" }: ResearchCardProps) => {
         <div className="relative h-48 w-full overflow-hidden">
           <img 
             src={research.imageUrl} 
-            alt={research.title} 
+            alt={`Cover image for research report: ${research.title}`}
+            loading="lazy"
             className="h-full w-full object-cover" 
           />
           {isFeatured && (

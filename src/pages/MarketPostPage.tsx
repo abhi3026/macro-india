@@ -136,7 +136,8 @@ const MarketPostPage = () => {
             <div className="mb-8 rounded-lg overflow-hidden">
               <img 
                 src={post.image} 
-                alt={post.title} 
+                alt={`Featured image for: ${post.title}`}
+                loading="lazy"
                 className="w-full h-auto object-cover" 
               />
             </div>

@@ -1,53 +1,32 @@
+Plan:
 
-## What I'll build
+1. Restore hero text visibility
+   - Update the hero section to use a dedicated white-on-navy hero text token instead of `text-primary-foreground`, because dark mode currently makes `primary-foreground` dark.
+   - Keep the existing navy hero background and make all hero copy, metadata, source labels, and outline button text readable again.
 
-A new edge function `macro-data-agent` that uses Lovable AI (Gemini, with Google Search grounding) to fetch the latest values for:
+2. Fix the AI content agent non-2xx error
+   - Remove the direct Gemini API path from `ai-content-agent` completely: no `GEMINI_API_KEY`, no Gemini model loop, no Google direct endpoint fallback.
+   - Replace the current raw Lovable AI call, which is using the wrong gateway auth header shape, with the supported Lovable AI Gateway pattern using `LOVABLE_API_KEY`, `Lovable-API-Key`, and `X-Lovable-AIG-SDK`.
+   - Use the current default model `google/gemini-3-flash-preview` through Lovable AI.
+   - Generate structured JSON more reliably, then validate/repair locally where possible so malformed JSON does not fail the whole run.
+   - Keep the existing background-run behaviour: function returns `202` quickly and the run details table shows per-topic success/failure.
+   - Remove TinyFish remnants if any remain in code/config/secrets, since macro scraping no longer needs TinyFish.
+   - Deploy and test the edge function after edits, then check recent run records/logs.
 
-1. **India at a glance** (`macro_snapshot` table) — GDP growth, CPI, repo rate, 10Y G-Sec, forex reserves, etc.
-2. **Economic Indicators** (`country_indicators` table) — every country × indicator pair currently defined in `countries` × `indicator_definitions`.
-3. **Interest Rates & Bonds** (`interest_rates` table) — policy rate + 10Y bond yield per country.
+3. Explain and fix search visibility blockers
+   - Your site likely is not appearing for “Indianmacro” because metadata is split across domains: current sitemap/robots and runtime SEO point at the Lovable app domain while the production custom domain is `https://www.indianmacro.com`.
+   - Google also needs time after verification, publishing, sitemap updates, and crawl requests; brand-name ranking is not instant even when the site is technically correct.
+   - I’ll align canonical URLs, Open Graph URLs, sitemap URLs, robots sitemap directive, JSON-LD, and Google Search Console-facing metadata to the production domain.
 
-It runs **once daily at 03:00 IST** via pg_cron and auto-publishes results.
+4. Fix SEO & AI search findings from the current scan
+   - Fix failing canonical/social preview findings by changing `SEOHead` base URL to `https://www.indianmacro.com`.
+   - Update `scripts/generate-sitemap.ts`, `public/sitemap.xml`, and `public/robots.txt` to use the production custom domain.
+   - Resolve sitemap mismatch by only listing indexable public routes; keep `/admin`, `/auth`, and `/search` out of the sitemap because they are intentionally blocked/non-indexable, and mark that finding fixed with an explanation.
+   - Add/verify accessible names and alt text in the flagged components: `BlogPostCard`, `ResearchCard`, `MarketPostPage`, and `ImageUpload`.
+   - Fix the contrast/performance findings tied to hero text and font loading.
+   - Mark addressed SEO findings as fixed in the SEO panel so the next scan can re-check them.
 
-## No API key needed
-
-You asked which free key — **none**. We'll use the **Lovable AI Gateway** (already provisioned: `LOVABLE_API_KEY`) with `google/gemini-2.5-flash` and Google Search grounding. This avoids signups, rate-limit headaches, and per-country API juggling.
-
-> If, after a week, accuracy isn't good enough, I can layer in **FRED** (free key, US data), **World Bank** (no key), and **RBI** scraping as deterministic fallbacks. Starting AI-only per your choice.
-
-## How it works
-
-```text
-pg_cron (03:00 IST daily)
-        │
-        ▼
-edge fn: macro-data-agent
-   1. Load schemas: macro_snapshot rows, countries, indicator_definitions, interest_rates rows
-   2. For each group, ask Gemini (with Google Search) for latest values
-      → returns structured JSON (value, previous, period, source URL)
-   3. Compute delta, trend, sentiment server-side (not from the model)
-   4. UPSERT into the 3 tables, status = 'published'
-   5. Log run + per-row outcome into a new `macro_agent_runs` table
-        │
-        ▼
-Frontend (already live) re-reads → values update automatically
-```
-
-## Key implementation details
-
-- **Sentiment / trend** computed in code from `current vs previous` and each indicator's `higher_is_better` flag — the model only supplies raw numbers + source.
-- **Source URL stored** on every row (`source`, `source_url`) so you can audit.
-- **Confidence guard**: if the model returns null / cannot find a value, the existing row is left untouched (no overwrite with blanks).
-- **Manual "Run now"** button added to the existing AI Agent admin page, alongside a small "Recent macro runs" table.
-- **Auto-publish** as requested — values go live immediately.
-
-## Files
-
-- `supabase/migrations/...` — new `macro_agent_runs` table + pg_cron schedule.
-- `supabase/functions/macro-data-agent/index.ts` — new edge function.
-- `src/pages/admin/AIAgentCMS.tsx` — add a "Run macro data refresh" button + runs table.
-
-## Risks / things to know
-
-- LLM-fetched economic data can occasionally be stale or wrong. Auto-publish means errors go straight to the site. If you want a safety net later, I can add a "deviation > X%" rule that drops to draft for review.
-- Lovable AI usage is billed from your workspace credits (~30-50 model calls/day for this agent).
+5. Verification
+   - Test `ai-content-agent` through the backend function endpoint.
+   - Check recent AI run rows for successful start and clearer error reporting if generation later fails.
+   - Trigger or recommend a fresh SEO scan after the code fixes; publishing is required for Google and Lighthouse to see the changes.

@@ -1,5 +1,5 @@
-// AI Content Agent — uses Google Gemini direct API (user-provided key) for
-// educational posts (term explainers), research articles, and weekly reads.
+// AI Content Agent — generates educational posts, research articles, and
+// weekly reads using the Lovable AI Gateway (no direct provider keys).
 import { createClient } from "npm:@supabase/supabase-js@2";
 
 const corsHeaders = {
@@ -8,11 +8,16 @@ const corsHeaders = {
 };
 
 const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-const MODELS = ["gemini-2.5-flash", "gemini-flash-latest", "gemini-2.0-flash"] as const;
-const LOVABLE_MODELS = ["google/gemini-2.5-flash", "google/gemini-2.0-flash", "google/gemini-flash-latest"] as const;
+
+// Try the current default first, then fall back to broadly available models
+// if the default is rate-limited or temporarily unavailable.
+const LOVABLE_MODELS = [
+  "google/gemini-3-flash-preview",
+  "google/gemini-2.5-flash",
+  "google/gemini-2.5-flash-lite",
+] as const;
 
 const slugify = (s: string) =>
   s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 80);
@@ -30,36 +35,14 @@ function extractJson(text: string): string {
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-async function callGeminiOnce(model: string, system: string, prompt: string): Promise<string> {
-  if (!GEMINI_API_KEY) throw new Error("Gemini API key not configured");
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
-  const res = await fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      systemInstruction: { parts: [{ text: system + "\n\nRespond with ONLY valid JSON matching the requested schema. No prose, no markdown fences." }] },
-      contents: [{ role: "user", parts: [{ text: prompt }] }],
-      generationConfig: { responseMimeType: "application/json", temperature: 0.7 },
-    }),
-  });
-  if (!res.ok) {
-    const t = await res.text();
-    const err: any = new Error(`Gemini ${model} ${res.status}: ${t.slice(0, 400)}`);
-    err.status = res.status;
-    throw err;
-  }
-  const data = await res.json();
-  const text = data?.candidates?.[0]?.content?.parts?.map((p: any) => p.text).join("") ?? "";
-  return text;
-}
-
 async function callLovableOnce(model: string, system: string, prompt: string): Promise<string> {
-  if (!LOVABLE_API_KEY) throw new Error("Lovable AI is not configured");
+  if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
   const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
     method: "POST",
     headers: {
       "Authorization": `Bearer ${LOVABLE_API_KEY}`,
       "Content-Type": "application/json",
+      "X-Lovable-AIG-SDK": "edge-function",
     },
     body: JSON.stringify({
       model,
@@ -81,7 +64,7 @@ async function callLovableOnce(model: string, system: string, prompt: string): P
   return data?.choices?.[0]?.message?.content ?? "";
 }
 
-async function callLovable(system: string, prompt: string): Promise<string> {
+async function callAI(system: string, prompt: string): Promise<string> {
   let lastErr: any;
   for (const model of LOVABLE_MODELS) {
     for (let attempt = 0; attempt < 3; attempt++) {
@@ -90,43 +73,15 @@ async function callLovable(system: string, prompt: string): Promise<string> {
       } catch (e: any) {
         lastErr = e;
         const status = e?.status ?? 0;
+        // 402 (credits) and 429 (rate limit) should surface to the caller quickly.
+        if (status === 402) throw e;
         const retriable = status === 429 || status === 500 || status === 502 || status === 503 || status === 504;
-        if (!retriable) break;
+        if (!retriable) break; // try next model
         await sleep(600 * Math.pow(2, attempt));
       }
     }
   }
   throw lastErr ?? new Error("Lovable AI call failed");
-}
-
-async function callGemini(system: string, prompt: string): Promise<string> {
-  let lastErr: any;
-  for (const model of MODELS) {
-    for (let attempt = 0; attempt < 4; attempt++) {
-      try {
-        return await callGeminiOnce(model, system, prompt);
-      } catch (e: any) {
-        lastErr = e;
-        const status = e?.status ?? 0;
-        const retriable = status === 429 || status === 500 || status === 502 || status === 503 || status === 504;
-        if (!retriable) break; // try next model
-        await sleep(800 * Math.pow(2, attempt)); // 0.8s, 1.6s, 3.2s, 6.4s
-      }
-    }
-  }
-  throw lastErr ?? new Error("Gemini call failed");
-}
-
-async function callAI(system: string, prompt: string): Promise<string> {
-  if (LOVABLE_API_KEY) {
-    try {
-      return await callLovable(system, prompt);
-    } catch (e) {
-      if (!GEMINI_API_KEY) throw e;
-      console.warn("Lovable AI failed; falling back to Gemini", e);
-    }
-  }
-  return await callGemini(system, prompt);
 }
 
 async function generateJSON<T>(opts: { system: string; prompt: string }): Promise<T> {

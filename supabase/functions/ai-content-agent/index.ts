@@ -338,7 +338,7 @@ Deno.serve(async (req) => {
 
   const { data: runRow, error: runErr } = await supabase
     .from("ai_agent_runs")
-    .insert({ trigger, status: "running", model: LOVABLE_API_KEY ? LOVABLE_MODELS[0] : `google/${MODELS[0]}` })
+    .insert({ trigger, status: "running", model: LOVABLE_MODELS[0] })
     .select()
     .single();
   if (runErr || !runRow) {

@@ -40,9 +40,9 @@ async function callLovableOnce(model: string, system: string, prompt: string): P
   const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
     method: "POST",
     headers: {
-      "Authorization": `Bearer ${LOVABLE_API_KEY}`,
+      "Lovable-API-Key": LOVABLE_API_KEY,
       "Content-Type": "application/json",
-      "X-Lovable-AIG-SDK": "edge-function",
+      "X-Lovable-AIG-SDK": "vercel-ai-sdk",
     },
     body: JSON.stringify({
       model,
@@ -50,7 +50,6 @@ async function callLovableOnce(model: string, system: string, prompt: string): P
         { role: "system", content: `${system}\n\nRespond with ONLY valid JSON matching the requested schema. No prose, no markdown fences.` },
         { role: "user", content: prompt },
       ],
-      response_format: { type: "json_object" },
       temperature: 0.7,
     }),
   });

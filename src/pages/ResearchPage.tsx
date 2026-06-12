@@ -59,7 +59,7 @@ const ResearchPage = () => {
         aside={
           <div className="rounded-xl border border-white/15 bg-white/5 backdrop-blur p-6">
             <p className="text-[11px] tracking-wider uppercase text-white/80">Coverage</p>
-            <h3 className="font-display text-lg font-semibold mt-1 text-white">What we research</h3>
+            <h2 className="font-display text-lg font-semibold mt-1 text-white">What we research</h2>
             <ul className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-sm text-white/80">
               {["GDP & growth", "Inflation & RBI policy", "Banking & credit", "Equity & debt markets", "FX & external sector", "Sector deep-dives"].map((x) => (
                 <li key={x} className="flex items-center gap-2">

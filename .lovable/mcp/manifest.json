@@ -1,0 +1,232 @@
+{
+  "version": 1,
+  "sdk_version": "3.3.0",
+  "path": "/functions/v1/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://nhnazpsymubixvdymitu.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "macro-india-insights",
+      "version": "0.1.0",
+      "title": "macro-india-insights"
+    },
+    "tools": [
+      {
+        "name": "list_educational_posts",
+        "title": "List educational posts",
+        "description": "List educational finance posts (explained terms like repo rate, PMI, bonds), newest first. Visibility follows the signed-in caller's permissions.",
+        "annotations": {
+          "readOnlyHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "category": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80,
+              "description": "Filter by category slug, e.g. monetary-policy."
+            },
+            "limit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50,
+              "default": 20,
+              "description": "How many posts to return (max 50)."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_educational_post",
+        "title": "Get educational post",
+        "description": "Fetch one educational finance post by its slug, including the full article body.",
+        "annotations": {
+          "readOnlyHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "slug": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200,
+              "description": "The post's URL slug, from list_educational_posts."
+            }
+          },
+          "required": [
+            "slug"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_research_articles",
+        "title": "List research articles",
+        "description": "List macro research articles and market reports, newest first. Visibility follows the signed-in caller's permissions.",
+        "annotations": {
+          "readOnlyHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "category": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80,
+              "description": "Filter by category, e.g. inflation or monetary-policy."
+            },
+            "limit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50,
+              "default": 20,
+              "description": "How many articles to return (max 50)."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_research_article",
+        "title": "Get research article",
+        "description": "Fetch one research article by its slug, including the full report body.",
+        "annotations": {
+          "readOnlyHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "slug": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200,
+              "description": "The article's URL slug, from list_research_articles."
+            }
+          },
+          "required": [
+            "slug"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_weekly_reads",
+        "title": "List weekly reads",
+        "description": "List curated weekly market reads, newest first. Visibility follows the signed-in caller's permissions.",
+        "annotations": {
+          "readOnlyHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "limit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50,
+              "default": 20,
+              "description": "How many entries to return (max 50)."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_macro_snapshot",
+        "title": "Get India at a glance",
+        "description": "Read the 'India at a glance' macro snapshot: headline indicators (GDP, inflation, repo rate, etc.) with latest value, change, trend and sentiment. Visibility follows the signed-in caller's permissions.",
+        "annotations": {
+          "readOnlyHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {},
+          "additionalProperties": false
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_country_indicators",
+        "title": "List economic indicators",
+        "description": "Read the economic indicators table (GDP, inflation, unemployment, PMI, etc. per country) with latest value, change, trend and sentiment. Visibility follows the signed-in caller's permissions.",
+        "annotations": {
+          "readOnlyHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "country_code": {
+              "type": "string",
+              "minLength": 2,
+              "maxLength": 2,
+              "description": "Two-letter country code filter, e.g. IN for India."
+            },
+            "indicator_key": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80,
+              "description": "Indicator key filter, e.g. gdp-growth."
+            },
+            "limit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200,
+              "default": 100,
+              "description": "How many rows to return (max 200)."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_interest_rates",
+        "title": "List interest rates & bonds",
+        "description": "Read the interest rates & bonds table: central-bank policy rates and 10-year bond yields per country with changes, trend and sentiment. Visibility follows the signed-in caller's permissions.",
+        "annotations": {
+          "readOnlyHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "country_code": {
+              "type": "string",
+              "minLength": 2,
+              "maxLength": 2,
+              "description": "Two-letter country code filter, e.g. IN for India."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}

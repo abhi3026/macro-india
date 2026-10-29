@@ -21,8 +21,8 @@ export default defineMcp({
   auth: auth.oauth.issuer({
     issuer: `https://${projectRef}.supabase.co/auth/v1`,
     acceptedAudiences: "authenticated",
+    requireOAuthClientClaim: true,
   }),
-  requireOAuthClientClaim: true,
   tools: [
     listEducationalPosts,
     getEducationalPost,

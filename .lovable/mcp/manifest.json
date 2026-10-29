@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "sdk_version": "3.3.0",
+  "sdk_version": "3.3.1",
   "path": "/functions/v1/mcp",
   "auth": {
     "type": "oauth",
@@ -26,24 +26,24 @@
           "openWorldHint": false
         },
         "inputSchema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
           "type": "object",
           "properties": {
             "category": {
+              "description": "Filter by category slug, e.g. monetary-policy.",
               "type": "string",
               "minLength": 1,
-              "maxLength": 80,
-              "description": "Filter by category slug, e.g. monetary-policy."
+              "maxLength": 80
             },
             "limit": {
+              "default": 20,
+              "description": "How many posts to return (max 50).",
               "type": "integer",
               "minimum": 1,
-              "maximum": 50,
-              "default": 20,
-              "description": "How many posts to return (max 50)."
+              "maximum": 50
             }
           },
-          "additionalProperties": false,
-          "$schema": "http://json-schema.org/draft-07/schema#"
+          "additionalProperties": false
         },
         "outputSchema": null
       },
@@ -56,6 +56,7 @@
           "openWorldHint": false
         },
         "inputSchema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
           "type": "object",
           "properties": {
             "slug": {
@@ -68,8 +69,7 @@
           "required": [
             "slug"
           ],
-          "additionalProperties": false,
-          "$schema": "http://json-schema.org/draft-07/schema#"
+          "additionalProperties": false
         },
         "outputSchema": null
       },
@@ -82,24 +82,24 @@
           "openWorldHint": false
         },
         "inputSchema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
           "type": "object",
           "properties": {
             "category": {
+              "description": "Filter by category, e.g. inflation or monetary-policy.",
               "type": "string",
               "minLength": 1,
-              "maxLength": 80,
-              "description": "Filter by category, e.g. inflation or monetary-policy."
+              "maxLength": 80
             },
             "limit": {
+              "default": 20,
+              "description": "How many articles to return (max 50).",
               "type": "integer",
               "minimum": 1,
-              "maximum": 50,
-              "default": 20,
-              "description": "How many articles to return (max 50)."
+              "maximum": 50
             }
           },
-          "additionalProperties": false,
-          "$schema": "http://json-schema.org/draft-07/schema#"
+          "additionalProperties": false
         },
         "outputSchema": null
       },
@@ -112,6 +112,7 @@
           "openWorldHint": false
         },
         "inputSchema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
           "type": "object",
           "properties": {
             "slug": {
@@ -124,8 +125,7 @@
           "required": [
             "slug"
           ],
-          "additionalProperties": false,
-          "$schema": "http://json-schema.org/draft-07/schema#"
+          "additionalProperties": false
         },
         "outputSchema": null
       },
@@ -138,18 +138,18 @@
           "openWorldHint": false
         },
         "inputSchema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
           "type": "object",
           "properties": {
             "limit": {
+              "default": 20,
+              "description": "How many entries to return (max 50).",
               "type": "integer",
               "minimum": 1,
-              "maximum": 50,
-              "default": 20,
-              "description": "How many entries to return (max 50)."
+              "maximum": 50
             }
           },
-          "additionalProperties": false,
-          "$schema": "http://json-schema.org/draft-07/schema#"
+          "additionalProperties": false
         },
         "outputSchema": null
       },
@@ -178,30 +178,30 @@
           "openWorldHint": false
         },
         "inputSchema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
           "type": "object",
           "properties": {
             "country_code": {
+              "description": "Two-letter country code filter, e.g. IN for India.",
               "type": "string",
               "minLength": 2,
-              "maxLength": 2,
-              "description": "Two-letter country code filter, e.g. IN for India."
+              "maxLength": 2
             },
             "indicator_key": {
+              "description": "Indicator key filter, e.g. gdp-growth.",
               "type": "string",
               "minLength": 1,
-              "maxLength": 80,
-              "description": "Indicator key filter, e.g. gdp-growth."
+              "maxLength": 80
             },
             "limit": {
+              "default": 100,
+              "description": "How many rows to return (max 200).",
               "type": "integer",
               "minimum": 1,
-              "maximum": 200,
-              "default": 100,
-              "description": "How many rows to return (max 200)."
+              "maximum": 200
             }
           },
-          "additionalProperties": false,
-          "$schema": "http://json-schema.org/draft-07/schema#"
+          "additionalProperties": false
         },
         "outputSchema": null
       },
@@ -214,17 +214,17 @@
           "openWorldHint": false
         },
         "inputSchema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
           "type": "object",
           "properties": {
             "country_code": {
+              "description": "Two-letter country code filter, e.g. IN for India.",
               "type": "string",
               "minLength": 2,
-              "maxLength": 2,
-              "description": "Two-letter country code filter, e.g. IN for India."
+              "maxLength": 2
             }
           },
-          "additionalProperties": false,
-          "$schema": "http://json-schema.org/draft-07/schema#"
+          "additionalProperties": false
         },
         "outputSchema": null
       }

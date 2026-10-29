@@ -349,9 +349,9 @@ var mcp_default = defineMcp({
   instructions: "Tools for IndianMacro (indianmacro.com), an India-focused macroeconomics and markets publication. Use the read tools to list and fetch published educational posts, research articles and weekly reads, and to read the latest macro data (India at a glance, country economic indicators, and interest rates & bonds). Visibility of drafts follows the signed-in caller's permissions.",
   auth: auth.oauth.issuer({
     issuer: `https://${projectRef}.supabase.co/auth/v1`,
-    acceptedAudiences: "authenticated"
+    acceptedAudiences: "authenticated",
+    requireOAuthClientClaim: true
   }),
-  requireOAuthClientClaim: true,
   tools: [
     list_educational_posts_default,
     get_educational_post_default,

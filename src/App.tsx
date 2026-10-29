@@ -24,6 +24,7 @@ import SearchPage from "@/pages/SearchPage";
 import EconomicIndicatorsPage from "@/pages/EconomicIndicatorsPage";
 import InterestRatesPage from "@/pages/InterestRatesPage";
 import AuthPage from "@/pages/AuthPage";
+import OAuthConsent from "@/pages/OAuthConsent";
 import AdminLayout from "@/pages/admin/AdminLayout";
 import AdminDashboard from "@/pages/admin/AdminDashboard";
 import EducationCMS from "@/pages/admin/EducationCMS";
@@ -65,6 +66,7 @@ function AppContent() {
                 <Route path="/terms" element={<TermsPage />} />
                 <Route path="/search" element={<SearchPage />} />
                 <Route path="/auth" element={<AuthPage />} />
+                <Route path="/.lovable/oauth/consent" element={<OAuthConsent />} />
                 <Route path="/admin" element={<ProtectedAdminRoute><AdminLayout /></ProtectedAdminRoute>}>
                   <Route index element={<AdminDashboard />} />
                   <Route path="ai-agent" element={<AIAgentCMS />} />

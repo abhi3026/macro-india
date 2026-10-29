@@ -10,6 +10,8 @@ import { Badge } from "@/components/ui/badge";
 import { Search, ArrowRight, BookOpen } from "lucide-react";
 import { fetchResearchPosts, type ResearchPost } from "@/utils/contentLoader";
 import { Link } from "react-router-dom";
+import { useWebMCP } from "use-webmcp-tool";
+import { runWebMCPTool } from "@/lib/webmcp-telemetry";
 
 import NewsletterSignupDialog from "@/components/NewsletterSignupDialog";
 
@@ -37,6 +39,58 @@ const ResearchPage = () => {
       return matchesQ && matchesC;
     });
   }, [rest, query, category]);
+
+  const changeCategory = (next: string) => {
+    if (!(CATEGORIES as readonly string[]).includes(next)) {
+      throw new Error("Unknown category; expected All, Economic Outlook, Monetary Policy, Markets, or Sectors.");
+    }
+    setCategory(next);
+  };
+
+  const changeQuery = (next: string) => {
+    if (typeof next !== "string") throw new Error("Search text must be text.");
+    setQuery(next);
+  };
+
+  useWebMCP({
+    name: "list_research_reports",
+    description: "List the research reports currently shown on the /research page, respecting the active search text and category filter.",
+    annotations: { readOnlyHint: true, untrustedContentHint: true },
+    execute: () =>
+      runWebMCPTool("list_research_reports", () => {
+        if (loading) return "Research reports are still loading.";
+        const shown = [...(featured ? [featured] : []), ...filtered];
+        return shown.length
+          ? shown.map((p) => `${p.title} — ${p.category} — /research/${p.slug}`).join("\n")
+          : "No reports match the current filters.";
+      }),
+  });
+
+  useWebMCP({
+    name: "filter_research_reports",
+    description: "Change which research reports are shown: set the search text and/or the category filter on the /research page.",
+    annotations: { untrustedContentHint: true },
+    inputSchema: {
+      type: "object",
+      properties: {
+        query: { type: "string", description: "Search text matched against report titles and descriptions. Omit to keep the current search." },
+        category: { type: "string", enum: [...CATEGORIES], description: "Category filter." },
+      },
+    },
+    execute: (args: { query?: unknown; category?: unknown }) =>
+      runWebMCPTool("filter_research_reports", () => {
+        const hasQuery = typeof args?.query === "string";
+        const hasCategory =
+          typeof args?.category === "string" && (CATEGORIES as readonly string[]).includes(args.category);
+        if (typeof args?.category === "string" && !hasCategory) {
+          throw new Error("Unknown category; expected All, Economic Outlook, Monetary Policy, Markets, or Sectors.");
+        }
+        if (!hasQuery && !hasCategory) return "No filter values were provided; the view is unchanged.";
+        if (hasQuery) changeQuery(args.query as string);
+        if (hasCategory) changeCategory(args.category as string);
+        return `Filters applied: category ${hasCategory ? (args.category as string) : "unchanged"}, search ${hasQuery ? `"${args.query as string}"` : "unchanged"}.`;
+      }),
+  });
 
   return (
     <div className="min-h-screen flex flex-col bg-background">

@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
+import { useWebMCP } from "use-webmcp-tool";
+import { runWebMCPTool } from "@/lib/webmcp-telemetry";
 
 type Trend = "up" | "down" | "flat";
 type Sentiment = "positive" | "negative" | "neutral";
@@ -56,6 +58,15 @@ const MacroSummary = () => {
   });
 
   const metrics: Metric[] = data && data.length ? data : FALLBACK;
+
+  useWebMCP({
+    name: "list_india_at_a_glance",
+    description: "List the 'India at a glance' macro indicators currently shown on the homepage: label, latest value, change, trend and context for each.",
+    annotations: { readOnlyHint: true, untrustedContentHint: true },
+    execute: () =>
+      runWebMCPTool("list_india_at_a_glance", () =>
+        metrics.map((m) => `${m.label}: ${m.value} ${m.delta} (${m.trend}, ${m.context})`).join("\n")),
+  });
 
   const updated = new Date().toLocaleDateString("en-IN", {
     day: "numeric", month: "short", year: "numeric",

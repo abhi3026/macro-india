@@ -29,10 +29,12 @@ export default function AuthPage() {
   const [otp, setOtp] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [busy, setBusy] = useState(false);
+  const [searchParams] = useSearchParams();
+  const next = oauthReturnPath(searchParams.get("next") ?? "/admin");
 
   useEffect(() => { document.title = "Admin Sign In | IndianMacro"; }, []);
 
-  if (!loading && user && mode !== "otp") return <Navigate to="/admin" replace />;
+  if (!loading && user && mode !== "otp") return <Navigate to={next} replace />;
 
   const submitCreds = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,7 +49,7 @@ export default function AuthPage() {
       } else {
         const { error } = await supabase.auth.signUp({
           email, password,
-          options: { emailRedirectTo: `${window.location.origin}/admin` },
+          options: { emailRedirectTo: new URL(next, window.location.origin).href },
         });
         if (error) throw error;
         toast.success("Account created. You can sign in now.");
@@ -64,7 +66,9 @@ export default function AuthPage() {
     if (!parsed.success) { toast.error("Enter a valid email"); return; }
     setBusy(true);
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email);
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: new URL(next, window.location.origin).href,
+      });
       if (error) throw error;
       toast.success("OTP sent. Check your email.");
       setMode("otp");

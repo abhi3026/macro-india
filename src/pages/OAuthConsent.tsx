@@ -44,7 +44,7 @@ export default function OAuthConsent() {
       setScopes((data as any)?.requested_scope ?? (data as any)?.scope ?? "openid email profile");
     })();
     return () => { active = false; };
-  }, [authorizationId, user]);
+  }, [authorizationId, user, loading]);
 
   async function decide(approve: boolean) {
     setBusy(true);

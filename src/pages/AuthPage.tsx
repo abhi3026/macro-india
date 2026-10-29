@@ -39,7 +39,7 @@ export default function AuthPage() {
   const submitCreds = async (e: React.FormEvent) => {
     e.preventDefault();
     const parsed = credsSchema.safeParse({ email, password });
-    if (!parsed.success) { toast.error(parsed.error.errors[0].message); return; }
+    if (!parsed.success) { toast.error(parsed.error.issues[0].message); return; }
     setBusy(true);
     try {
       if (mode === "signin") {

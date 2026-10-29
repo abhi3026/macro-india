@@ -3,11 +3,11 @@
 // supabase function: mcp
 // Bundled from src/lib/mcp/index.ts by @lovable.dev/mcp-js.
 // src/lib/mcp/index.ts
-import { auth, defineMcp } from "npm:@lovable.dev/mcp-js@3.3.0";
+import { auth, defineMcp } from "npm:@lovable.dev/mcp-js@3.3.1";
 
 // src/lib/mcp/tools/list-educational-posts.ts
-import { defineTool } from "npm:@lovable.dev/mcp-js@3.3.0";
-import { z } from "npm:zod@^3.25.76";
+import { defineTool } from "npm:@lovable.dev/mcp-js@3.3.1";
+import { z } from "npm:zod@^4.6.6";
 
 // src/lib/mcp/supabase.ts
 import { createClient } from "npm:@supabase/supabase-js@^2.105.4";
@@ -92,8 +92,8 @@ var list_educational_posts_default = defineTool({
 });
 
 // src/lib/mcp/tools/get-educational-post.ts
-import { defineTool as defineTool2 } from "npm:@lovable.dev/mcp-js@3.3.0";
-import { z as z2 } from "npm:zod@^3.25.76";
+import { defineTool as defineTool2 } from "npm:@lovable.dev/mcp-js@3.3.1";
+import { z as z2 } from "npm:zod@^4.6.6";
 var get_educational_post_default = defineTool2({
   name: "get_educational_post",
   title: "Get educational post",
@@ -129,8 +129,8 @@ ${post.body ?? ""}` }],
 });
 
 // src/lib/mcp/tools/list-research-articles.ts
-import { defineTool as defineTool3 } from "npm:@lovable.dev/mcp-js@3.3.0";
-import { z as z3 } from "npm:zod@^3.25.76";
+import { defineTool as defineTool3 } from "npm:@lovable.dev/mcp-js@3.3.1";
+import { z as z3 } from "npm:zod@^4.6.6";
 var list_research_articles_default = defineTool3({
   name: "list_research_articles",
   title: "List research articles",
@@ -165,8 +165,8 @@ var list_research_articles_default = defineTool3({
 });
 
 // src/lib/mcp/tools/get-research-article.ts
-import { defineTool as defineTool4 } from "npm:@lovable.dev/mcp-js@3.3.0";
-import { z as z4 } from "npm:zod@^3.25.76";
+import { defineTool as defineTool4 } from "npm:@lovable.dev/mcp-js@3.3.1";
+import { z as z4 } from "npm:zod@^4.6.6";
 var get_research_article_default = defineTool4({
   name: "get_research_article",
   title: "Get research article",
@@ -203,8 +203,8 @@ ${article.body ?? ""}` }],
 });
 
 // src/lib/mcp/tools/list-weekly-reads.ts
-import { defineTool as defineTool5 } from "npm:@lovable.dev/mcp-js@3.3.0";
-import { z as z5 } from "npm:zod@^3.25.76";
+import { defineTool as defineTool5 } from "npm:@lovable.dev/mcp-js@3.3.1";
+import { z as z5 } from "npm:zod@^4.6.6";
 var list_weekly_reads_default = defineTool5({
   name: "list_weekly_reads",
   title: "List weekly reads",
@@ -234,7 +234,7 @@ var list_weekly_reads_default = defineTool5({
 });
 
 // src/lib/mcp/tools/get-macro-snapshot.ts
-import { defineTool as defineTool6 } from "npm:@lovable.dev/mcp-js@3.3.0";
+import { defineTool as defineTool6 } from "npm:@lovable.dev/mcp-js@3.3.1";
 var get_macro_snapshot_default = defineTool6({
   name: "get_macro_snapshot",
   title: "Get India at a glance",
@@ -263,8 +263,8 @@ var get_macro_snapshot_default = defineTool6({
 });
 
 // src/lib/mcp/tools/list-country-indicators.ts
-import { defineTool as defineTool7 } from "npm:@lovable.dev/mcp-js@3.3.0";
-import { z as z6 } from "npm:zod@^3.25.76";
+import { defineTool as defineTool7 } from "npm:@lovable.dev/mcp-js@3.3.1";
+import { z as z6 } from "npm:zod@^4.6.6";
 var list_country_indicators_default = defineTool7({
   name: "list_country_indicators",
   title: "List economic indicators",
@@ -304,8 +304,8 @@ var list_country_indicators_default = defineTool7({
 });
 
 // src/lib/mcp/tools/list-interest-rates.ts
-import { defineTool as defineTool8 } from "npm:@lovable.dev/mcp-js@3.3.0";
-import { z as z7 } from "npm:zod@^3.25.76";
+import { defineTool as defineTool8 } from "npm:@lovable.dev/mcp-js@3.3.1";
+import { z as z7 } from "npm:zod@^4.6.6";
 var list_interest_rates_default = defineTool8({
   name: "list_interest_rates",
   title: "List interest rates & bonds",
@@ -365,5 +365,5 @@ var mcp_default = defineMcp({
 });
 
 // lovable-mcp-supabase-entry.ts
-import { createSupabaseHandler } from "npm:@lovable.dev/mcp-js@3.3.0/stacks/supabase";
+import { createSupabaseHandler } from "npm:@lovable.dev/mcp-js@3.3.1/stacks/supabase";
 Deno.serve(createSupabaseHandler(mcp_default, { functionName: "mcp" }));

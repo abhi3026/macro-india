@@ -65,6 +65,7 @@ function AppContent() {
                 <Route path="/terms" element={<TermsPage />} />
                 <Route path="/search" element={<SearchPage />} />
                 <Route path="/auth" element={<AuthPage />} />
+                <Route path="/.lovable/oauth/consent" element={<OAuthConsent />} />
                 <Route path="/admin" element={<ProtectedAdminRoute><AdminLayout /></ProtectedAdminRoute>}>
                   <Route index element={<AdminDashboard />} />
                   <Route path="ai-agent" element={<AIAgentCMS />} />

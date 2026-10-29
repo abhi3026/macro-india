@@ -25,6 +25,7 @@ import EconomicIndicatorsPage from "@/pages/EconomicIndicatorsPage";
 import InterestRatesPage from "@/pages/InterestRatesPage";
 import AuthPage from "@/pages/AuthPage";
 import OAuthConsent from "@/pages/OAuthConsent";
+import AdminLayout from "@/pages/admin/AdminLayout";
 import AdminDashboard from "@/pages/admin/AdminDashboard";
 import EducationCMS from "@/pages/admin/EducationCMS";
 import EducationCategoriesCMS from "@/pages/admin/EducationCategoriesCMS";

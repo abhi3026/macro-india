@@ -10,6 +10,8 @@ import { Badge } from "@/components/ui/badge";
 import { Search, ArrowRight, BookOpen } from "lucide-react";
 import { fetchResearchPosts, type ResearchPost } from "@/utils/contentLoader";
 import { Link } from "react-router-dom";
+import { useWebMCP } from "use-webmcp-tool";
+import { runWebMCPTool } from "@/lib/webmcp-telemetry";
 
 import NewsletterSignupDialog from "@/components/NewsletterSignupDialog";
 

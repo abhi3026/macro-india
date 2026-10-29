@@ -18,11 +18,16 @@ export default function OAuthConsent() {
 
   useEffect(() => {
     let active = true;
+    if (!authorizationId) {
+      setError("This authorization link is missing its request ID. Please start the connection again from your app.");
+      return;
+    }
+    if (!loading && !user) {
+      const consentUrl = window.location.pathname + window.location.search;
+      window.location.href = "/auth?next=" + encodeURIComponent(consentUrl);
+      return;
+    }
     (async () => {
-      if (!authorizationId) {
-        setError("This authorization link is missing its request ID. Please start the connection again from your app.");
-        return;
-      }
       if (!user) return;
       const { data, error } = await supabase.auth.oauth.getAuthorizationDetails(authorizationId);
       if (!active) return;

@@ -17,24 +17,37 @@ const credsSchema = z.object({
   password: z.string().min(8, "Min 8 characters").max(72),
 });
 
-type Mode = "signin" | "signup" | "forgot" | "otp";
+type Mode = "signin" | "signup" | "forgot" | "sent" | "reset";
 
 const getErrorMessage = (err: unknown, fallback: string) => err instanceof Error ? err.message : fallback;
 
+const isRecoveryUrl = () =>
+  typeof window !== "undefined" &&
+  (new URLSearchParams(window.location.search).get("reset") === "1" ||
+    window.location.hash.includes("type=recovery"));
+
 export default function AuthPage() {
   const { user, loading } = useAuth();
-  const [mode, setMode] = useState<Mode>("signin");
+  const [mode, setMode] = useState<Mode>(() => (isRecoveryUrl() ? "reset" : "signin"));
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [otp, setOtp] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const next = oauthReturnPath(searchParams.get("next") ?? "/admin");
 
   useEffect(() => { document.title = "Admin Sign In | IndianMacro"; }, []);
 
-  if (!loading && user && mode !== "otp") return <Navigate to={next} replace />;
+  useEffect(() => {
+    const { data: sub } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "PASSWORD_RECOVERY") setMode("reset");
+    });
+    return () => sub.subscription.unsubscribe();
+  }, []);
+
+  if (!loading && user && mode !== "reset") return <Navigate to={next} replace />;
 
   const submitCreds = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,7 +65,7 @@ export default function AuthPage() {
           options: { emailRedirectTo: new URL(next, window.location.origin).href },
         });
         if (error) throw error;
-        toast.success("Account created. You can sign in now.");
+        toast.success("Account created. Check your email to confirm.");
         setMode("signin");
       }
     } catch (err: unknown) {
@@ -60,37 +73,37 @@ export default function AuthPage() {
     } finally { setBusy(false); }
   };
 
-  const sendOtp = async (e?: React.FormEvent) => {
+  const sendResetLink = async (e?: React.FormEvent) => {
     e?.preventDefault();
     const parsed = z.string().email().safeParse(email);
     if (!parsed.success) { toast.error("Enter a valid email"); return; }
     setBusy(true);
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: new URL(next, window.location.origin).href,
-      });
+      const redirect = new URL("/auth", window.location.origin);
+      redirect.searchParams.set("reset", "1");
+      if (next !== "/admin") redirect.searchParams.set("next", next);
+      const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: redirect.href });
       if (error) throw error;
-      toast.success("OTP sent. Check your email.");
-      setMode("otp");
+      setMode("sent");
     } catch (err: unknown) {
-      toast.error(getErrorMessage(err, "Failed to send OTP"));
+      toast.error(getErrorMessage(err, "Failed to send reset link"));
     } finally { setBusy(false); }
   };
 
-  const verifyAndReset = async (e: React.FormEvent) => {
+  const saveNewPassword = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (otp.trim().length < 6) { toast.error("Enter the 6-digit code"); return; }
     if (newPassword.length < 8) { toast.error("Password must be at least 8 characters"); return; }
+    if (newPassword !== confirmPassword) { toast.error("Passwords do not match"); return; }
     setBusy(true);
     try {
-      const { error: vErr } = await supabase.auth.verifyOtp({ email, token: otp.trim(), type: "recovery" });
-      if (vErr) throw vErr;
-      const { error: uErr } = await supabase.auth.updateUser({ password: newPassword });
-      if (uErr) throw uErr;
-      toast.success("Password reset. You're signed in.");
-      setMode("signin");
+      const { data } = await supabase.auth.getSession();
+      if (!data.session) throw new Error("This reset link has expired. Please request a new one.");
+      const { error } = await supabase.auth.updateUser({ password: newPassword });
+      if (error) throw error;
+      toast.success("Password updated. You're signed in.");
+      navigate(next, { replace: true });
     } catch (err: unknown) {
-      toast.error(getErrorMessage(err, "Could not reset password"));
+      toast.error(getErrorMessage(err, "Could not update password"));
     } finally { setBusy(false); }
   };
 

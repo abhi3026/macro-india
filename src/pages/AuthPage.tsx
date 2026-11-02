@@ -116,13 +116,14 @@ export default function AuthPage() {
           <p className="text-[11px] tracking-[0.2em] uppercase text-muted-foreground">Restricted access</p>
         </div>
         <h1 className="font-display text-2xl font-semibold">
-          {mode === "forgot" ? "Reset password" : mode === "otp" ? "Enter code" : "Editorial Console"}
+          {mode === "forgot" || mode === "sent" ? "Reset password" : mode === "reset" ? "Choose a new password" : "Editorial Console"}
         </h1>
         <p className="text-sm text-muted-foreground mt-1">
           {mode === "signin" && "Sign in to manage research, education and macro data."}
           {mode === "signup" && "Create a contributor account."}
-          {mode === "forgot" && "We'll email you a one-time code to reset your password."}
-          {mode === "otp" && `Enter the code sent to ${email} and choose a new password.`}
+          {mode === "forgot" && "We'll email you a link to reset your password."}
+          {mode === "sent" && `If an account exists for ${email}, a reset link is on its way. Open the email and click "Reset Password".`}
+          {mode === "reset" && "Enter your new password below."}
         </p>
 
         {(mode === "signin" || mode === "signup") && (

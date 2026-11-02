@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Navigate, useSearchParams } from "react-router-dom";
+import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -17,24 +17,37 @@ const credsSchema = z.object({
   password: z.string().min(8, "Min 8 characters").max(72),
 });
 
-type Mode = "signin" | "signup" | "forgot" | "otp";
+type Mode = "signin" | "signup" | "forgot" | "sent" | "reset";
 
 const getErrorMessage = (err: unknown, fallback: string) => err instanceof Error ? err.message : fallback;
 
+const isRecoveryUrl = () =>
+  typeof window !== "undefined" &&
+  (new URLSearchParams(window.location.search).get("reset") === "1" ||
+    window.location.hash.includes("type=recovery"));
+
 export default function AuthPage() {
   const { user, loading } = useAuth();
-  const [mode, setMode] = useState<Mode>("signin");
+  const [mode, setMode] = useState<Mode>(() => (isRecoveryUrl() ? "reset" : "signin"));
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [otp, setOtp] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const next = oauthReturnPath(searchParams.get("next") ?? "/admin");
 
   useEffect(() => { document.title = "Admin Sign In | IndianMacro"; }, []);
 
-  if (!loading && user && mode !== "otp") return <Navigate to={next} replace />;
+  useEffect(() => {
+    const { data: sub } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "PASSWORD_RECOVERY") setMode("reset");
+    });
+    return () => sub.subscription.unsubscribe();
+  }, []);
+
+  if (!loading && user && mode !== "reset") return <Navigate to={next} replace />;
 
   const submitCreds = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,7 +65,7 @@ export default function AuthPage() {
           options: { emailRedirectTo: new URL(next, window.location.origin).href },
         });
         if (error) throw error;
-        toast.success("Account created. You can sign in now.");
+        toast.success("Account created. Check your email to confirm.");
         setMode("signin");
       }
     } catch (err: unknown) {
@@ -60,37 +73,37 @@ export default function AuthPage() {
     } finally { setBusy(false); }
   };
 
-  const sendOtp = async (e?: React.FormEvent) => {
+  const sendResetLink = async (e?: React.FormEvent) => {
     e?.preventDefault();
     const parsed = z.string().email().safeParse(email);
     if (!parsed.success) { toast.error("Enter a valid email"); return; }
     setBusy(true);
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: new URL(next, window.location.origin).href,
-      });
+      const redirect = new URL("/auth", window.location.origin);
+      redirect.searchParams.set("reset", "1");
+      if (next !== "/admin") redirect.searchParams.set("next", next);
+      const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: redirect.href });
       if (error) throw error;
-      toast.success("OTP sent. Check your email.");
-      setMode("otp");
+      setMode("sent");
     } catch (err: unknown) {
-      toast.error(getErrorMessage(err, "Failed to send OTP"));
+      toast.error(getErrorMessage(err, "Failed to send reset link"));
     } finally { setBusy(false); }
   };
 
-  const verifyAndReset = async (e: React.FormEvent) => {
+  const saveNewPassword = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (otp.trim().length < 6) { toast.error("Enter the 6-digit code"); return; }
     if (newPassword.length < 8) { toast.error("Password must be at least 8 characters"); return; }
+    if (newPassword !== confirmPassword) { toast.error("Passwords do not match"); return; }
     setBusy(true);
     try {
-      const { error: vErr } = await supabase.auth.verifyOtp({ email, token: otp.trim(), type: "recovery" });
-      if (vErr) throw vErr;
-      const { error: uErr } = await supabase.auth.updateUser({ password: newPassword });
-      if (uErr) throw uErr;
-      toast.success("Password reset. You're signed in.");
-      setMode("signin");
+      const { data } = await supabase.auth.getSession();
+      if (!data.session) throw new Error("This reset link has expired. Please request a new one.");
+      const { error } = await supabase.auth.updateUser({ password: newPassword });
+      if (error) throw error;
+      toast.success("Password updated. You're signed in.");
+      navigate(next, { replace: true });
     } catch (err: unknown) {
-      toast.error(getErrorMessage(err, "Could not reset password"));
+      toast.error(getErrorMessage(err, "Could not update password"));
     } finally { setBusy(false); }
   };
 
@@ -103,13 +116,14 @@ export default function AuthPage() {
           <p className="text-[11px] tracking-[0.2em] uppercase text-muted-foreground">Restricted access</p>
         </div>
         <h1 className="font-display text-2xl font-semibold">
-          {mode === "forgot" ? "Reset password" : mode === "otp" ? "Enter code" : "Editorial Console"}
+          {mode === "forgot" || mode === "sent" ? "Reset password" : mode === "reset" ? "Choose a new password" : "Editorial Console"}
         </h1>
         <p className="text-sm text-muted-foreground mt-1">
           {mode === "signin" && "Sign in to manage research, education and macro data."}
           {mode === "signup" && "Create a contributor account."}
-          {mode === "forgot" && "We'll email you a one-time code to reset your password."}
-          {mode === "otp" && `Enter the code sent to ${email} and choose a new password.`}
+          {mode === "forgot" && "We'll email you a link to reset your password."}
+          {mode === "sent" && `If an account exists for ${email}, a reset link is on its way. Open the email and click "Reset Password".`}
+          {mode === "reset" && "Enter your new password below."}
         </p>
 
         {(mode === "signin" || mode === "signup") && (
@@ -129,33 +143,38 @@ export default function AuthPage() {
         )}
 
         {mode === "forgot" && (
-          <form onSubmit={sendOtp} className="mt-6 space-y-4">
+          <form onSubmit={sendResetLink} className="mt-6 space-y-4">
             <div className="space-y-1.5">
               <Label htmlFor="email">Email</Label>
               <Input id="email" type="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
             </div>
             <Button type="submit" disabled={busy} className="w-full">
-              {busy ? "Sending…" : "Send code"}
+              {busy ? "Sending…" : "Send reset link"}
             </Button>
           </form>
         )}
 
-        {mode === "otp" && (
-          <form onSubmit={verifyAndReset} className="mt-6 space-y-4">
-            <div className="space-y-1.5">
-              <Label htmlFor="otp">One-time code</Label>
-              <Input id="otp" inputMode="numeric" autoComplete="one-time-code" required value={otp} onChange={(e) => setOtp(e.target.value)} placeholder="123456" />
-            </div>
+        {mode === "sent" && (
+          <div className="mt-6 space-y-4">
+            <Button type="button" variant="outline" disabled={busy} onClick={() => sendResetLink()} className="w-full">
+              {busy ? "Sending…" : "Resend link"}
+            </Button>
+          </div>
+        )}
+
+        {mode === "reset" && (
+          <form onSubmit={saveNewPassword} className="mt-6 space-y-4">
             <div className="space-y-1.5">
               <Label htmlFor="newPassword">New password</Label>
-              <Input id="newPassword" type="password" autoComplete="new-password" required value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
+              <Input id="newPassword" type="password" autoComplete="new-password" required minLength={8} value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="confirmPassword">Confirm new password</Label>
+              <Input id="confirmPassword" type="password" autoComplete="new-password" required minLength={8} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
             </div>
             <Button type="submit" disabled={busy} className="w-full">
-              {busy ? "Resetting…" : "Reset password"}
+              {busy ? "Saving…" : "Save new password"}
             </Button>
-            <button type="button" onClick={() => sendOtp()} disabled={busy} className="text-xs text-muted-foreground hover:text-foreground w-full text-center">
-              Resend code
-            </button>
           </form>
         )}
 
@@ -169,8 +188,8 @@ export default function AuthPage() {
           {mode === "signup" && (
             <button onClick={() => setMode("signin")} className="hover:text-foreground text-center">Already have an account? Sign in</button>
           )}
-          {(mode === "forgot" || mode === "otp") && (
-            <button onClick={() => { setMode("signin"); setOtp(""); setNewPassword(""); }} className="hover:text-foreground text-center">Back to sign in</button>
+          {(mode === "forgot" || mode === "sent") && (
+            <button onClick={() => setMode("signin")} className="hover:text-foreground text-center">Back to sign in</button>
           )}
         </div>
       </Card>

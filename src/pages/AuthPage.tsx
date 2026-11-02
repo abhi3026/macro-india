@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Navigate, useSearchParams } from "react-router-dom";
+import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -143,33 +143,38 @@ export default function AuthPage() {
         )}
 
         {mode === "forgot" && (
-          <form onSubmit={sendOtp} className="mt-6 space-y-4">
+          <form onSubmit={sendResetLink} className="mt-6 space-y-4">
             <div className="space-y-1.5">
               <Label htmlFor="email">Email</Label>
               <Input id="email" type="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
             </div>
             <Button type="submit" disabled={busy} className="w-full">
-              {busy ? "Sending…" : "Send code"}
+              {busy ? "Sending…" : "Send reset link"}
             </Button>
           </form>
         )}
 
-        {mode === "otp" && (
-          <form onSubmit={verifyAndReset} className="mt-6 space-y-4">
-            <div className="space-y-1.5">
-              <Label htmlFor="otp">One-time code</Label>
-              <Input id="otp" inputMode="numeric" autoComplete="one-time-code" required value={otp} onChange={(e) => setOtp(e.target.value)} placeholder="123456" />
-            </div>
+        {mode === "sent" && (
+          <div className="mt-6 space-y-4">
+            <Button type="button" variant="outline" disabled={busy} onClick={() => sendResetLink()} className="w-full">
+              {busy ? "Sending…" : "Resend link"}
+            </Button>
+          </div>
+        )}
+
+        {mode === "reset" && (
+          <form onSubmit={saveNewPassword} className="mt-6 space-y-4">
             <div className="space-y-1.5">
               <Label htmlFor="newPassword">New password</Label>
-              <Input id="newPassword" type="password" autoComplete="new-password" required value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
+              <Input id="newPassword" type="password" autoComplete="new-password" required minLength={8} value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="confirmPassword">Confirm new password</Label>
+              <Input id="confirmPassword" type="password" autoComplete="new-password" required minLength={8} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
             </div>
             <Button type="submit" disabled={busy} className="w-full">
-              {busy ? "Resetting…" : "Reset password"}
+              {busy ? "Saving…" : "Save new password"}
             </Button>
-            <button type="button" onClick={() => sendOtp()} disabled={busy} className="text-xs text-muted-foreground hover:text-foreground w-full text-center">
-              Resend code
-            </button>
           </form>
         )}
 
@@ -183,8 +188,8 @@ export default function AuthPage() {
           {mode === "signup" && (
             <button onClick={() => setMode("signin")} className="hover:text-foreground text-center">Already have an account? Sign in</button>
           )}
-          {(mode === "forgot" || mode === "otp") && (
-            <button onClick={() => { setMode("signin"); setOtp(""); setNewPassword(""); }} className="hover:text-foreground text-center">Back to sign in</button>
+          {(mode === "forgot" || mode === "sent") && (
+            <button onClick={() => setMode("signin")} className="hover:text-foreground text-center">Back to sign in</button>
           )}
         </div>
       </Card>

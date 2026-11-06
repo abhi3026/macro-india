@@ -101,6 +101,11 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://www.indianmacro.com/education/terminology</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://www.indianmacro.com/education/taxation</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -117,6 +122,16 @@
   </url>
   <url>
     <loc>https://www.indianmacro.com/education/personal-finance</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.indianmacro.com/education/corporate-finance</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.indianmacro.com/education/investing</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -140,6 +155,18 @@
   <url>
     <loc>https://www.indianmacro.com/education/financial-markets/bonds-understanding-basics-indian-investors</loc>
     <lastmod>2026-06-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.indianmacro.com/education/macroeconomics/what-is-stagflation-definition-causes-impact</loc>
+    <lastmod>2026-11-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.indianmacro.com/education/terminology/understanding-debt-to-equity-ratio-india</loc>
+    <lastmod>2026-11-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -198,6 +225,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://www.indianmacro.com/education/macroeconomics/understanding-mclr-india-banking</loc>
+    <lastmod>2026-11-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://www.indianmacro.com/education/macroeconomics/understanding-gdp-guide-for-investors</loc>
     <lastmod>2026-05-31</lastmod>
     <changefreq>monthly</changefreq>
@@ -206,6 +239,12 @@
   <url>
     <loc>https://www.indianmacro.com/education/fiscal-policy/understanding-fiscal-deficit-india-guide-nwbd</loc>
     <lastmod>2026-06-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.indianmacro.com/education/corporate-finance/understanding-operating-margin-efficiency-metric</loc>
+    <lastmod>2026-11-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -228,8 +267,26 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://www.indianmacro.com/education/macroeconomics/understanding-purchasing-managers-index-pmi-india</loc>
+    <lastmod>2026-11-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.indianmacro.com/education/investing/sharpe-ratio-explained-risk-adjusted-returns</loc>
+    <lastmod>2026-11-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://www.indianmacro.com/education/monetary-policy/understanding-cash-reserve-ratio-crr-india-rbi-liquidity</loc>
     <lastmod>2026-06-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.indianmacro.com/education/corporate-finance/understanding-interest-coverage-ratio</loc>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -248,6 +305,12 @@
   <url>
     <loc>https://www.indianmacro.com/education/investing-basics/understanding-net-asset-value-nav-guide</loc>
     <lastmod>2026-06-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.indianmacro.com/education/macroeconomics/understanding-statutory-liquidity-ratio-slr</loc>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -390,6 +453,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://www.indianmacro.com/education/terminology/understanding-foreign-direct-investment-fdi</loc>
+    <lastmod>2026-11-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://www.indianmacro.com/research/india-gsec-global-bond-indices-impact</loc>
     <lastmod>2026-06-01</lastmod>
     <changefreq>monthly</changefreq>
@@ -518,6 +587,66 @@
   <url>
     <loc>https://www.indianmacro.com/research/green-bonds-india-growth-challenges-market-potential</loc>
     <lastmod>2026-06-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.indianmacro.com/research/economics-of-green-hydrogen-subsidies-india</loc>
+    <lastmod>2026-11-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.indianmacro.com/research/rise-of-passive-debt-funds-target-maturity-structures</loc>
+    <lastmod>2026-11-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.indianmacro.com/research/crowding-in-effect-public-spending-private-investment</loc>
+    <lastmod>2026-11-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.indianmacro.com/research/national-logistics-policy-india-export-competitiveness</loc>
+    <lastmod>2026-11-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.indianmacro.com/research/semiconductor-subsidy-india-fiscal-multiplier-ism</loc>
+    <lastmod>2026-11-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.indianmacro.com/research/microfinance-crisis-loop-rural-india-overindebtedness</loc>
+    <lastmod>2026-11-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.indianmacro.com/research/financialization-of-indian-gold-sgb-digital-gold</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.indianmacro.com/research/k-shaped-recovery-indian-private-consumption</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.indianmacro.com/research/india-rural-consumption-recovery-monsoon-fmcg-analysis</loc>
+    <lastmod>2026-11-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.indianmacro.com/research/india-banking-credit-mix-evolution-industrial-to-retail</loc>
+    <lastmod>2026-11-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
